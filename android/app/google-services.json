@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104143026082",
+    "project_id": "sprinter-27ea3",
+    "storage_bucket": "sprinter-27ea3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104143026082:android:5d2a5fb605644c76eaa4fb",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBSls4TRhJHPwlMkwV5qIjxSA805py3nc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
