@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "104143026082",
+    "firebase_url": "https://sprinter-27ea3-default-rtdb.firebaseio.com",
+    "project_id": "sprinter-27ea3",
+    "storage_bucket": "sprinter-27ea3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104143026082:android:72722221bec8e552eaa4fb",
+        "android_client_info": {
+          "package_name": "com.Sprinter.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104143026082-v1r3pusk57legr49uoj9ms6g51idbk45.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Sprinter.myapp",
+            "certificate_hash": "781a7b6a47555117d43646bb3bb1bfbf52ad81a7"
+          }
+        },
+        {
+          "client_id": "104143026082-4k9gahu680nmdog2tl6vipfl80f5fp1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBSls4TRhJHPwlMkwV5qIjxSA805py3nc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104143026082-4k9gahu680nmdog2tl6vipfl80f5fp1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "104143026082-euks8mbvs7ab4jsulvq9re9d9njvfocl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "123"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

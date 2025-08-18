@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '104143026082',
     projectId: 'sprinter-27ea3',
     authDomain: 'sprinter-27ea3.firebaseapp.com',
+    databaseURL: 'https://sprinter-27ea3-default-rtdb.firebaseio.com',
     storageBucket: 'sprinter-27ea3.firebasestorage.app',
     measurementId: 'G-8MM89EBPCF',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:104143026082:android:5d2a5fb605644c76eaa4fb',
     messagingSenderId: '104143026082',
     projectId: 'sprinter-27ea3',
+    databaseURL: 'https://sprinter-27ea3-default-rtdb.firebaseio.com',
     storageBucket: 'sprinter-27ea3.firebasestorage.app',
   );
 
@@ -69,7 +71,9 @@ class DefaultFirebaseOptions {
     appId: '1:104143026082:ios:c9137f9ae3a0fe6deaa4fb',
     messagingSenderId: '104143026082',
     projectId: 'sprinter-27ea3',
+    databaseURL: 'https://sprinter-27ea3-default-rtdb.firebaseio.com',
     storageBucket: 'sprinter-27ea3.firebasestorage.app',
+    iosClientId: '104143026082-euks8mbvs7ab4jsulvq9re9d9njvfocl.apps.googleusercontent.com',
     iosBundleId: '123',
   );
 

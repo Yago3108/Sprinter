@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myapp/util/usuario.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -39,7 +40,6 @@ class UserProvider extends ChangeNotifier {
       );
 
       final novoUsuario = Usuario(
-
         uid: cred.user!.uid,
         nome: nome,
         email: email,
@@ -60,6 +60,65 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> continuarComGoogle() async {
+    try {
+      // 1. Iniciar o processo de login com o Google
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // O usuário cancelou o login
+        return;
+      }
+
+      // 2. Autenticar com o Firebase usando as credenciais do Google
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // 3. Verificar se o usuário já existe no Firestore
+        final DocumentSnapshot userDoc =
+            await _firestore.collection('usuarios').doc(user.uid).get();
+
+        if (!userDoc.exists) {
+          // Se o usuário não existe, crie um novo documento no Firestore
+          final novoUsuario = Usuario(
+            uid: user.uid,
+            nome: user.displayName ?? '',
+            email: user.email ?? '',
+            cpf: "",
+            nascimento: "",
+            carboCoins: 0.0,
+            carbono: 0.0,
+            distancia: 0.0,
+            fotoPerfil: user.photoURL ?? '', // Use a foto do perfil do Google
+          );
+
+          // Converta o objeto para um mapa e salve no Firestore
+          await _firestore
+              .collection('usuarios')
+              .doc(novoUsuario.uid)
+              .set(novoUsuario.toMap());
+
+          print('Novo usuário criado e salvo no Firestore!');
+        } else {
+          print('Usuário já existe no Firestore.');
+        }
+      }
+    } catch (e) {
+      print('Erro durante o login com o Google: $e');
+      // Você pode mostrar uma mensagem de erro para o usuário aqui
+    }
+    notifyListeners();
   }
 
   Future<void> carregarUsuario(String uid) async {
