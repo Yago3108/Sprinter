@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/util/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});
@@ -8,9 +10,17 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class PaginaInicialState extends State<PaginaInicial> {
+ 
+  @override
+  void initState() { 
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
+     final userProvider = context.watch<UserProvider>();
+    final dados = userProvider.getDistanciaEPontos();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -26,7 +36,12 @@ class PaginaInicialState extends State<PaginaInicial> {
                 Padding(padding: EdgeInsets.only(top: 10)),
                 Container(child: Column(
                   children: [
-                    Text("a"),
+                    Text("${dados?['distancia']}km")
+                    ],
+                ),),
+                Container(child: Column(
+                  children: [
+                    Text("${dados?['pontos']} CarboCoins")
                   ]
                 ),),
               ],
