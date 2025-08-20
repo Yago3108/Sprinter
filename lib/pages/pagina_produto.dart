@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/util/widget_pesquisa.dart';
 
 class PaginaProduto extends StatefulWidget {
-  const PaginaProduto({super.key});
+  final String produtoId;
+  const PaginaProduto(Key? key, this.produtoId) : super(key: key);
 
   @override
   PaginaProdutoState createState() => PaginaProdutoState();
@@ -10,14 +12,13 @@ class PaginaProduto extends StatefulWidget {
 class PaginaProdutoState extends State<PaginaProduto> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       body: Center(
-        child: Column(
-          children: [
-            
+    return Scaffold(body: Center(child: Column(children: [
+          WidgetPesquisa(),
+          Text("")
+
           ],
-        ),
-      ),
+        )
+      )
     );
   }
 }

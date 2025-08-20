@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myapp/util/usuario.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -61,7 +64,32 @@ class UserProvider extends ChangeNotifier {
       rethrow;
     }
   }
+ Future<void> selecionarImagem() async {
+      final ImagePicker _picker = ImagePicker();
+      try {
+      // 1. Seleciona a imagem da galeria
+      final XFile? imagem = await _picker.pickImage(source: ImageSource.gallery);
+      if (imagem == null) return; // Usuário cancelou
 
+      // 2. Converte para bytes
+      final bytes = await imagem.readAsBytes();
+
+      // 3. Converte para Base64
+      final base64Image = base64Encode(bytes);
+
+      // 4. Atualiza no Firestore
+      if (_user != null) {
+        _user!.fotoPerfil = base64Image;
+        await _firestore
+            .collection('usuarios')
+            .doc(_user!.uid)
+            .update({'fotoPerfil': base64Image});
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Erro ao atualizar foto de perfil: $e");
+    }
+    }
   Future<void> continuarComGoogle() async {
     try {
       // 1. Iniciar o processo de login com o Google
@@ -157,6 +185,11 @@ class UserProvider extends ChangeNotifier {
   Future<void> logout() async {
     await _auth.signOut();
     _user = null;
+    notifyListeners();
+  }
+
+  Future<void> esqueceuSenha() async {
+    await _auth.sendPasswordResetEmail(email: _user!.email);
     notifyListeners();
   }
 }

@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_amizades.dart';
 import 'package:myapp/pages/pagina_compras.dart';
+import 'package:myapp/pages/pagina_configuracao.dart';
 import 'package:myapp/pages/pagina_mapa.dart';
+import 'package:myapp/pages/pagina_perfil.dart';
 import 'package:myapp/pages/pagina_rendimento.dart';
 import 'package:myapp/pages/pagina_tela_inicial.dart';
+import 'package:myapp/util/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Pagina extends StatefulWidget {
-   const Pagina({super.key});
+  const Pagina({super.key});
 
   @override
   State<Pagina> createState() => _PaginaState();
@@ -25,39 +32,66 @@ class _PaginaState extends State<Pagina> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    final fotoBase64 = userProvider.user?.fotoPerfil;
+    Uint8List? bytes;
+    if (fotoBase64 != null && fotoBase64.isNotEmpty) {
+      bytes = base64Decode(fotoBase64);
+    }
+    return Scaffold(
+      appBar: AppBar(
+        actionsPadding: EdgeInsets.only(right: 10),
+        backgroundColor: Color.fromARGB(255, 5, 106, 12),
+        iconTheme: IconThemeData(color: Colors.white),
 
-        return Scaffold(
-             appBar: AppBar(
-          actionsPadding: EdgeInsets.only(right: 10),
-          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-          iconTheme: IconThemeData(color: Colors.white),
-          
-          centerTitle: true,
-          actions: [
-            CircleAvatar(
-              backgroundImage: AssetImage("assets/images/perfil_basico.jpg"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: CircleAvatar(
+              backgroundImage:
+                  bytes != null
+                      ? MemoryImage(bytes)
+                      : AssetImage("assets/images/perfil_basico.jpg"),
               radius: 25,
+            ),
+            onPressed:
+                () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => PaginaPerfil()),
+                  ),
+                },
+          ),
+        ],
+      ),
+
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Image.asset("assets/images/Sprinter_simples.png"),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, color: Colors.black),
+              title: Text("Configurações"),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaginaConfiguracao()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Fazer Logout"),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
-
-        drawer: Drawer(
-          
-          child: ListView(
-            children: [
-              DrawerHeader(child: Image.asset("assets/images/Sprinter_simples.png")),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Fazer Logout"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-
-            ],
-          )
-        ),
-        backgroundColor: Color.fromARGB(255, 240, 240, 240), // Cor de fundo clara
+      ),
+      backgroundColor: Color.fromARGB(255, 240, 240, 240), // Cor de fundo clara
       body: _paginas[_paginaAtual],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
@@ -83,18 +117,27 @@ class _PaginaState extends State<Pagina> {
         ),
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.people_alt_outlined), label: "Amizades"),
+            icon: Icon(Icons.people_alt_outlined),
+            label: "Amizades",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined), label: "Comprar"),
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: "Comprar",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: "Início"),
+            icon: Icon(Icons.home_outlined),
+            label: "Início",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.location_on_outlined), label: "Mapa"),
+            icon: Icon(Icons.location_on_outlined),
+            label: "Mapa",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.show_chart), label: "Rendimento"),
+            icon: Icon(Icons.show_chart),
+            label: "Rendimento",
+          ),
         ],
       ),
     );
-
   }
 }

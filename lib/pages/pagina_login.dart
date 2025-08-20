@@ -17,6 +17,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
   TextEditingController controllerSenha = TextEditingController();
   bool nomeValido = false;
   bool senhaValida = false;
+  bool _obscureText = true;
   void cadastro() {
     Navigator.push(
       context,
@@ -103,8 +104,17 @@ class _PaginaLoginState extends State<PaginaLogin> {
                       Padding(padding: EdgeInsetsGeometry.only(top: 30)),
                       TextField(
                         controller: controllerSenha,
+                        obscureText: _obscureText,
                         decoration: InputDecoration(
-                          labelText: ("Senha"),
+                          labelText: ("Senha"),   
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           floatingLabelStyle: TextStyle(
                             color: Colors.black,

@@ -9,7 +9,7 @@ class Usuario {
   final double carboCoins;
   final double carbono;
   final double distancia;
-  final dynamic fotoPerfil;
+   dynamic fotoPerfil;
 
   Usuario({
     required this.uid,

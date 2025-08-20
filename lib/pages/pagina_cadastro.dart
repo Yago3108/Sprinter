@@ -1,4 +1,5 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/util/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +60,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     "}",
     "~",
   ];
-  
+
   Future<void> _selecionarData(BuildContext context) async {
     DateTime? dataSelecionada = await showDatePicker(
       context: context,
@@ -99,12 +100,26 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       }
 
       cpfValido = CPFValidator.isValid(controllerCpf.text);
-      
-      if (data.length == 10) {
-        dataValida = true;
-      } else {
+
+      try {
+        final datadiv = data.split('/');
+        if (datadiv.length == 3) {
+          final dia = int.parse(datadiv[0]);
+          final mes = int.parse(datadiv[1]);
+          final ano = int.parse(datadiv[2]);
+
+          final dataC = DateTime(ano, mes, dia);
+          if (dataC.day == dia && dataC.month == mes && dataC.year == ano) {
+            dataValida = true;
+          } else {
+            dataValida = false;
+          }
+        } else {
+          dataValida = false;
+        }
+      } catch (e) {
         dataValida = false;
-      }
+      };
 
       if (senha.length >= 8) {
         senhaValida = true;
@@ -135,7 +150,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         distancia: 0.0,
         contCarbono: 0.0,
         contPontos: 0.0,
-        foto:0,
+        foto: 0,
       );
       login();
     }
@@ -182,11 +197,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "Insira o seu nome:",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: nomeValido ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: nomeValido ? Colors.black : Colors.red,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: nomeValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: nomeValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -205,11 +225,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "Insira seu E-mail",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: emailValido ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: emailValido ? Colors.black : Colors.red,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: nomeValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: nomeValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -217,8 +242,13 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                 Padding(padding: EdgeInsets.only(top: 20)),
                 TextFormField(
                   controller: controllerData,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    DataInputFormatter(),
+                  ],
                   decoration: InputDecoration(
-                    labelText: ("Data Nascimento:"),
+                    labelText: ("Data de Nascimento:"),
                     suffixIcon: IconButton(
                       onPressed: () => _selecionarData(context),
                       icon: Icon(Icons.calendar_today),
@@ -232,17 +262,25 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "DD/MM/YYYY",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: dataValida ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: dataValida ? Colors.black : Colors.red,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: dataValida ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: dataValida ? Colors.black : Colors.red,
+                      ),
                     ),
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 20)),
                 TextFormField(
                   controller: controllerCpf,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CpfInputFormatter(),
+                  ],
                   decoration: InputDecoration(
                     labelText: ("CPF:"),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -254,11 +292,17 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "000.000.000-00",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: cpfValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: cpfValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: cpfValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: cpfValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -278,11 +322,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "Insira sua Senha",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: senhaValida ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: senhaValida ? Colors.black : Colors.red,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: cpfValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: cpfValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -302,11 +351,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     hintText: "Insira sua senha novamente",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: confirmarSenhaValida ?Colors.black : Colors.red),
+                      borderSide: BorderSide(
+                        color: confirmarSenhaValida ? Colors.black : Colors.red,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
-                      borderSide: BorderSide(color: cpfValido ?Colors.black : Colors.red, width: 2),
+                      borderSide: BorderSide(
+                        color: cpfValido ? Colors.black : Colors.red,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),

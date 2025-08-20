@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-
+import '../util/produto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProdutoProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Produto> _produtos = [];
+
+  List<Produto> get produtos => _produtos;
+
   Future<void> adicionarProduto(
     String nome,
     String descricao,
@@ -45,4 +49,13 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
   
+  Future<void> carregarProdutos() async {
+  try {
+    QuerySnapshot snapshot = await _firestore.collection('produtos').get();
+    _produtos = snapshot.docs.map((doc) => Produto.fromFirestore(doc)).toList();
+    notifyListeners();
+  } catch (e) {
+    throw Exception("Erro ao carregar produtos: $e");
   }
+}
+}
