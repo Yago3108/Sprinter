@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/flutter_map.dart' as flutter_map;
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +16,8 @@ class PaginaMapa extends StatefulWidget {
 
 class _PaginaMapaState extends State<PaginaMapa> {
   late MapaProvider _mapaProvider;
-  double latitude = 0;
-  double longitude = 0;
+  double? latitude;
+  double? longitude;
 
   @override
   void initState() {
@@ -55,38 +56,37 @@ class _PaginaMapaState extends State<PaginaMapa> {
 
   @override
   Widget build(BuildContext context) {
+    if (latitude == null || longitude == null) {
+      return const MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Atividade ao Ar Livre')),
         body: Stack(
           children: [
-            AnimatedBuilder(
-              animation: _mapaProvider,
-              builder: (context, _) {
-                return FlutterMap(
-                  options: MapOptions(
-                    initialCenter: LatLng(latitude, longitude),
-                    initialZoom: 16,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          "https://s.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: const ['a', 'b', 'c'],
-                      userAgentPackageName: "com.example.myapp",
-                    ),
-                    PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: _mapaProvider.rota,
-                          strokeWidth: 1,
-                          color: Colors.green,
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+            OSMFlutter(
+              
+              osmOption: OSMOption(
+            zoomOption: ZoomOption(
+              initZoom: 16),
+                showContributorBadgeForOSM: false,
+                showDefaultInfoWindow: false,
+           
+                roadConfiguration: RoadOption(
+                  roadColor: const Color.fromARGB(255, 21, 77, 25),
+                ),
+              ),
+              controller: MapController(
+             
+            initMapWithUserPosition: UserTrackingOption(
+              enableTracking: true,
+            )
+              ),
             ),
             Positioned(
               bottom: 30,

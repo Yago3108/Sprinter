@@ -39,6 +39,7 @@ dependencies:
 
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.0.1
+  flutter_osm_plugin: ^1.4.2
 
   # extras do teu projeto
   brasil_fields: ^1.14.0
