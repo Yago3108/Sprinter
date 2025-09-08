@@ -42,7 +42,6 @@ class ProdutoProvider extends ChangeNotifier {
       throw Exception('Erro ao deletar produto: $e');
     }
   }
-
   Future<List<Produto>> carregarProdutos() async {
     try {
       QuerySnapshot snapshot = await _firestore.collection('produtos').get();

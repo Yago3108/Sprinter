@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 
 class WidgetCarrinho extends StatefulWidget {
@@ -36,10 +37,15 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
     produtoid = widget.produtoId;
   }
 
-  Comprar(int quantidade, double preco, String produtoid, String userid) {}
+  Comprar(int quantidade, double preco, String produtoid, String userid) {
+    // Lógica de compra aqui
+    print("Compra realizada: $quantidade x $nome por \$$preco cada.");
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
+
+      width: 300,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 204, 204, 204),
         borderRadius: BorderRadius.circular(20),
@@ -49,39 +55,57 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.shopping_cart,
-                  size: 10,
-                  color: Color.fromARGB(255, 5, 106, 12),
-                ),
-                Text(
-                  "Carrinho",
+                Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+               Text(
+                  "Carrinho:",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 30,
                     color: Color.fromARGB(255, 5, 106, 12),
                     fontFamily: "Lao Muang Don",
                   ),
                 ),
+                      Padding(padding: EdgeInsetsGeometry.only(right: 110)),
+                    Icon(
+                  Icons.shopping_cart,
+                  size: 20,
+                  color: Color.fromARGB(255, 5, 106, 12),
+                ),
               ],
             ),
+            Padding(padding: EdgeInsetsGeometry.only(top: 20)),
             Container(
+              alignment: Alignment.center,
+              width: 250,
+              height: 30,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 230, 230, 230),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("$quantidade"),
+                  Text("$quantidade",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 5, 106, 12),
+                        fontFamily: "Lao Muang Don",
+                      )),
                   Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                  Text(nome),
+                  Text(nome,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 5, 106, 12),
+                        fontFamily: "Lao Muang Don",
+                      )),
                   Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                  Text("${preco}Cc"),
                 ],
               ),
             ),
+            Padding(padding:  EdgeInsetsGeometry.only(top: 20)),
             Container(
+              width: 150,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(30),
                 color: Color.fromARGB(255, 5, 106, 12),
               ),
               child: TextButton(
@@ -95,9 +119,25 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
                 ),
                 onPressed: () {
                   Comprar(quantidade, preco, produtoid, userid);
+                  Navigator.pop(context);
+
+                  showSnackBar(BuildContext context) {
+                    final snackBar = SnackBar(
+                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                      content: Text("Compra realizada: $quantidade x $nome por $preco Cc.",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontFamily: "Lao Muang Don",
+                          )),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                  showSnackBar( context);
                 },
               ),
             ),
+              Padding(padding:  EdgeInsetsGeometry.only(top: 20)),
           ],
         ),
       ),

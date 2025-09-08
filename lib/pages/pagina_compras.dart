@@ -24,27 +24,26 @@ class PaginaComprasState extends State<PaginaCompras> {
     if (_overlayEntry != null) return;
 
     _overlayEntry = OverlayEntry(
-      maintainState: false,
-      opaque: false,
       builder: (context) => Positioned.fill(
-        child: Material(
-          color: const Color.fromARGB(127, 0, 0, 0),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 60, left: 16, right: 16),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white, // caixa mais clara
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    WidgetPesquisa(
-                      onProdutoSelecionado: (produtoId) {
+        child: GestureDetector(
+          onTap: _removerPesquisa,
+          child: Material(
+            color: const Color.fromARGB(85, 0, 0, 0),
+            
+             // fundo semitransparente
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 85, left: 16, right: 16),
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      // seu widget de pesquisa importado
+                      WidgetPesquisa(
+                        onProdutoSelecionado: (produtoId) {
                         // remove overlay
                         _removerPesquisa();
-
+          
                         // navega para a página de produto
                         Navigator.push(
                           context,
@@ -52,20 +51,22 @@ class PaginaComprasState extends State<PaginaCompras> {
                             builder: (_) => PaginaProduto(null, produtoId),
                           ),
                         );
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: _removerPesquisa,
+                      }
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: _removerPesquisa,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+         
+              ],
+            ),
           ),
         ),
       ),
@@ -73,7 +74,6 @@ class PaginaComprasState extends State<PaginaCompras> {
 
     Overlay.of(context).insert(_overlayEntry!);
   }
-
   void _removerPesquisa() {
     _overlayEntry?.remove();
     _overlayEntry = null;
@@ -106,7 +106,7 @@ class PaginaComprasState extends State<PaginaCompras> {
                     icon: Row(
                       children: [
                         Text("Ingresso para..."),
-                        Padding(padding: EdgeInsetsGeometry.only(left: 150)),
+                        Padding(padding: EdgeInsetsGeometry.only(left: 140)),
                         Icon(Icons.search),
                       ],
                     ),
@@ -135,10 +135,9 @@ class PaginaComprasState extends State<PaginaCompras> {
                 ),
                 Padding(padding: EdgeInsets.only(top: 20)),
                 SizedBox(
-                  height: 370,
+                  height: 380,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-
                     children: [
                       ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
                       ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),

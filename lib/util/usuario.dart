@@ -1,5 +1,6 @@
-class Usuario {
-  final String uid;
+ class Usuario {
+final List<Usuario> amigos; 
+final String uid;
   final String nome;
   final String email;
   final String cpf;
@@ -10,6 +11,7 @@ class Usuario {
   dynamic fotoPerfil;
 
   Usuario({
+    required this.amigos,
     required this.uid,
     required this.nome,
     required this.email,
@@ -23,6 +25,7 @@ class Usuario {
 
   factory Usuario.fromMap(Map<String, dynamic> map) {
     return Usuario(
+      amigos: [],
       uid: map['uid'],
       nome: map['nome'],
       email: map['email'],
@@ -37,6 +40,7 @@ class Usuario {
 
   Map<String, dynamic> toMap() {
     return {
+      'amigos': amigos,
       'uid': uid,
       'nome': nome,
       'email': email,

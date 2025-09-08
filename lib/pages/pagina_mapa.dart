@@ -15,9 +15,12 @@ class PaginaMapa extends StatefulWidget {
 }
 
 class _PaginaMapaState extends State<PaginaMapa> {
+  Stream<Position>? posStream;
   late MapaProvider _mapaProvider;
-  double? latitude;
-  double? longitude;
+   double latitude=0;
+  double longitude=0;
+
+ 
 
   @override
   void initState() {
@@ -29,6 +32,35 @@ class _PaginaMapaState extends State<PaginaMapa> {
     if (userProvider.user != null) {
       _mapaProvider.setUid(userProvider.user!.uid);
     }
+  }
+    MapController controller = MapController(
+    initMapWithUserPosition: UserTrackingOption(
+      enableTracking: true,
+    ),
+    
+  );
+   void iniciarAtividade() async {
+    final atividade = context.read<MapaProvider>();
+    atividade.iniciarAtividade();
+
+    // escuta localização em tempo real
+    posStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 5, // só atualiza a cada 5 metros
+      ),
+    );
+
+    posStream!.listen((pos) async {
+
+      final geo = GeoPoint(latitude: pos.latitude, longitude: pos.longitude);
+      await controller.currentLocation();
+      await controller.addMarker(geo);
+    });
+  }
+
+  void pararAtividade() {
+    context.read<MapaProvider>().pararAtividade();
   }
 
   Future<void> _obterLocalizacaoAtual() async {
@@ -65,8 +97,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
         ),
       );
     }
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         body: Stack(
           children: [
             OSMFlutter(
@@ -81,12 +112,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
                   roadColor: const Color.fromARGB(255, 21, 77, 25),
                 ),
               ),
-              controller: MapController(
-             
-            initMapWithUserPosition: UserTrackingOption(
-              enableTracking: true,
-            )
-              ),
+              controller: controller,
             ),
             Positioned(
               bottom: 30,
@@ -96,6 +122,17 @@ class _PaginaMapaState extends State<PaginaMapa> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                     onPressed: () {
                       _mapaProvider.iniciarAtividade();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +145,17 @@ class _PaginaMapaState extends State<PaginaMapa> {
                     child: Text("INICIAR"),
                   ),
                   ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                     icon: const Icon(Icons.stop),
                     label: const Text("Parar"),
                     onPressed: () async {
@@ -125,7 +173,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    
   }
 }

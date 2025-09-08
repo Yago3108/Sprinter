@@ -43,6 +43,7 @@ class UserProvider extends ChangeNotifier {
       );
 
       final novoUsuario = Usuario(
+        amigos: amigos,
         uid: cred.user!.uid,
         nome: nome,
         email: email,
@@ -142,7 +143,65 @@ class UserProvider extends ChangeNotifier {
       }
     }
   }
+  Usuario? usuarioPesquisado;
+  Future<Usuario?> getUsuarioByUid(String uid) async {
+    try {
+      final doc = await _firestore.collection('usuarios').doc(uid).get();
 
+      if (!doc.exists) return null;
+
+      final data = doc.data()!;
+
+      usuarioPesquisado =Usuario(
+        uid: data['uid'],
+        nome: data['nome'],
+        email: data['email'],
+        cpf: data['cpf'],
+        nascimento: data['nascimento'],
+        carboCoins: (data['carboCoins'] ?? 0).toDouble(),
+        carbono: (data['carbono'] ?? 0).toDouble(),
+        distancia: (data['distancia'] ?? 0).toDouble(),
+        fotoPerfil: data['Foto_perfil'],
+        amigos: [],
+      );
+    } catch (e) {
+      print("Erro ao buscar usuário por UID: $e");
+      return Usuario(
+        uid: "",
+        nome: "",
+        email:"",
+        cpf:"",
+        nascimento: "",
+        carboCoins: 0,
+        carbono:0,
+        distancia: 0,
+        fotoPerfil:"",
+        amigos: [],
+      );;
+    }
+  }
+  final List<Usuario> _amigos = [];
+  List<Usuario> get amigos => _amigos;
+
+  Future<void> carregarTodosAmigos() async {
+    if (_user == null) return;
+
+    final snapshot = await _firestore
+        .collection('usuarios')
+        .where(user!.uid)
+        .get();
+
+    _amigos.clear();
+    for (var doc in snapshot.docs) {
+      _amigos.add(Usuario.fromMap(doc.data()));
+    }
+    notifyListeners();
+  }
+     
+    
+   
+  
+   
   Future<void> logout() async {
     await _auth.signOut();
     _user = null;

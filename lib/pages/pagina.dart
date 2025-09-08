@@ -7,6 +7,7 @@ import 'package:myapp/pages/pagina_amizades.dart';
 import 'package:myapp/pages/pagina_compras.dart';
 import 'package:myapp/pages/pagina_configuracao.dart';
 import 'package:myapp/pages/pagina_cria_produto.dart';
+import 'package:myapp/pages/pagina_login.dart';
 import 'package:myapp/pages/pagina_mapa.dart';
 import 'package:myapp/pages/pagina_perfil.dart';
 import 'package:myapp/pages/pagina_rendimento.dart';
@@ -112,7 +113,13 @@ class _PaginaState extends State<Pagina> {
               leading: Icon(Icons.logout),
               title: Text("Fazer Logout"),
               onTap: () {
-                Navigator.pop(context);
+                UserProvider userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                    userProvider.logout();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaginaLogin()),
+                );
               },
             ),
           ],

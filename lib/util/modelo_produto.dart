@@ -41,8 +41,8 @@ class ProdutoCard extends StatelessWidget {
             );
           },
           icon: Container(
-            width: 175,
-            height: 350,
+            width: 250,
+            height: 360,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 230, 230, 230),
@@ -56,8 +56,8 @@ class ProdutoCard extends StatelessWidget {
                   imagemBytes != null
                       ? Image.memory(
                           imagemBytes,
-                          height: 175,
-                          width: 175,
+                          height: 200,
+                          width: 250,
                           fit: BoxFit.cover,
                         )
                       : const SizedBox(
@@ -77,13 +77,13 @@ class ProdutoCard extends StatelessWidget {
 
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
                         " ${produto['preco'].toStringAsFixed(0)}",
                         style: const TextStyle(
-                          fontSize: 35,
+                          fontSize: 30,
                           fontFamily: "Medula One",
                           color: Color.fromARGB(255, 29, 64, 26),
                         ),

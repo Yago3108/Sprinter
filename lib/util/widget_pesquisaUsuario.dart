@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_produto.dart';
+import 'package:myapp/util/usuario.dart';
 
-class WidgetPesquisa extends StatefulWidget {
+class WidgetPesquisaUsuario extends StatefulWidget {
   final void Function(String produtoId) onProdutoSelecionado;
 
-  const WidgetPesquisa({
+  const WidgetPesquisaUsuario({
     super.key,
     required this.onProdutoSelecionado,
   });
   @override
-  WidgetPesquisaState createState() => WidgetPesquisaState();
+  WidgetPesquisaUsuarioState createState() => WidgetPesquisaUsuarioState();
 }
 
-class WidgetPesquisaState extends State<WidgetPesquisa> {
+class WidgetPesquisaUsuarioState extends State<WidgetPesquisaUsuario> {
     OverlayEntry? _overlayEntry;
   String query = "";
   @override
@@ -28,7 +29,7 @@ class WidgetPesquisaState extends State<WidgetPesquisa> {
         children: [
           TextField(
             decoration: InputDecoration(
-              hint: Text("Ingresso para ..."),
+              hint: Text("Pesquisar usuário..."),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -44,11 +45,11 @@ class WidgetPesquisaState extends State<WidgetPesquisa> {
           StreamBuilder<QuerySnapshot>(
             stream: (query.isEmpty)
                 ? FirebaseFirestore.instance
-                      .collection('produtos')
+                      .collection('usuarios')
                       .limit(3) // mostra 3 primeiros sem filtro
                       .snapshots()
                 : FirebaseFirestore.instance
-                      .collection('produtos')
+                      .collection('usuarios')
                       .where('nome', isGreaterThanOrEqualTo: query)
                       .where('nome', isLessThanOrEqualTo: query + '\uf8ff')
                       .limit(3)
@@ -58,21 +59,21 @@ class WidgetPesquisaState extends State<WidgetPesquisa> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final produtos = snapshot.data!.docs;
+              final usuarios = snapshot.data!.docs;
 
-              if (produtos.isEmpty) {
-                return const Center(child: Text("Nenhum produto encontrado"));
+              if (usuarios.isEmpty) {
+                return const Center(child: Text("Nenhum usuário encontrado"));
               }
 
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: produtos.length,
+                itemCount: usuarios.length,
                 itemBuilder: (context, index) {
-                  final produto = produtos[index];
+                  final usuario = usuarios[index];
                   return ListTile(
-                    title: Text(produto['nome']),
+                    title: Text(usuario['nome']),
                     onTap: () {
-                    widget.onProdutoSelecionado(produto.id);
+                    widget.onProdutoSelecionado(usuario.id);
                     },
                   );
                 },
