@@ -88,6 +88,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
 
   @override
   Widget build(BuildContext context) {
+    bool clicou=true;
     if (latitude == null || longitude == null) {
       return const MaterialApp(
         home: Scaffold(
@@ -134,7 +135,10 @@ class _PaginaMapaState extends State<PaginaMapa> {
                       ),
                     ),
                     onPressed: () {
-                      _mapaProvider.iniciarAtividade();
+                   
+                    },
+                    child: clicou==true?IconButton(onPressed: () {
+                          _mapaProvider.iniciarAtividade();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Atividade iniciada"),
@@ -142,32 +146,18 @@ class _PaginaMapaState extends State<PaginaMapa> {
                         ),
                       );
                     },
-                    child: Text("INICIAR"),
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    icon: const Icon(Icons.stop),
-                    label: const Text("Parar"),
-                    onPressed: () async {
-                      await _mapaProvider.pararAtividade();
+                      icon: Icon(Icons.play_arrow_sharp,color: Colors.white,)):IconButton(onPressed: () {
+                          _mapaProvider.pararAtividade();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Atividade salva"),
+                          content: Text("Atividade parada"),
                           backgroundColor: Color.fromARGB(255, 5, 106, 12),
                         ),
                       );
                     },
+                      icon: Icon(Icons.stop,color: Colors.white,))
                   ),
+
                 ],
               ),
             ),

@@ -143,8 +143,11 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
   AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
- amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
+  setState(() {
+      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
   amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
+  });
+
 
     return DefaultTabController(
       length: 3,
@@ -203,59 +206,63 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child:
-                      amigos.isEmpty
+                      amizadeProvider.amizades.isEmpty
                           ? Text('Nenhum amigo encontrado.')
                           : ListView.builder(
                      
                               itemCount: amigos.length,
                               itemBuilder: (context, index) {
-                                     
-                                    
                                     Usuario amigo1=amigos[index];
-                                return amigo1!=null ?Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                          color: Color.fromARGB(255, 5, 106, 12),
-                                        width: 1,
-                                      
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(    padding: EdgeInsets.only(left: 10), ),
-                                  
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundImage: amigo1.fotoPerfil != String
-                                            ? AssetImage('assets/images/perfil_basico.jpg')
-                                            : AssetImage('assets/images/perfil_basico.jpg'),
+                                return amigo1!=null ?Column(
+                                  children: [
+                                    Padding(padding: EdgeInsetsGeometry.only(top:10)),
+                                    Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                              color: Color.fromARGB(255, 5, 106, 12),
+                                            width: 1,
+                                          
+                                        ),
                                       ),
-                                      Padding(padding: EdgeInsets.only(left: 20)),
-                                      Text(amigo1.nome,style: TextStyle(
-                                        fontSize: 16,
-
-                                fontFamily: 'League Spartan',
-                                        color: Color.fromARGB(255, 5, 106, 12
-                                      ),),),
-                                      Padding(padding: EdgeInsets.only(left: 20)),
-                                      Text('${amigo1.carboCoins.toStringAsFixed(0)} Cc',style: TextStyle(
-                                        fontSize: 14,
-                                fontFamily: 'League Spartan',
-                                        color: Color.fromARGB(255, 5, 106, 12
-                                      ),),),
-                                           Padding(padding: EdgeInsets.only(left: 20)),
-                                      Text(amigo1.email,style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'League Spartan',
-                                        color: Color.fromARGB(255, 5, 106, 12
-                                      ),),),
-                                    ],
-                                  ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(    padding: EdgeInsets.only(left: 10), ),
+                                      
+                                          CircleAvatar(
+                                            radius: 12,
+                                            backgroundImage: amigo1.fotoPerfil != String
+                                                ? AssetImage('assets/images/perfil_basico.jpg')
+                                                : AssetImage('assets/images/perfil_basico.jpg'),
+                                          ),
+                                          Padding(padding: EdgeInsets.only(left: 20)),
+                                          Text(amigo1.nome,style: TextStyle(
+                                            fontSize: 16,
+                                    
+                                    fontFamily: 'League Spartan',
+                                            color: Color.fromARGB(255, 5, 106, 12
+                                          ),),),
+                                          Padding(padding: EdgeInsets.only(left: 20)),
+                                          Text('${amigo1.carboCoins.toStringAsFixed(0)} Cc',style: TextStyle(
+                                            fontSize: 14,
+                                    fontFamily: 'League Spartan',
+                                            color: Color.fromARGB(255, 5, 106, 12
+                                          ),),),
+                                               Padding(padding: EdgeInsets.only(left: 20)),
+                                          Text(amigo1.email,style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'League Spartan',
+                                            color: Color.fromARGB(255, 5, 106, 12
+                                          ),),),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ):Text( "Carregando... ");
+                            
                               },
                             ),
                     )),
@@ -269,7 +276,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child:
-                      amigos.isEmpty
+                      amizadeProvider.pedidos.isEmpty
                           ? Text('Nenhum pedido encontrado.')
                           : ListView.builder(
                      
@@ -314,6 +321,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                         setState(() {
                                            amizadeProvider.aceitarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().user!.uid);
                                             amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().user!.uid);
+                                             carregarTodosAmigos();
                                         });
                                        
                                       }, icon: Icon(Icons.check,color: Colors.green,)),

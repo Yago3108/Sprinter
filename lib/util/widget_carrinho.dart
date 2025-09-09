@@ -84,7 +84,7 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("$quantidade",
+                  Text("$quantidade x",
                       style: TextStyle(
                         fontSize: 15,
                         color: Color.fromARGB(255, 5, 106, 12),

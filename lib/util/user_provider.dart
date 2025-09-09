@@ -34,7 +34,7 @@ class UserProvider extends ChangeNotifier {
     double contPontos = 0,
     double contCarbono = 0,
     double distancia = 0,
-    dynamic foto = 0,
+    dynamic foto = "",
   }) async {
     try {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(

@@ -7,8 +7,8 @@ class AmizadeProvider extends ChangeNotifier {
   final List<Amizade> _amizades = [];
   final List<PedidoAmizade> _pedidos = [];
 
-  List<Amizade> get amizades => List.unmodifiable(_amizades);
-  List<PedidoAmizade> get pedidos => List.unmodifiable(_pedidos);
+  List<Amizade> get amizades =>_amizades;
+  List<PedidoAmizade> get pedidos => _pedidos;
 
   // Buscar amizades do Firestore
   Future<void> fetchAmizadesFromFirestore(String uid) async {
@@ -76,6 +76,7 @@ class AmizadeProvider extends ChangeNotifier {
   // Aceita um pedido de amizade
   Future<void> aceitarPedidoAmizade(String uidRemetente, String uidDestinatario) async {
     final firestore = FirebaseFirestore.instance;
+    _pedidos.removeWhere((pedido) => pedido.id == uidRemetente);
     // Adiciona amizade para ambos usuários
     await firestore
         .collection('usuarios')
@@ -95,7 +96,7 @@ class AmizadeProvider extends ChangeNotifier {
     await firestore
         .collection('usuarios')
         .doc(uidDestinatario)
-        .collection('pedidos_amizade')
+        .collection('pedidos')
         .doc(uidRemetente)
         .delete();
   }
@@ -108,7 +109,7 @@ class AmizadeProvider extends ChangeNotifier {
     await firestore
         .collection('usuarios')
         .doc(uidDestinatario)
-        .collection('pedidos_amizade')
+        .collection('pedidos')
         .doc(uidRemetente)
         .delete();
   }

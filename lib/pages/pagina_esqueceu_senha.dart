@@ -88,16 +88,20 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
             Padding(padding: EdgeInsets.only(top: 10)),
             Image.asset("assets/images/Logo_Sprinter.png", height: 100),
             Padding(padding: EdgeInsets.only(top: 10)),
-            Icon(Icons.lock_rounded, size: 100),
+            Icon(Icons.lock_rounded, size: 200),
             Padding(padding: EdgeInsets.only(top: 10)),
             Text("Recuperação de Senha", style: TextStyle(fontSize: 20)),
             Padding(padding: EdgeInsets.only(top: 10)),
-            TextField(
-              decoration: InputDecoration(
-                labelText: ("Digite seu e-mail"),
-                errorText: erroEmail,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(35),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: TextField(
+                
+                decoration: InputDecoration(
+                  labelText: ("Digite seu e-mail"),
+                  errorText: erroEmail,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(35),
+                  ),
                 ),
               ),
             ),
@@ -106,9 +110,20 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
               onPressed: () {
                 validarEmail();
               },
-              child: const Text("Receber Link de Recuperação"),
+              child: Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 5, 106, 12),
+                  borderRadius: BorderRadius.circular(35)
+                ),
+                child: Text("Receber Link de Recuperação",style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "League Spartan",
+                ),)),
             ),
-            Padding(padding: EdgeInsets.only(top: 30)),
+            Padding(padding: EdgeInsets.only(top: 10)),
             GestureDetector(
               onTap: () {
                 userProvider.esqueceuSenha();

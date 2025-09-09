@@ -17,8 +17,8 @@ import 'pagina_mapa.dart';
 class PaginaPerfilAmizade extends StatefulWidget {
   final String uidAmigo;
 
-   PaginaPerfilAmizade(param0, {super.key, required this.uidAmigo,}){
-   final String uidAmigo;
+  PaginaPerfilAmizade(param0, {super.key, required this.uidAmigo}) {
+    final String uidAmigo;
     Key? key;
   }
 
@@ -27,29 +27,24 @@ class PaginaPerfilAmizade extends StatefulWidget {
 }
 
 class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
-
-
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     final AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
-    Future<Usuario?> amigo1 =userProvider.getUsuarioByUid( widget.uidAmigo);
-    Usuario? amigo=userProvider.usuarioPesquisado;
-    amigo1.then((value) => amigo=value);
-    if (amigo== null) {
+    Future<Usuario?> amigo1 = userProvider.getUsuarioByUid(widget.uidAmigo);
+    Usuario? amigo = userProvider.usuarioPesquisado;
+    amigo1.then((value) => amigo = value);
+    if (amigo == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text("Carregando..."),
-        ),
+        appBar: AppBar(title: Text("Carregando...")),
         body: Center(child: CircularProgressIndicator()),
       );
     }
-  
-  
-    amigo1.then((value) => amigo=value);
+
+    amigo1.then((value) => amigo = value);
     final fotoBase64 = amigo?.fotoPerfil;
     Uint8List? bytes;
-    
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -109,151 +104,197 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
               Column(
                 children: [
                   Image(image: AssetImage("assets/images/Logo_Sprinter.png")),
-                  Padding(padding: EdgeInsets.only(top: 15)),
+                  Padding(padding: EdgeInsets.only(top: 70)),
 
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 163, 219, 99),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: CircleAvatar(
-                            backgroundImage: bytes != null
-                                ? MemoryImage(bytes, scale: 50)
-                                : AssetImage("assets/images/perfil_basico.jpg"),
-                            radius: 50,
-                          ),
-                          onPressed: () => {userProvider.selecionarImagem()},
+                  Stack(
+                    alignment: Alignment.topCenter,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 127, 176, 100),
+                          borderRadius: BorderRadius.circular(25),
                         ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 60)),
+                            Text(
+                              amigo?.nome ?? "",
+                              style: TextStyle(
+                                fontFamily: 'League Spartan',
+                                fontSize: 40,
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 30)),
+                            Container(
+                              width: 300,
+                              height: 50,
 
-                        Text(
-                          "NOME:",
-                          style: TextStyle(
-                            fontFamily: 'Lao Muang Don',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 5)),
-                        Text(
-                          amigo?.nome ?? "",
-                          style: TextStyle(
-                            fontFamily: 'Lao Muang Don',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                        Container(
-                          width: 300,
-                          height: 30,
+                              decoration: BoxDecoration(
+                                border: BoxBorder.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    amigo?.email ?? "",
+                                    style: TextStyle(
+                                      fontFamily: 'Lao Muang Don',
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 30)),
+                            Container(
+                              width: 300,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                border: BoxBorder.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    amigo?.nascimento ?? "",
+                                    style: TextStyle(
+                                      fontFamily: 'League Spartan',
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 30)),
+                            Container(
+                              width: 300,
+                              height: 50,
 
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                               amigo?.email ?? "",
-                                style: TextStyle(
-                                  fontFamily: 'Lao Muang Don',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                              decoration: BoxDecoration(
+                                border: BoxBorder.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${amigo?.carbono} kg CO2",
+                                    style: TextStyle(
+                                      fontFamily: 'League Spartan',
+
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 30)),
+                            Text(
+                              "CarboCoins:",
+                              style: TextStyle(
+                                fontFamily: 'League Spartan',
+
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              "${amigo?.carboCoins.toStringAsFixed(0)} Cc",
+                              style: TextStyle(
+                                fontFamily: 'League Spartan',
+
+                                fontSize: 40,
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 10)),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: -75,
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          clipBehavior: Clip.none,
+                          children: [
+                            IconButton(
+                              icon: CircleAvatar(
+                                backgroundImage: bytes != null
+                                    ? MemoryImage(bytes, scale: 75)
+                                    : AssetImage(
+                                        "assets/images/perfil_basico.jpg",
+                                      ),
+                                radius: 75,
+                                child: Container(
+                                  height: 375,
+                                  width: 375,
+                                  decoration: BoxDecoration(
+                                    border: BoxBorder.all(
+                                      color: Color.fromARGB(255, 29, 64, 26),
+                                    ),
+
+                                    borderRadius: BorderRadius.circular(75),
+                                  ),
                                 ),
                               ),
-                              Icon(Icons.email_outlined),
-                            ],
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                        Container(
-                          width: 300,
-                          height: 30,
+                              onPressed: () => {
+                                userProvider.selecionarImagem(),
+                              },
+                            ),
 
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                amigo?.nascimento ?? "",
-                                style: TextStyle(
-                                  fontFamily: 'Lao Muang Don',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                            Positioned(
+                              bottom: -10,
+                              child: Icon(
+                                Icons.add_circle,
+                                size: 30,
+                                color: Color.fromARGB(255, 29, 64, 26),
                               ),
-                              Icon(Icons.date_range),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                        Container(
-                          width: 300,
-                          height: 30,
-
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "***.***.***-**",
-                                style: TextStyle(
-                                  fontFamily: 'Lao Muang Don',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                        Text(
-                          "CarboCoins:",
-                          style: TextStyle(
-                            fontFamily: 'Lao Muang Don',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          "${amigo?.carboCoins} Cc",
-                          style: TextStyle(
-                            fontFamily: 'Lao Muang Don',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                      ],
+                      ),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30)),
+                  IconButton(
+                    onPressed: () {
+                      amizadeProvider.enviarPedidoAmizade(
+                        userProvider.user!.nome,
+                        userProvider.user!.uid,
+                        widget.uidAmigo,
+                      );
+                      Navigator.pop(context);
+                    },
+                    icon: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 29, 64, 26),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 40,
+                      ),
                     ),
                   ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  IconButton(onPressed: (){
-                    amizadeProvider.enviarPedidoAmizade(userProvider.user!.nome,userProvider.user!.uid, widget.uidAmigo);
-                    Navigator.pop(context);
-                   
-                  }, icon: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 5, 106, 12),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(  Icons.add, color: Colors.white, size: 30,),
-                  )),
                 ],
               ),
             ],
