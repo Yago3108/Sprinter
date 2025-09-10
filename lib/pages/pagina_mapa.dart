@@ -19,13 +19,18 @@ class _PaginaMapaState extends State<PaginaMapa> {
   late MapaProvider _mapaProvider;
    double latitude=0;
   double longitude=0;
-
+   bool clicou=false;
+MapController controller= MapController(
+  initMapWithUserPosition: UserTrackingOption(
+    enableTracking: true,
+  )
+);
  
 
   @override
   void initState() {
     super.initState();
-    _obterLocalizacaoAtual();
+    _inicializarMapa();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     _mapaProvider = Provider.of<MapaProvider>(context, listen: false);
 
@@ -33,37 +38,19 @@ class _PaginaMapaState extends State<PaginaMapa> {
       _mapaProvider.setUid(userProvider.user!.uid);
     }
   }
-    MapController controller = MapController(
-    initMapWithUserPosition: UserTrackingOption(
-      enableTracking: true,
-    ),
-    
-  );
    void iniciarAtividade() async {
     final atividade = context.read<MapaProvider>();
     atividade.iniciarAtividade();
 
-    // escuta localização em tempo real
-    posStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 5, // só atualiza a cada 5 metros
-      ),
-    );
-
-    posStream!.listen((pos) async {
-
-      final geo = GeoPoint(latitude: pos.latitude, longitude: pos.longitude);
-      await controller.currentLocation();
-      await controller.addMarker(geo);
-    });
-  }
-
+    
+    }
+    
   void pararAtividade() {
-    context.read<MapaProvider>().pararAtividade();
+   final ativade= context.watch<MapaProvider>();
+   ativade.pararAtividade();
   }
-
-  Future<void> _obterLocalizacaoAtual() async {
+ Future<void> _inicializarMapa() async {
+    // Verifica permissão
     bool servicoAtivo = await Geolocator.isLocationServiceEnabled();
     if (!servicoAtivo) {
       await Geolocator.openLocationSettings();
@@ -76,19 +63,25 @@ class _PaginaMapaState extends State<PaginaMapa> {
       if (permissao == LocationPermission.deniedForever) return;
     }
 
+    // Pega localização
     Position posicao = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.best),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.best),
     );
 
+    // Cria o controller com initPosition
     setState(() {
-      latitude = posicao.latitude;
-      longitude = posicao.longitude;
+      controller = MapController(
+        initPosition: GeoPoint(
+          latitude: posicao.latitude,
+          longitude: posicao.longitude,
+        ),
+      );
     });
   }
-
   @override
   Widget build(BuildContext context) {
-    bool clicou=true;
+   
+  
     if (latitude == null || longitude == null) {
       return const MaterialApp(
         home: Scaffold(
@@ -114,7 +107,28 @@ class _PaginaMapaState extends State<PaginaMapa> {
                 ),
               ),
               controller: controller,
+           onMapIsReady: (isReady) {
+              
+           Consumer<MapaProvider>(
+                builder: (context, mapa, _) {
+                  if (mapa.rota.length >= 2) {
+                    controller.drawRoad(
+                      mapa.rota.first,   // início da caminhada
+                      mapa.rota.last,    // último ponto atualizado
+                      roadOption: const RoadOption(
+                        roadColor: Color.fromARGB(255, 5, 106, 12),
+                        roadWidth: 8,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              );
+           },
             ),
+            
+          
+            
             Positioned(
               bottom: 30,
               left: 20,
@@ -122,42 +136,47 @@ class _PaginaMapaState extends State<PaginaMapa> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 5, 106, 12),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 20,
                     ),
-                    onPressed: () {
-                   
-                    },
-                    child: clicou==true?IconButton(onPressed: () {
-                          _mapaProvider.iniciarAtividade();
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                     clicou= !clicou;
+                    });
+
+                    if (clicou!=false){ 
+                      _mapaProvider.iniciarAtividade();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Atividade iniciada"),
                           backgroundColor: Color.fromARGB(255, 5, 106, 12),
                         ),
                       );
-                    },
-                      icon: Icon(Icons.play_arrow_sharp,color: Colors.white,)):IconButton(onPressed: () {
-                          _mapaProvider.pararAtividade();
+                    } else {
+                      _mapaProvider.pararAtividade();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Atividade parada"),
                           backgroundColor: Color.fromARGB(255, 5, 106, 12),
                         ),
                       );
-                    },
-                      icon: Icon(Icons.stop,color: Colors.white,))
+                    }
+                  },
+                  child: Icon(
+                    clicou ? Icons.stop : Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 30,
                   ),
-
+                ),
                 ],
               ),
             ),

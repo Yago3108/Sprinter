@@ -19,26 +19,6 @@ class PaginaPerfil extends StatefulWidget {
 }
 
 class PaginaPerfilState extends State<PaginaPerfil> {
-  void compras() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PaginaCompras()),
-    );
-  }
-
-  void mapa() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PaginaMapa()),
-    );
-  }
-
-  void telaInicial() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PaginaInicial()),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

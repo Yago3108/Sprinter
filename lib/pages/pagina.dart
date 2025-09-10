@@ -37,27 +37,23 @@ class _PaginaState extends State<Pagina> {
   initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      carregarFotoPerfil();
     });
   }
 
-  carregarFotoPerfil() {
-    try {
-      final userProvider = context.watch<UserProvider>();
-      final fotoBase64 = userProvider.getFotoPerfil();
-
-      if (fotoBase64 != null && fotoBase64.isNotEmpty) {
-        setState(() {
-          bytes = base64Decode(fotoBase64['fotoPerfil']);
-        });
-      }
-    } catch (e) {
-      print("FALHA AO CARREGAR IMAGEM DE PERFIL: $e");
-    }
-  }
+  
+  
+  
 
   @override
   Widget build(BuildContext context) {
+        final userProvider = context.watch<UserProvider>();
+      final fotoBase64 = userProvider.user?.fotoPerfil;
+
+      if (fotoBase64 != null) {
+        setState(() {
+          bytes = base64Decode(fotoBase64);
+        });
+      }
     return Scaffold(
       appBar: AppBar(
         actionsPadding: EdgeInsets.only(right: 10),

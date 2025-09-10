@@ -44,59 +44,27 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
     amigo1.then((value) => amigo = value);
     final fotoBase64 = amigo?.fotoPerfil;
     Uint8List? bytes;
-
+      if (fotoBase64 != null) {
+        setState(() {
+          bytes = base64Decode(fotoBase64);
+        });
+      }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          leading: BackButton(
+            
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           actionsPadding: EdgeInsets.only(right: 10),
           backgroundColor: Color.fromARGB(255, 5, 106, 12),
           iconTheme: IconThemeData(color: Colors.white),
 
           centerTitle: true,
-          actions: [
-            IconButton(
-              icon: CircleAvatar(
-                backgroundImage: bytes != null
-                    ? MemoryImage(bytes)
-                    : AssetImage("assets/images/perfil_basico.jpg"),
-                radius: 25,
-              ),
-              onPressed: () => {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaPerfil()),
-                ),
-              },
-            ),
-          ],
-        ),
-
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              DrawerHeader(
-                child: Image.asset("assets/images/Sprinter_simples.png"),
-              ),
-              ListTile(
-                leading: Icon(Icons.home, color: Colors.black),
-                title: Text("Pagina Inicial"),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Pagina()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Fazer Logout"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+         
         ),
         body: Center(
           child: ListView(
@@ -229,14 +197,9 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                       ),
                       Positioned(
                         top: -75,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          clipBehavior: Clip.none,
-                          children: [
-                            IconButton(
-                              icon: CircleAvatar(
-                                backgroundImage: bytes != null
-                                    ? MemoryImage(bytes, scale: 75)
+                          child:  CircleAvatar(
+                                backgroundImage: bytes != null && amigo!.fotoPerfil.isNotEmpty
+                                    ? MemoryImage(bytes!, scale: 75)
                                     : AssetImage(
                                         "assets/images/perfil_basico.jpg",
                                       ),
@@ -253,25 +216,11 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                                   ),
                                 ),
                               ),
-                              onPressed: () => {
-                                userProvider.selecionarImagem(),
-                              },
-                            ),
-
-                            Positioned(
-                              bottom: -10,
-                              child: Icon(
-                                Icons.add_circle,
-                                size: 30,
-                                color: Color.fromARGB(255, 29, 64, 26),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(top: 30)),
+                  amizadeProvider.verificarAmigo(widget.uidAmigo)==false?
                   IconButton(
                     onPressed: () {
                       amizadeProvider.enviarPedidoAmizade(
@@ -294,6 +243,12 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                         size: 40,
                       ),
                     ),
+                  ):Text("Seu Amigo",
+                  style:TextStyle(
+                  fontFamily: "League Spartan",
+                  fontSize: 30,
+                  color: Color.fromARGB(255, 59, 80, 48)
+                  ),
                   ),
                 ],
               ),

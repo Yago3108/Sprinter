@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -213,6 +214,12 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                               itemCount: amigos.length,
                               itemBuilder: (context, index) {
                                     Usuario amigo1=amigos[index];
+                                    var fotoBase64=amigo1.fotoPerfil;
+                                    Uint8List? bytes;
+                                    if(fotoBase64!=null){
+                      
+          bytes = base64Decode(fotoBase64);
+                                    }
                                 return amigo1!=null ?Column(
                                   children: [
                                     Padding(padding: EdgeInsetsGeometry.only(top:10)),
@@ -234,9 +241,9 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                       
                                           CircleAvatar(
                                             radius: 12,
-                                            backgroundImage: amigo1.fotoPerfil != String
-                                                ? AssetImage('assets/images/perfil_basico.jpg')
-                                                : AssetImage('assets/images/perfil_basico.jpg'),
+                                            backgroundImage:  bytes != null && amigo1.fotoPerfil.isNotEmpty
+                                                ? MemoryImage(bytes!)
+                                                : AssetImage("assets/images/perfil_basico.jpg"),
                                           ),
                                           Padding(padding: EdgeInsets.only(left: 20)),
                                           Text(amigo1.nome,style: TextStyle(

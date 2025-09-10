@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
 
 class MapaProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? _uid;
-  List<LatLng> _rota = [];
+  List<GeoPoint> _rota = [];
   double _distancia = 0.0;
   Duration _tempo = Duration.zero;
   DateTime? _inicio;
@@ -20,7 +21,7 @@ class MapaProvider extends ChangeNotifier {
     _uid = uid;
   }
 
-  List<LatLng> get rota => _rota;
+  List<GeoPoint> get rota => _rota;
   double get distancia => _distancia;
   Duration get tempo => _tempo;
 
@@ -31,9 +32,14 @@ class MapaProvider extends ChangeNotifier {
     _inicio = DateTime.now();
     _fim = null;
 
-    _stream = Geolocator.getPositionStream().listen((posicao) {
-      final atual = LatLng(posicao.latitude, posicao.longitude);
-
+    _stream = Geolocator.getPositionStream(
+       locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 0, // não ignora nenhum movimento
+      timeLimit: Duration(seconds: 1),
+    ),
+    ).listen((posicao) {
+      final atual = GeoPoint(latitude: posicao.latitude, longitude: posicao.longitude);
       if (_ultimaPosicao != null) {
         _distancia += Geolocator.distanceBetween(
           _ultimaPosicao!.latitude,
@@ -42,7 +48,7 @@ class MapaProvider extends ChangeNotifier {
           atual.longitude,
         );
       }
-
+  
       _rota.add(atual);
       _ultimaPosicao = posicao;
       notifyListeners();

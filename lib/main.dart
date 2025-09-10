@@ -10,7 +10,7 @@ import 'package:myapp/util/produto_provider.dart';
 import 'package:myapp/util/user_provider.dart';
 import 'package:myapp/util/usuario.dart';
 import 'package:provider/provider.dart';
-
+ 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -9,7 +9,9 @@ class AmizadeProvider extends ChangeNotifier {
 
   List<Amizade> get amizades =>_amizades;
   List<PedidoAmizade> get pedidos => _pedidos;
-
+    bool verificarAmigo(String uid) {
+    return _amizades.contains(uid);
+  }
   // Buscar amizades do Firestore
   Future<void> fetchAmizadesFromFirestore(String uid) async {
     final firestore = FirebaseFirestore.instance;
@@ -30,7 +32,6 @@ class AmizadeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
   // Buscar pedidos de amizade do Firestore
   Future<void> fetchPedidosFromFirestore(String uid) async {
     final firestore = FirebaseFirestore.instance;
