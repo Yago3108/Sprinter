@@ -58,7 +58,7 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
     for (int i = 0; i < chavesOrdenadas.length; i++) {
       final chave = chavesOrdenadas[i];
       final dadosDia = Map<String, dynamic>.from(dias[chave] ?? {});
-      // 🔥 Converte metros para km
+    
       final distanciaKm = ((dadosDia['distancia'] ?? 0.0) as num).toDouble() / 1000.0;
 
       dadosGrafico.add(FlSpot(i.toDouble(), distanciaKm));
@@ -89,6 +89,10 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
               );
             },
           ),
+        ),
+        rightTitles: AxisTitles(),
+        topTitles: AxisTitles(
+
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -129,7 +133,7 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
         LineChartBarData(
           spots: dadosGrafico,
           isCurved: true,
-          color: Colors.blue,
+          color: Color.fromARGB(255, 5, 106, 12),
           barWidth: 3,
           dotData: FlDotData(show: true),
           belowBarData: BarAreaData(show: false),
@@ -143,10 +147,13 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
     _setDados();
 
     return AspectRatio(
-      aspectRatio: 1.7,
+      aspectRatio: 2,
       child: dadosGrafico.isEmpty
           ? const Center(child: Text("Sem dados"))
-          : LineChart(getChartData()),
+          : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: LineChart(getChartData()),
+          ),
     );
   }
 }

@@ -248,7 +248,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                         },
                                         child: Container(
                                           width: 400,
-                                          height: 30,
+                                          height: 50,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(30),
                                             color: Colors.white,
@@ -266,27 +266,27 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                                   Padding(    padding: EdgeInsets.only(left: 10), ),
                                               
                                                   CircleAvatar(
-                                                    radius: 12,
+                                                    radius: 18,
                                                     backgroundImage: (bytes != null && amigo1.fotoPerfil.isNotEmpty)
                                                         ? MemoryImage(bytes)
                                                         : AssetImage("assets/images/perfil_basico.jpg"),
                                                   ),
                                                   Padding(padding: EdgeInsets.only(left: 20)),
                                                   Text(amigo1.nome,style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                                                     
                                                                                     fontFamily: 'League Spartan',
                                                     color: Color.fromARGB(255, 5, 106, 12
                                                   ),),),
                                                   Padding(padding: EdgeInsets.only(left: 20)),
                                                   Text('${amigo1.carboCoins.toStringAsFixed(0)} Cc',style: TextStyle(
-                                                    fontSize: 14,
+                                                    fontSize: 15,
                                                                                     fontFamily: 'League Spartan',
                                                     color: Color.fromARGB(255, 5, 106, 12
                                                   ),),),
                                                        Padding(padding: EdgeInsets.only(left: 20)),
                                                   Text(amigo1.email,style: TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: 15,
                                                     fontFamily: 'League Spartan',
                                                     color: Color.fromARGB(255, 5, 106, 12
                                                   ),),),
@@ -366,15 +366,22 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                               color: Colors.white
                             ),),
                           ),
-                          title: Text(item['nome']),
+                          title: Text(item['nome'],style: TextStyle(
+                                  fontSize: 19
+                                ),),
                           subtitle: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
                                 Text(
-                                  "Distância: ${item['distancia'].toStringAsFixed(2)} m"
+                                  "Distância: ${item['distancia'].toStringAsFixed(2)} m",style: TextStyle(
+                                  fontSize: 17
+                                ),
                                 ),
                                 Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                                Text("Tempo: ${item['tempo'].toStringAsFixed(1)} seg",)
+                                Text("Tempo: ${item['tempo'].toStringAsFixed(1)} seg",style: TextStyle(
+                                  fontSize: 17
+                                ),)
                               ],
                             ),
                           ),
