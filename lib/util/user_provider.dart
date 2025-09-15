@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -161,7 +162,7 @@ class UserProvider extends ChangeNotifier {
         carboCoins: (data['carboCoins'] ?? 0).toDouble(),
         carbono: (data['carbono'] ?? 0).toDouble(),
         distancia: (data['distancia'] ?? 0).toDouble(),
-        fotoPerfil: data['Foto_perfil'],
+        fotoPerfil: base64Decode(data['Foto_perfil']),
         amigos: [],
       );
     } catch (e) {
@@ -212,4 +213,5 @@ class UserProvider extends ChangeNotifier {
     await _auth.sendPasswordResetEmail(email: _user!.email);
     notifyListeners();
   }
+  
 }

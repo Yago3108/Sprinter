@@ -9,51 +9,58 @@ class MapaProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? _uid;
-  List<GeoPoint> _rota = [];
+  final List<GeoPoint> _rota = [];
   double _distancia = 0.0;
   Duration _tempo = Duration.zero;
   DateTime? _inicio;
   DateTime? _fim;
   Position? _ultimaPosicao;
   StreamSubscription<Position>? _stream;
-
+    MapController? _controller;
+    void setController(MapController controller) {
+    _controller = controller;
+  }
   void setUid(String uid) {
     _uid = uid;
   }
-
-  List<GeoPoint> get rota => _rota;
-  double get distancia => _distancia;
-  Duration get tempo => _tempo;
+  final MapController controller = MapController(
+    initMapWithUserPosition: UserTrackingOption(enableTracking: false),
+  );
+  StreamSubscription<Position>? _posicaoStream;
 
   void iniciarAtividade() {
-    _rota.clear();
-    _distancia = 0;
-    _tempo = Duration.zero;
-    _inicio = DateTime.now();
-    _fim = null;
+    rota.clear();
 
-    _stream = Geolocator.getPositionStream(
-       locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.best,
-      distanceFilter: 0, // não ignora nenhum movimento
-      timeLimit: Duration(seconds: 1),
-    ),
-    ).listen((posicao) {
-      final atual = GeoPoint(latitude: posicao.latitude, longitude: posicao.longitude);
-      if (_ultimaPosicao != null) {
-        _distancia += Geolocator.distanceBetween(
-          _ultimaPosicao!.latitude,
-          _ultimaPosicao!.longitude,
-          atual.latitude,
-          atual.longitude,
+    _posicaoStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation, // mais preciso
+        distanceFilter: 0, // pega todos os pontos
+      ),
+    ).listen((pos) async {
+      final ponto = GeoPoint(latitude: pos.latitude, longitude: pos.longitude);
+      rota.add(ponto);
+
+      // Atualiza a posição no mapa
+      await controller.moveTo(ponto);
+
+      // Desenha a rota se houver pelo menos 2 pontos
+      if (rota.length >= 2) {
+        await controller.drawRoad(
+          rota.first,
+          rota.last,
+          roadOption: const RoadOption(
+            roadColor: Colors.green,
+            roadWidth: 6,
+          ),
         );
       }
-  
-      _rota.add(atual);
-      _ultimaPosicao = posicao;
+
       notifyListeners();
     });
   }
+  List<GeoPoint> get rota => _rota;
+  double get distancia => _distancia;
+  Duration get tempo => _tempo;
 
   Future<void> pararAtividade() async {
     _fim = DateTime.now();

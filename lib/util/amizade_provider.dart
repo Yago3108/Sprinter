@@ -4,13 +4,15 @@ import 'package:myapp/util/amigo.dart';
 import 'package:myapp/util/pedido.dart';
 
 class AmizadeProvider extends ChangeNotifier {
+  
   final List<Amizade> _amizades = [];
   final List<PedidoAmizade> _pedidos = [];
 
   List<Amizade> get amizades =>_amizades;
   List<PedidoAmizade> get pedidos => _pedidos;
     bool verificarAmigo(String uid) {
-    return _amizades.contains(uid);
+      return _amizades.any((amizade) =>
+      amizade.usuarioId1 == uid || amizade.usuarioId2 == uid);
   }
   // Buscar amizades do Firestore
   Future<void> fetchAmizadesFromFirestore(String uid) async {

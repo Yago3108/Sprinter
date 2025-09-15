@@ -27,28 +27,31 @@ class PaginaPerfilAmizade extends StatefulWidget {
 }
 
 class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
+   Usuario? amigo;
+  Uint8List? fotoBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarAmigo();
+  }
+
+  Future<void> _carregarAmigo() async {
+    final userProvider = context.read<UserProvider>();
+    final usuario = await userProvider.getUsuarioByUid(widget.uidAmigo);
+    if (mounted) {
+      setState(() {
+        amigo = userProvider.usuarioPesquisado;
+          try {
+            fotoBytes = userProvider.usuarioPesquisado?.fotoPerfil!;
+          } catch (_) {
+            fotoBytes = null;
+          }
+      });}}
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     final AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
-    Future<Usuario?> amigo1 = userProvider.getUsuarioByUid(widget.uidAmigo);
-    Usuario? amigo = userProvider.usuarioPesquisado;
-    amigo1.then((value) => amigo = value);
-    if (amigo == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text("Carregando...")),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    amigo1.then((value) => amigo = value);
-    final fotoBase64 = amigo?.fotoPerfil;
-    Uint8List? bytes;
-      if (fotoBase64 != null) {
-        setState(() {
-          bytes = base64Decode(fotoBase64);
-        });
-      }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -198,8 +201,8 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                       Positioned(
                         top: -75,
                           child:  CircleAvatar(
-                                backgroundImage: bytes != null && amigo!.fotoPerfil.isNotEmpty
-                                    ? MemoryImage(bytes!, scale: 75)
+                                backgroundImage: fotoBytes!= null && amigo!.fotoPerfil.isNotEmpty
+                                    ? MemoryImage(fotoBytes!, scale: 75)
                                     : AssetImage(
                                         "assets/images/perfil_basico.jpg",
                                       ),

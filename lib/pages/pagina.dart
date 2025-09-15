@@ -36,8 +36,6 @@ class _PaginaState extends State<Pagina> {
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    });
   }
 
   
