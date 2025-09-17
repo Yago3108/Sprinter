@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_amizades.dart';
 import 'package:myapp/pages/pagina_compras.dart';
@@ -23,8 +21,9 @@ class Pagina extends StatefulWidget {
 }
 
 class _PaginaState extends State<Pagina> {
-  int _paginaAtual = 2;
+  int _paginaAtual = 2; //Página Inicial
 
+  //Lista das páginas
   final List<Widget> _paginas = [
     PaginaAmizades(),
     PaginaCompras(),
@@ -32,35 +31,33 @@ class _PaginaState extends State<Pagina> {
     PaginaMapa(),
     PaginaRendimento(),
   ];
+
   Uint8List? bytes;
+
   @override
   initState() {
     super.initState();
   }
 
-  
-  
-  
-
   @override
   Widget build(BuildContext context) {
-        final userProvider = context.watch<UserProvider>();
-      final fotoBase64 = userProvider.user?.fotoPerfil;
+    final userProvider = context.watch<UserProvider>();
+    final fotoBase64 = userProvider.user?.fotoPerfil;
 
-      if (fotoBase64 != null) {
-        setState(() {
-          bytes = base64Decode(fotoBase64);
-        });
-      }
+    if (fotoBase64 != null) {
+      setState(() {
+        bytes = base64Decode(fotoBase64); //Decodifica a foto de perfil
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         actionsPadding: EdgeInsets.only(right: 10),
         backgroundColor: Color.fromARGB(255, 5, 106, 12),
         iconTheme: IconThemeData(color: Colors.white),
-
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //Foto de perfil
             icon: CircleAvatar(
               backgroundImage: bytes != null
                   ? MemoryImage(bytes!)
@@ -70,6 +67,7 @@ class _PaginaState extends State<Pagina> {
             onPressed: () => {
               Navigator.pushReplacement(
                 context,
+                //Redireciona para tela de perfil
                 MaterialPageRoute(builder: (context) => PaginaPerfil()),
               ),
             },
@@ -81,7 +79,7 @@ class _PaginaState extends State<Pagina> {
         child: ListView(
           children: [
             DrawerHeader(
-              child: Image.asset("assets/images/Sprinter_simples.png"),
+              child: Image.asset("assets/images/Sprinter_simples.png"), //Logo
             ),
             ListTile(
               leading: Icon(Icons.settings, color: Colors.black),
@@ -89,7 +87,7 @@ class _PaginaState extends State<Pagina> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => PaginaConfiguracao()),
+                  MaterialPageRoute(builder: (context) => PaginaConfiguracao()), //Redireciona para página de configurações
                 );
               },
             ),
@@ -99,7 +97,7 @@ class _PaginaState extends State<Pagina> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CriarProdutoPage()),
+                  MaterialPageRoute(builder: (context) => CriarProdutoPage()), //Redireciona para página de configurações
                 );
               },
             ),
@@ -107,31 +105,31 @@ class _PaginaState extends State<Pagina> {
               leading: Icon(Icons.logout),
               title: Text("Fazer Logout"),
               onTap: () {
-                UserProvider userProvider =
-                    Provider.of<UserProvider>(context, listen: false);
-                    userProvider.logout();
+                UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+                userProvider.logout();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => PaginaLogin()),
+                  MaterialPageRoute(builder: (context) => PaginaLogin()), //Redireciona para página de login
                 );
               },
             ),
           ],
         ),
       ),
+
       backgroundColor: Color.fromARGB(255, 240, 240, 240),
       body: _paginas[_paginaAtual],
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
         onTap: (index) {
           setState(() {
-            _paginaAtual = index;
+            _paginaAtual = index; //Muda para página selecionada
           });
         },
         iconSize: 30,
         selectedItemColor: Color.fromARGB(255, 5, 106, 12),
         unselectedItemColor: Color.fromARGB(255, 5, 106, 12),
-        backgroundColor: Color.fromARGB(255, 5, 106, 12),
         showUnselectedLabels: false,
         selectedLabelStyle: TextStyle(
           fontFamily: 'Lao Muang Don',

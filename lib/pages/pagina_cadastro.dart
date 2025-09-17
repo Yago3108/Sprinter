@@ -14,6 +14,7 @@ class PaginaCadastro extends StatefulWidget {
 }
 
 class _PaginaCadastroState extends State<PaginaCadastro> {
+  //Controllers de TextField
   TextEditingController controllerNome = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerCpf = TextEditingController();
@@ -21,6 +22,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   TextEditingController controllerSenha = TextEditingController();
   TextEditingController controllerConfirmarSenha = TextEditingController();
 
+  //Variáveis de erro
   String? erroNome;
   String? erroEmail;
   String? erroCPF;
@@ -28,6 +30,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   String? erroSenha;
   String? erroConfirmarSenha;
 
+  //Variáveis de controle
   bool nomeValido = true;
   bool emailValido = true;
   bool cpfValido = true;
@@ -37,41 +40,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   bool _obscureTextSenha = true;
   bool _obscureTextConfirmarSenha = true;
 
-  List<String> caracteresEspeciais = [
-    "! ",
-    "\"",
-    "#",
-    "\$",
-    "%",
-    "&",
-    "'",
-    "(",
-    ")",
-    "*",
-    "+",
-    ",",
-    "-",
-    ".",
-    "/",
-    ":",
-    ";",
-    "<",
-    "=",
-    ">",
-    "?",
-    "@",
-    "[",
-    "\"",
-    "]",
-    "^",
-    "_",
-    "`",
-    "{",
-    "|",
-    "}",
-    "~",
-  ];
-
+  //Função para validar a data
   bool validarData(String date) {
     try {
       DateFormat format = DateFormat("dd/MM/yyyy");
@@ -87,6 +56,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
+  //Função para selecionar a data com calendário
   Future<void> _selecionarData(BuildContext context) async {
     DateTime? dataSelecionada = await showDatePicker(
       context: context,
@@ -116,8 +86,11 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
+  //Função para verificar as informações do usuário e cadastrar no sistema
   void verificarECadastrar() {
     setState(() {
+
+      //Verificação de Nome
       if (controllerNome.text.isEmpty) {
         nomeValido = false;
         erroNome = "O nome não pode estar vazio";
@@ -126,6 +99,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         erroNome = null;
       }
 
+      //Verificação de Email
       if (controllerEmail.text.isEmpty) {
         emailValido = false;
         erroEmail = "O Email não pode estar vazio";
@@ -137,6 +111,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         erroEmail = null;
       }
 
+      //Verificação de CPF
       if (controllerCpf.text.isEmpty) {
         cpfValido = false;
         erroCPF = "O CPF não pode estar vazio";
@@ -148,6 +123,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         erroCPF = null;
       }
 
+      //Verificação de Data
       if (controllerData.text.isEmpty) {
         dataValida = false;
         erroData = "A data não pode estar vazia";
@@ -162,6 +138,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         erroData = null;
       }
 
+      //Verificação de Senha
       if (controllerSenha.text.isEmpty) {
         senhaValida = false;
         erroSenha = "A senha não pode estar vazia";
@@ -173,6 +150,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         erroSenha = null;
       }
 
+      //Verificação de Confirmar Senha
       if (controllerConfirmarSenha.text.isEmpty) {
         confirmarSenhaValida = false;
         erroConfirmarSenha = "Confirmar senha não pode estar vazio";
@@ -183,14 +161,11 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         confirmarSenhaValida = true;
         erroConfirmarSenha = null;
       }
+
     });
 
-    if (nomeValido &&
-        emailValido &&
-        cpfValido &&
-        dataValida &&
-        senhaValida &&
-        confirmarSenhaValida) {
+    //Se tudo for válido, cadastra o usuário no sistema
+    if (nomeValido && emailValido && cpfValido && dataValida && senhaValida && confirmarSenhaValida) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.registrar(
         nome: controllerNome.text,
@@ -203,23 +178,20 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         contPontos: 0.0,
         foto: 0,
       );
-      login();
-    }
-  }
 
-  void login() {
-    setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PaginaLogin()),
-      );
-      controllerConfirmarSenha.clear();
-      controllerData.clear();
-      controllerEmail.clear();
-      controllerNome.clear();
-      controllerSenha.clear();
-      controllerCpf.clear();
-    });
+      setState(() {
+        //Redireciona para página de Login
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
+
+        //Limpa os campos
+        controllerConfirmarSenha.clear();
+        controllerData.clear();
+        controllerEmail.clear();
+        controllerNome.clear();
+        controllerSenha.clear();
+        controllerCpf.clear();
+      });
+    }
   }
 
   @override
@@ -230,12 +202,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              SizedBox(height: 20),
-              Image.asset("assets/images/Logo_Sprinter.png", height: 75),
+              Padding(padding: EdgeInsets.only(top: 20)),
+              Image.asset("assets/images/Logo_Sprinter.png", height: 75), //Logo
               Padding(padding: EdgeInsets.only(top: 15)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextField( //TextField de Nome
                   controller: controllerNome,
                   decoration: InputDecoration(
                     labelText: ("Nome de usuário"),
@@ -255,9 +227,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               ),
 
               Padding(padding: EdgeInsets.only(top: 40)),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextField( //TextField de Email
                   controller: controllerEmail,
                   decoration: InputDecoration(
                     labelText: ("Email:"),
@@ -277,9 +250,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               ),
 
               Padding(padding: EdgeInsets.only(top: 35)),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextFormField(
+                child: TextField( //TextField de Data
                   controller: controllerData,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -306,10 +280,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ),
               ),
+
               Padding(padding: EdgeInsets.only(top: 35)),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextFormField(
+                child: TextField( //TextField de CPF
                   controller: controllerCpf,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -331,11 +307,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ),
               ),
+
               Padding(padding: EdgeInsets.only(top: 35)),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextField( //TextField de Senha
                   controller: controllerSenha,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -368,9 +345,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               ),
 
               Padding(padding: EdgeInsets.only(top: 35)),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextField( //TextField de Confirmar Senha
                   controller: controllerConfirmarSenha,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -402,8 +380,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ),
               ),
+
               Padding(padding: EdgeInsets.only(top: 40)),
-              TextButton(
+
+              TextButton( //Botão de Cadastro
                 style: TextButton.styleFrom(
                   backgroundColor: Color.fromARGB(1000, 5, 106, 12),
                 ),
@@ -425,8 +405,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () => login(),
+
+              TextButton( //Botão para ir ao Login
+                onPressed: () => Navigator.pop(context),
                 child: Text(
                   "Já tem uma conta? Faça login!",
                   style: TextStyle(

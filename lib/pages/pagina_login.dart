@@ -14,32 +14,23 @@ class PaginaLogin extends StatefulWidget {
 }
 
 class _PaginaLoginState extends State<PaginaLogin> {
+  //Controllers de TextField
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerSenha = TextEditingController();
 
+  //Variáveis de erro
   String? erroEmail;
   String? erroSenha;
 
+  //Variáveis de controle
   bool emailValido = false;
   bool senhaValida = false;
   bool _obscureText = true;
 
-  void cadastro() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PaginaCadastro()),
-    );
-  }
-
-  void esqueceuSenha() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PaginaEsqueceuSenha()),
-    );
-  }
-
+  //Função para verificar os campos de texto e logar no sistema
   void verificarELogar() async {
     setState(() {
+      //Verificação de Email
       if (controllerEmail.text.isEmpty) {
         emailValido = false;
         erroEmail = "Email não pode estar vazio";
@@ -50,7 +41,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
         emailValido = true;
         erroEmail = null;
       }
-
+      
+      //Verificação de Senha
       if (controllerSenha.text.isEmpty) {
         senhaValida = false;
         erroSenha = "Senha não pode estar vazia";
@@ -63,26 +55,18 @@ class _PaginaLoginState extends State<PaginaLogin> {
       }
     });
 
+    //Se for válido, tenta logar no sistema
     if (emailValido && senhaValida) {
       try {
-        UserProvider userProvider = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        );
-        var uid = await userProvider.login(
-          controllerEmail.text,
-          controllerSenha.text,
-        );
+        UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+        var uid = await userProvider.login(controllerEmail.text, controllerSenha.text);
 
         if (uid != null) {
           controllerEmail.clear();
           controllerSenha.clear();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Pagina()),
-          );
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina())); //Redireciona para tela inicial
         }
-      } catch (e) {
+      } catch (e) { //Se der erro
         setState(() {
           erroEmail = "Login inválido";
           erroSenha = "Login inválido";
@@ -99,26 +83,19 @@ class _PaginaLoginState extends State<PaginaLogin> {
           children: [
             Column(
               children: [
-                SizedBox(height: 20),
-                //imagem
-                Container(
+                Padding(padding: EdgeInsets.only(top: 20)),
+                Container( //Logo
                   padding: EdgeInsets.only(top: 40),
                   child: Image.asset(
                     "assets/images/Logo_Sprinter.png",
                     height: 75,
                   ),
                 ), //textfields
-                SizedBox(height: 30),
                 Padding(
-                  padding: EdgeInsetsGeometry.only(
-                    top: 20,
-                    left: 30,
-                    right: 30,
-                  ),
+                  padding: EdgeInsets.only(top: 50, left: 30, right: 30),
                   child: Column(
                     children: [
-                      //Nome
-                      TextField(
+                      TextField( //TextField de Email
                         controller: controllerEmail,
                         decoration: InputDecoration(
                           labelText: ("E-mail / nome de usuário"),
@@ -129,15 +106,17 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             fontSize: 20,
                             fontFamily: 'Lao Muang Don',
                           ),
-                          hintText: "Insira o nome ou Email",
+                          hintText: "Insira o Email",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(35),
                             borderSide: BorderSide(color: Colors.black),
                           ),
                         ),
                       ),
-                      Padding(padding: EdgeInsetsGeometry.only(top: 30)),
-                      TextField(
+
+                      Padding(padding: EdgeInsets.only(top: 30)),
+
+                      TextField( //TextField de Senha
                         controller: controllerSenha,
                         obscureText: _obscureText,
                         decoration: InputDecoration(
@@ -163,7 +142,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           ),
                           hintText: "Insira a senha",
                           counter: TextButton(
-                            onPressed: esqueceuSenha,
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEsqueceuSenha())),
                             child: Container(
                               height: 20,
                               padding: EdgeInsets.only(left: 5),
@@ -177,7 +156,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
                               ),
                             ),
                           ),
-
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(35),
                             borderSide: BorderSide(color: Colors.black),
@@ -187,7 +165,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
                       Padding(padding: EdgeInsets.only(top: 20)),
 
-                      TextButton(
+                      TextButton( //Botão de Login
                         style: TextButton.styleFrom(
                           backgroundColor: Color.fromARGB(1000, 5, 106, 12),
                         ),
@@ -209,10 +187,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
+
+                      Padding(padding: EdgeInsets.only(top: 5)),
 
                       TextButton(
-                        onPressed: cadastro,
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaCadastro())),
                         child: Text(
                           "Não tem uma conta? Cadastre-se",
                           style: TextStyle(
@@ -222,8 +201,10 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Text(
+
+                      Padding(padding: EdgeInsets.only(top: 20)),
+                      
+                      const Text(
                         "Continuar com:",
                         style: TextStyle(
                           color: Colors.black,
@@ -231,26 +212,33 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           fontFamily: 'Lao Muang Don',
                         ),
                       ),
-                      SizedBox(height: 10),
+
+                      Padding(padding: EdgeInsets.only(top: 10)),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          IconButton(
+                          IconButton( //Logo do Google
                             icon: CircleAvatar(
                               backgroundImage: AssetImage(
                                 "assets/images/google.png",
                               ),
                               radius: 30,
                             ),
-                            onPressed: () async {},
+                            onPressed: () {},
                           ),
-                          SizedBox(width: 15),
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/images/facebook.png",
+
+                          Padding(padding: EdgeInsets.only(right: 10)),
+
+                          IconButton( //Logo do Facebook
+                            icon: CircleAvatar(
+                              backgroundImage: AssetImage(
+                                "assets/images/facebook.png",
+                              ),
+                              radius: 30,
                             ),
-                            radius: 30,
+                            onPressed: () {},
                           ),
                         ],
                       ),

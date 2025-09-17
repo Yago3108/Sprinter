@@ -20,6 +20,7 @@ class PaginaInicialState extends State<PaginaInicial> {
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     final dados = userProvider.getDistanciaEPontos();
+
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -27,36 +28,39 @@ class PaginaInicialState extends State<PaginaInicial> {
           child: Column(
             children: [
               Padding(padding: EdgeInsets.only(top: 10)),
+
               Image.asset("assets/images/Logo_Sprinter.png", height: 100),
+
               Padding(padding: EdgeInsets.only(top: 10)),
+
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PaginaRendimento()),
+                    MaterialPageRoute(builder: (context) => PaginaRendimento()), //Redireciona para a página de rendimento
                   );
                 },
                 child: Container(
-                  
                   alignment: Alignment.topCenter,
                   width: 250,
                   height: 150,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(162, 84, 138, 87), 
-        spreadRadius: 5, 
-        blurRadius: 7, 
-        offset: Offset(0, 3), 
-      ),
-    ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(162, 84, 138, 87), 
+                        spreadRadius: 5, 
+                        blurRadius: 7, 
+                        offset: Offset(0, 3), 
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromARGB(255, 230, 230, 230),
                   ),
                   child: Column(
                     children: [
                       Padding(padding: EdgeInsets.only(top: 20)),
+
                       Text(
                         "${dados?['distancia']}km",
                         style: TextStyle(
@@ -65,6 +69,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                           fontFamily: 'Lao Muang Don',
                         ),
                       ),
+
                       Text(
                         "percorridos hoje",
                         style: TextStyle(
@@ -73,17 +78,20 @@ class PaginaInicialState extends State<PaginaInicial> {
                           fontFamily: 'Lao Muang Don',
                         ),
                       ),
+
                       Padding(padding: EdgeInsets.only(top: 20)),
                     ],
                   ),
                 ),
               ),
+
               Padding(padding: EdgeInsetsGeometry.only(top: 45)),
+
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PaginaRendimento()),
+                    MaterialPageRoute(builder: (context) => PaginaRendimento()), //Redireciona para página de rendimento
                   );
                 },
                 child: Container(
@@ -93,13 +101,13 @@ class PaginaInicialState extends State<PaginaInicial> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(162, 84, 138, 87), 
-        spreadRadius: 5, 
-        blurRadius: 7, 
-        offset: Offset(0, 3), 
-      ),
-    ],
+                      BoxShadow(
+                        color: Color.fromARGB(162, 84, 138, 87), 
+                        spreadRadius: 5, 
+                        blurRadius: 7, 
+                        offset: Offset(0, 3), 
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromARGB(255, 230, 230, 230),
                   ),
@@ -113,6 +121,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                           fontFamily: 'Lao Muang Don',
                         ),
                       ),
+
                       Text(
                         "${dados?['pontos']}",
                         style: TextStyle(
@@ -121,6 +130,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                           fontFamily: 'Lao Muang Don',
                         ),
                       ),
+                      
                       Text(
                         "CarboCoins",
                         style: TextStyle(
