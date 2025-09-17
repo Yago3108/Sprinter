@@ -121,7 +121,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                       TextField(
                         controller: controllerEmail,
                         decoration: InputDecoration(
-                          labelText: ("E-mail / nome de usuário"),
+                          labelText: ("E-mail"),
                           errorText: erroEmail,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           floatingLabelStyle: TextStyle(
@@ -129,7 +129,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             fontSize: 20,
                             fontFamily: 'Lao Muang Don',
                           ),
-                          hintText: "Insira o nome ou Email",
+                          hintText: "Insira Email",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(35),
                             borderSide: BorderSide(color: Colors.black),

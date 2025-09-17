@@ -24,16 +24,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
     if (userProvider.user != null) {
       _mapaProvider.setUid(userProvider.user!.uid);
     }
-      _mapaProvider.controller.setMarkerIcon(
-    _mapaProvider.rota.first,
-    MarkerIcon(
-        icon: Icon(
-          Icons.play_arrow_rounded, // ícone que você quiser
-          color: Colors.blue,
-          size: 48,
-        ),
-      ),
-    );
+    
   }
 
   @override

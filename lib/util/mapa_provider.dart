@@ -15,11 +15,7 @@ class MapaProvider extends ChangeNotifier {
   DateTime? _inicio;
   DateTime? _fim;
   Position? _ultimaPosicao;
-  StreamSubscription<Position>? _stream;
-    MapController? _controller;
-    void setController(MapController controller) {
-    _controller = controller;
-  }
+
   void setUid(String uid) {
     _uid = uid;
   }
@@ -30,11 +26,15 @@ class MapaProvider extends ChangeNotifier {
 
   void iniciarAtividade() {
     rota.clear();
+    _distancia = 0.0;
+    _tempo = Duration.zero;
+    _inicio = DateTime.now();
+    _ultimaPosicao = null;
 
     _posicaoStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.bestForNavigation, // mais preciso
-        distanceFilter: 0, // pega todos os pontos
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 0,
       ),
     ).listen((pos) async {
       final ponto = GeoPoint(latitude: pos.latitude, longitude: pos.longitude);
@@ -43,16 +43,32 @@ class MapaProvider extends ChangeNotifier {
       // Atualiza a posição no mapa
       await controller.moveTo(ponto);
 
-      // Desenha a rota se houver pelo menos 2 pontos
-      if (rota.length >= 2) {
-        await controller.drawRoad(
-          rota.first,
-          rota.last,
-          roadOption: const RoadOption(
-            roadColor: Colors.green,
-            roadWidth: 6,
-          ),
+      // Calcula distância acumulada
+      if (_ultimaPosicao != null) {
+        final distanciaLocal = Distance().as(
+          LengthUnit.Meter,
+          LatLng(_ultimaPosicao!.latitude, _ultimaPosicao!.longitude),
+          LatLng(pos.latitude, pos.longitude),
         );
+        _distancia += distanciaLocal;
+      }
+      _ultimaPosicao = pos;
+
+      // Desenha a rota se houver pelo menos 2 pontos e forem diferentes
+      if (rota.length >= 2) {
+        final GeoPoint start = rota[rota.length - 2];
+        final GeoPoint end = rota.last;
+
+        if (start.latitude != end.latitude || start.longitude != end.longitude) {
+          await controller.drawRoad(
+            start,
+            end,
+            roadOption: const RoadOption(
+              roadColor: Colors.green,
+              roadWidth: 6,
+            ),
+          );
+        }
       }
 
       notifyListeners();
@@ -64,7 +80,7 @@ class MapaProvider extends ChangeNotifier {
 
   Future<void> pararAtividade() async {
     _fim = DateTime.now();
-    _stream?.cancel();
+    _posicaoStream?.cancel();
 
     if (_inicio != null && _fim != null) {
       _tempo = _fim!.difference(_inicio!);
