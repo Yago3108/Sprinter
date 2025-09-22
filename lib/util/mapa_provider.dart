@@ -15,8 +15,7 @@ class MapaProvider extends ChangeNotifier {
   DateTime? _inicio;
   DateTime? _fim;
   Position? _ultimaPosicao;
-  double _carbono = 0.0;
-  int _pontos = 0;
+  
 
   void setUid(String uid) {
     _uid = uid;
@@ -102,8 +101,8 @@ class MapaProvider extends ChangeNotifier {
         'tempo': _tempo.inSeconds,
         'inicio': _inicio,
         'fim': _fim,
-        'emissao': _carbono,
-        'pontos': _pontos
+        'emissao': emissao,
+        'pontos': pontos
       });
     }
 
