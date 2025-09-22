@@ -20,25 +20,30 @@ class PaginaProduto extends StatefulWidget {
 
 class PaginaProdutoState extends State<PaginaProduto> {
   
-  int quantidade = 1;
+  int quantidade = 1; //Quantidade inicial
   OverlayEntry? _overlayEntry;
   Uint8List? imagemBytes;
   Produto? produto;
-    Future<Produto?> buscarProdutoPorId(String produtoId) async {
-  try {
-    final doc = await FirebaseFirestore.instance
-        .collection('produtos')
-        .doc(produtoId)
-        .get();
 
-    if (doc.exists) {
-      return Produto.fromFirestore(doc);
+  Future<Produto?> buscarProdutoPorId(String produtoId) async {
+    try {
+      //Busca o produto pelo ID
+      final doc = await FirebaseFirestore.instance
+          .collection('produtos')
+          .doc(produtoId)
+          .get();
+
+      //Retorna o produto caso ele exista
+      if (doc.exists) {
+        return Produto.fromFirestore(doc);
+      }
+    } catch (e) {
+      return null;
     }
-  } catch (e) {
-    print('Erro ao buscar produto: $e');
     return null;
   }
-  return null;}
+
+  //Função para mostrar o Widget de Pesquisa
   void _mostrarPesquisa(BuildContext context) {
     if (_overlayEntry != null) return;
 
@@ -48,8 +53,6 @@ class PaginaProdutoState extends State<PaginaProduto> {
           onTap: _removerPesquisa,
           child: Material(
             color: const Color.fromARGB(85, 0, 0, 0),
-            
-             // fundo semitransparente
             child: Column(
               children: [
                 Container(
@@ -57,22 +60,18 @@ class PaginaProdutoState extends State<PaginaProduto> {
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      // seu widget de pesquisa importado
                       WidgetPesquisa(
                         onProdutoSelecionado: (produtoId) {
-                        // remove overlay
-                        _removerPesquisa();
-          
-                        // navega para a página de produto
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaginaProduto(null, produtoId),
-                          ),
-                        );
-                      }
+                          _removerPesquisa();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PaginaProduto(null, produtoId), //Navega para a tela do produto
+                            ),
+                          );
+                        },
                       ),
-                      const SizedBox(height: 8),
+                      Padding(padding: EdgeInsets.only(top: 8)),
                       Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
@@ -90,7 +89,6 @@ class PaginaProdutoState extends State<PaginaProduto> {
         ),
       ),
     );
-
     Overlay.of(context).insert(_overlayEntry!);
   }
 
@@ -98,6 +96,8 @@ class PaginaProdutoState extends State<PaginaProduto> {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
+
+  //Função para comprar o produto
   void comprar() {
     final userProvider = context.read<UserProvider>();
     final dados = userProvider.user;
@@ -122,34 +122,38 @@ class PaginaProdutoState extends State<PaginaProduto> {
    //   return;
    // }
 
-    // mostrar carrinho
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title:  WidgetCarrinho(null, produto!.id, quantidade,dados!.uid, produto!.preco, produto!.nome),
+        title:  WidgetCarrinho(null, produto!.id, quantidade, dados.uid, produto!.preco, produto!.nome),
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();
-      buscarProdutoPorId(widget.produtoId).then((prod) {
-        setState(() {
-          produto = prod;
-          if (produto != null) {
-            try {
-              imagemBytes = base64Decode(produto!.imagemBase64);
-            } catch (_) {}
+
+    //Chama a função para carregar o produto
+    buscarProdutoPorId(widget.produtoId).then((prod) {
+      setState(() {
+        produto = prod;
+        if (produto != null) {
+          try {
+            imagemBytes = base64Decode(produto!.imagemBase64);
+          } catch (_) {
+            
           }
-        });
-      
+        }
+      });
     });
-   
   }
+
   @override
   Widget build(BuildContext context) {
-     final userProvider = context.watch<UserProvider>();
+    final userProvider = context.watch<UserProvider>();
     final dados = userProvider.user;
+
     return Scaffold(
       appBar: AppBar(
         actionsPadding: EdgeInsets.only(right: 10),
@@ -158,196 +162,207 @@ class PaginaProdutoState extends State<PaginaProduto> {
       ),
       body: Center(
         child: ListView(
-          children:[Column(
-            children: [
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Container(
-                height: 40,
-                width: 300,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(35),
-                  border: Border.all(
-                    color: Color.fromARGB(255, 5, 106, 12),
-                    width: 2.0,
-                  ),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    _mostrarPesquisa(context);
-                  },
-                  icon: Row(
-                    children: [
-                      Text("Ingresso para..."),
-                      Padding(padding: EdgeInsetsGeometry.only(left: 140)),
-                      Icon(Icons.search),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-              if (produto != null) Image.memory(
-                      imagemBytes!,
-                      height: 250,
-                      width: 350,
-                      fit: BoxFit.cover,
-                    ) else SizedBox(
-                      height: 250,
-                      width: 300,
-                      child: Center(child: Icon(Icons.image, size: 50)),
-          
+          children:[
+            Column(
+              children: [
+                Padding(padding: EdgeInsets.only(top: 10)),
+                  Container(
+                    height: 40,
+                    width: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      border: Border.all(
+                        color: Color.fromARGB(255, 5, 106, 12),
+                        width: 2.0,
+                      ),
                     ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-                    Text(produto?.nome ?? 'Carregando...',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: 'League Spartan',
-                    color: Color.fromARGB(255, 29, 64, 26),
-                  )),
-              Padding(padding: EdgeInsetsGeometry.only(top: 5)),
+                    child: IconButton(
+                      onPressed: () {
+                        _mostrarPesquisa(context);
+                      },
+                      icon: Row(
+                        children: [
+                          Text("Ingresso para..."),
+                          Padding(padding: EdgeInsets.only(left: 140)),
+                          Icon(Icons.search),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsetsGeometry.only(top: 15)),
+                  if (produto != null) Image.memory(
+                    imagemBytes!,
+                    height: 250,
+                    width: 350,
+                    fit: BoxFit.cover,
+                  ) else SizedBox(
+                    height: 250,
+                    width: 300,
+                    child: Center(child: Icon(Icons.image, size: 50)),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 15)),
+                  Text(produto?.nome ?? 'Carregando...',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontFamily: 'League Spartan',
+                      color: Color.fromARGB(255, 29, 64, 26),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5)),
                     Row(
                       spacing: 0,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text(" ${produto?.preco.toStringAsFixed(0) ?? ''} ",
-                                        style: TextStyle(
-                        fontSize: 50,
-                        fontFamily: 'Medula One',
-                        color: Color.fromARGB(255, 29, 64, 26),
-                                        )),
+                        Text("${produto?.preco.toStringAsFixed(0) ?? ''} ",
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontFamily: 'Medula One',
+                            color: Color.fromARGB(255, 29, 64, 26),
+                          ),
+                        ),
                         Text(" Cc",
-                        style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'League Spartan',
-                        color: Color.fromARGB(255, 29, 64, 26),
-                                        )),
+                          style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'League Spartan',
+                          color: Color.fromARGB(255, 29, 64, 26),
+                          ),
+                        ),
                       ],
                     ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(35),
-                       color: Color.fromARGB(255, 168, 168, 168),
-                ),
-                width: 330,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(padding:  EdgeInsetsGeometry.only(left: 10)),
-                    Text("Quantidade: ",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'League Spartan',
-                      color: Color.fromARGB(255, 29, 64, 26),
-                    ),),
-                   Padding(padding: EdgeInsetsGeometry.only(left: 5)),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                               quantidade--;
-                        if (quantidade < 1) quantidade = 1;
-                        });
-                      },
-                      icon: Icon(Icons.remove,
-                      size: 30,
-                      color: Color.fromARGB(255, 29, 64, 26),
+                    Padding(padding: EdgeInsetsGeometry.only(top: 15)),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(35),
+                        color: Color.fromARGB(255, 168, 168, 168),
                       ),
-                    ),
-                    Text(quantidade.toString(),
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'League Spartan',
-                      color: Color.fromARGB(255, 29, 64, 26),)),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                             quantidade++;
-                        });
-                      },
-                      icon: Icon(Icons.add,
-                      size: 30,
-                      color: Color.fromARGB(255, 29, 64, 26),
-                      ),),
-                   
+                      width: 330,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(padding:  EdgeInsets.only(left: 10)),
+                          Text("Quantidade: ",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontFamily: 'League Spartan',
+                              color: Color.fromARGB(255, 29, 64, 26),
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(left: 5)),
+                          IconButton( 
+                            onPressed: () {
+                              setState(() {
+                                quantidade--;
+                                if (quantidade < 1) quantidade = 1;
+                              });
+                            },
+                            icon: Icon(Icons.remove,
+                            size: 30,
+                            color: Color.fromARGB(255, 29, 64, 26),
+                            ),
+                          ),
+                          Text(quantidade.toString(),
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontFamily: 'League Spartan',
+                              color: Color.fromARGB(255, 29, 64, 26)
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                quantidade++;
+                              });
+                            },
+                            icon: Icon(Icons.add,
+                            size: 30,
+                            color: Color.fromARGB(255, 29, 64, 26),
+                            ),
+                          ),
                   ],
                 ),
               ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 15)),
+              Padding(padding: EdgeInsets.only(top: 15)),
               TextButton(
                 onPressed: (){
                   comprar();
-              }, child: Container(
-                alignment: Alignment.center,
-                width: 300,
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(35),
-                  color: Color.fromARGB(255, 5, 106, 12),
+                }, 
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 300,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(35),
+                    color: Color.fromARGB(255, 5, 106, 12),
+                  ),
+                  child: Text("COMPRAR",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontFamily: 'Lao Muang Don',
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-                child: Text("COMPRAR",style: TextStyle(
-                  fontSize: 25,
-                  fontFamily: 'Lao Muang Don',
-                  color: Colors.white,
-                ),),
-              )),
-              Padding(padding:  EdgeInsetsGeometry.only(top: 15)),
+              ),
+              Padding(padding:  EdgeInsets.only(top: 15)),
               Text("Descrição:",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'League Spartan',
-                    color: Color.fromARGB(255, 29, 64, 26),
-                  )),
+                style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: 'League Spartan',
+                  color: Color.fromARGB(255, 29, 64, 26),
+                ),
+              ),
+              Container(
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 5, 106, 12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(top: 5)),
+              Text(produto?.descricao ?? 'Carregando...',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'League Spartan',
+                  color: Color.fromARGB(255, 29, 64, 26),
+                ),
+              ),
+              Padding(padding:  EdgeInsets.only(top: 15)),
+              Text("Outros produtos:",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: 'League Spartan',
+                  color: Color.fromARGB(255, 29, 64, 26),
+                ),
+              ),
               Container(
                 height:5,
                 width: 100,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 5, 106, 12),
                   borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(top: 5)),
+              SizedBox(
+                height: 380,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
+                    ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
+                    ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
+                  ],
                 ),
               ),
               Padding(padding: EdgeInsetsGeometry.only(top: 5)),
-                    Text(produto?.descricao ?? 'Carregando...',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'League Spartan',
-                    color: Color.fromARGB(255, 29, 64, 26),
-                  )),
-                Padding(padding:  EdgeInsetsGeometry.only(top: 15)),
-              Text("Outros produtos:",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'League Spartan',
-                    color: Color.fromARGB(255, 29, 64, 26),
-                    
-                  )),
-              Container(
-                height:5,
-                width: 100,
-                decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 5, 106, 12),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-                  Padding(padding: EdgeInsetsGeometry.only(top: 5)),
-                SizedBox(
-                  height: 380,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                    ],
-                  ),
-                ),
-                 Padding(padding: EdgeInsetsGeometry.only(top: 5)),
             ],
           ),
-          ] ,
+          ],
         ),
       ),
     );
   }
-
 }

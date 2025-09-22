@@ -1,5 +1,4 @@
 import 'dart:convert';
-//import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -18,8 +17,9 @@ class PaginaCompras extends StatefulWidget {
 }
 
 class PaginaComprasState extends State<PaginaCompras> {
-  OverlayEntry? _overlayEntry;
+  OverlayEntry? _overlayEntry; //Sobreposição do Widget de Pesquisa
 
+  //Função do Widget de Pesquisa
   void _mostrarPesquisa(BuildContext context) {
     if (_overlayEntry != null) return;
 
@@ -29,8 +29,6 @@ class PaginaComprasState extends State<PaginaCompras> {
           onTap: _removerPesquisa,
           child: Material(
             color: const Color.fromARGB(85, 0, 0, 0),
-            
-             // fundo semitransparente
             child: Column(
               children: [
                 Container(
@@ -38,22 +36,17 @@ class PaginaComprasState extends State<PaginaCompras> {
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      // seu widget de pesquisa importado
                       WidgetPesquisa(
                         onProdutoSelecionado: (produtoId) {
-                        // remove overlay
                         _removerPesquisa();
-          
-                        // navega para a página de produto
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PaginaProduto(null, produtoId),
-                          ),
-                        );
-                      }
+                            builder: (_) => PaginaProduto(null, produtoId), //Navega para a página de produto
+                          ));
+                        }
                       ),
-                      const SizedBox(height: 8),
+                      Padding(padding: EdgeInsets.only(top: 8)),
                       Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
@@ -64,16 +57,15 @@ class PaginaComprasState extends State<PaginaCompras> {
                     ],
                   ),
                 ),
-         
               ],
             ),
           ),
         ),
       ),
     );
-
     Overlay.of(context).insert(_overlayEntry!);
   }
+
   void _removerPesquisa() {
     _overlayEntry?.remove();
     _overlayEntry = null;
@@ -106,7 +98,7 @@ class PaginaComprasState extends State<PaginaCompras> {
                     icon: Row(
                       children: [
                         Text("Ingresso para..."),
-                        Padding(padding: EdgeInsetsGeometry.only(left: 140)),
+                        Padding(padding: EdgeInsets.only(left: 140)),
                         Icon(Icons.search),
                       ],
                     ),
@@ -121,9 +113,11 @@ class PaginaComprasState extends State<PaginaCompras> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(35),
                   ),
-                  child: Column(children: [
-                  ],
-                ),
+                  child: Column(
+                    children: [
+                    
+                    ],
+                  ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 const Text("mais vendidos"),
