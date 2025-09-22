@@ -15,6 +15,8 @@ class MapaProvider extends ChangeNotifier {
   DateTime? _inicio;
   DateTime? _fim;
   Position? _ultimaPosicao;
+  double _carbono = 0.0;
+  int _pontos = 0;
 
   void setUid(String uid) {
     _uid = uid;
@@ -86,6 +88,12 @@ class MapaProvider extends ChangeNotifier {
       _tempo = _fim!.difference(_inicio!);
     }
 
+    double fatorEmissao = 1.5;
+
+    double emissao = _tempo.inHours*fatorEmissao*(_distancia/1000);
+    
+    int pontos = emissao.floor();
+
     if (_uid != null) {
       await _firestore.collection('usuarios').doc(_uid).collection("atividades").add({
         'rota': _rota.map((ponto) => {'latitude': ponto.latitude, 'longitude': ponto.longitude}).toList(),
@@ -94,6 +102,8 @@ class MapaProvider extends ChangeNotifier {
         'tempo': _tempo.inSeconds,
         'inicio': _inicio,
         'fim': _fim,
+        'emissao': _carbono,
+        'pontos': _pontos
       });
     }
 
