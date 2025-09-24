@@ -14,18 +14,22 @@ class CriarProdutoPage extends StatefulWidget {
 
 class _CriarProdutoPageState extends State<CriarProdutoPage> {
   final _formKey = GlobalKey<FormState>();
+
+  //Controllers dos TextFields
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
   final TextEditingController _precoController = TextEditingController();
   final TextEditingController _tipoController = TextEditingController();
   final TextEditingController _quantidadeController = TextEditingController();
 
-  File? _imagemSelecionada;
+  File? _imagemSelecionada; //Arquivo da Imagem
   bool _carregando = false;
 
+  //Função para selecionar a imagem
   Future<void> _selecionarImagem() async {
     final picker = ImagePicker();
     final XFile? imagem = await picker.pickImage(source: ImageSource.gallery);
+
     if (imagem != null) {
       setState(() {
         _imagemSelecionada = File(imagem.path);
@@ -33,6 +37,7 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
     }
   }
 
+  //Função para salvar o produto
   Future<void> _salvarProduto() async {
     if (!_formKey.currentState!.validate() || _imagemSelecionada == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,7 +120,7 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
                 validator: (value) =>
                     value!.isEmpty ? 'Informe a quantidade' : null,
               ),
-              const SizedBox(height: 16),
+              Padding(padding: EdgeInsets.only(top: 16)),
               GestureDetector(
                 onTap: _selecionarImagem,
                 child: _imagemSelecionada == null
@@ -126,7 +131,7 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
                       )
                     : Image.file(_imagemSelecionada!, height: 150),
               ),
-              const SizedBox(height: 20),
+              Padding(padding: EdgeInsets.only(top: 20)),
               _carregando
                   ? const CircularProgressIndicator()
                   : ElevatedButton(

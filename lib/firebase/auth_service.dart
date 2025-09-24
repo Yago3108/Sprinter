@@ -32,7 +32,6 @@ class AuthService {
 
       return user;
     } catch (e) {
-      print("Erro ao registrar: $e");
       return null;
     }
   }

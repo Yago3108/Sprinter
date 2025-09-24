@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/pages/pagina.dart';
 import 'package:myapp/pages/pagina_perfil.dart';
 import 'package:myapp/util/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,39 +14,38 @@ class PaginaEsqueceuSenha extends StatefulWidget {
 }
 
 class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
-  bool emailValido = true;
+  bool emailValido = true; //Variável de controle
 
-  String? erroEmail;
+  String? erroEmail; //Variável de erro
 
-  final email = FirebaseAuth.instance.currentUser?.email;
+  final email = FirebaseAuth.instance.currentUser?.email; //Email do usuário
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController emailController = TextEditingController(); //Controller do TextField
 
+  //Função para validar o email
   Future<void> validarEmail() async {
-    if (emailController.text.isEmpty) {
-      setState(() {
+    setState(() {
+      if (emailController.text.isEmpty) {
         emailValido = false;
         erroEmail = "Email não pode estar vazio";
-      });
-    } else if (emailController.text != email) {
-      setState(() {
+      } else if (emailController.text != email) {
         emailValido = false;
         erroEmail = "Email inválido";
-      });
-    } else {
-      emailValido = true;
-      erroEmail = null;
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: emailController.text,
-      );
+      } else {
+        emailValido = true;
+        erroEmail = null;
+      }
+    });
+
+    if(emailValido) {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    emailController.text = email ?? "";
+    emailController.text = email ?? ""; //Inicializa o TextField
   }
 
   @override
@@ -95,7 +93,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextField(
-                
                 decoration: InputDecoration(
                   labelText: ("Digite seu e-mail"),
                   errorText: erroEmail,
@@ -118,10 +115,13 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                   color: Color.fromARGB(255, 5, 106, 12),
                   borderRadius: BorderRadius.circular(35)
                 ),
-                child: Text("Receber Link de Recuperação",style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "League Spartan",
-                ),)),
+                child: Text("Receber Link de Recuperação",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "League Spartan",
+                  ),
+                ),
+              ),
             ),
             Padding(padding: EdgeInsets.only(top: 10)),
             GestureDetector(

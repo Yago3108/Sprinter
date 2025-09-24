@@ -1,18 +1,9 @@
-import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:myapp/pages/pagina.dart';
-import 'package:myapp/pages/pagina_perfil.dart';
-import 'package:myapp/util/amigo.dart';
 import 'package:myapp/util/amizade_provider.dart';
 import 'package:myapp/util/user_provider.dart';
 import 'package:myapp/util/usuario.dart';
 import 'package:provider/provider.dart';
-import 'pagina_tela_inicial.dart';
-import 'pagina_compras.dart';
-import 'pagina_mapa.dart';
 
 class PaginaPerfilAmizade extends StatefulWidget {
   final String uidAmigo;
@@ -27,7 +18,7 @@ class PaginaPerfilAmizade extends StatefulWidget {
 }
 
 class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
-   Usuario? amigo;
+  Usuario? amigo;
   Uint8List? fotoBytes;
 
   @override
@@ -39,6 +30,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
   Future<void> _carregarAmigo() async {
     final userProvider = context.read<UserProvider>();
     final usuario = await userProvider.getUsuarioByUid(widget.uidAmigo);
+    
     if (mounted) {
       setState(() {
         amigo = userProvider.usuarioPesquisado;
@@ -47,7 +39,10 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
           } catch (_) {
             fotoBytes = null;
           }
-      });}}
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -57,7 +52,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
       home: Scaffold(
         appBar: AppBar(
           leading: BackButton(
-            
             onPressed: () {
               Navigator.pop(context);
             },
@@ -65,9 +59,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
           actionsPadding: EdgeInsets.only(right: 10),
           backgroundColor: Color.fromARGB(255, 5, 106, 12),
           iconTheme: IconThemeData(color: Colors.white),
-
           centerTitle: true,
-         
         ),
         body: Center(
           child: ListView(
@@ -76,7 +68,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                 children: [
                   Image(image: AssetImage("assets/images/Logo_Sprinter.png")),
                   Padding(padding: EdgeInsets.only(top: 70)),
-
                   Stack(
                     alignment: Alignment.topCenter,
                     clipBehavior: Clip.none,
@@ -103,7 +94,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                             Container(
                               width: 300,
                               height: 50,
-
                               decoration: BoxDecoration(
                                 border: BoxBorder.all(
                                   color: Colors.black,
@@ -154,7 +144,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                             Container(
                               width: 300,
                               height: 50,
-
                               decoration: BoxDecoration(
                                 border: BoxBorder.all(
                                   color: Colors.black,
@@ -170,7 +159,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                                     "${amigo?.carbono} kg CO2",
                                     style: TextStyle(
                                       fontFamily: 'League Spartan',
-
                                       fontSize: 15,
                                     ),
                                   ),
@@ -182,7 +170,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               "CarboCoins:",
                               style: TextStyle(
                                 fontFamily: 'League Spartan',
-
                                 fontSize: 20,
                               ),
                             ),
@@ -190,7 +177,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               "${amigo?.carboCoins.toStringAsFixed(0)} Cc",
                               style: TextStyle(
                                 fontFamily: 'League Spartan',
-
                                 fontSize: 40,
                               ),
                             ),
@@ -214,7 +200,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                                     border: BoxBorder.all(
                                       color: Color.fromARGB(255, 29, 64, 26),
                                     ),
-
                                     borderRadius: BorderRadius.circular(75),
                                   ),
                                 ),
@@ -223,7 +208,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(top: 30)),
-                  amizadeProvider.verificarAmigo(widget.uidAmigo)==false?
+                  amizadeProvider.verificarAmigo(widget.uidAmigo) == false ?
                   IconButton(
                     onPressed: () {
                       amizadeProvider.enviarPedidoAmizade(
@@ -246,13 +231,13 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                         size: 40,
                       ),
                     ),
-                  ):Text("Seu Amigo",
-                  style:TextStyle(
-                  fontFamily: "League Spartan",
-                  fontSize: 30,
-                  color: Color.fromARGB(255, 59, 80, 48)
-                  ),
-                  ),
+                  ) : Text("Seu Amigo",
+                    style:TextStyle(
+                    fontFamily: "League Spartan",
+                    fontSize: 30,
+                    color: Color.fromARGB(255, 59, 80, 48)
+                      ),
+                    ),
                 ],
               ),
             ],

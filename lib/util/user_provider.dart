@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/util/usuario.dart';
 
@@ -70,19 +67,15 @@ class UserProvider extends ChangeNotifier {
   Future<void> selecionarImagem() async {
     final ImagePicker _picker = ImagePicker();
     try {
-      // 1. Seleciona a imagem da galeria
       final XFile? imagem = await _picker.pickImage(
         source: ImageSource.gallery,
       );
-      if (imagem == null) return; // Usuário cancelou
+      if (imagem == null) return;
 
-      // 2. Converte para bytes
       final bytes = await imagem.readAsBytes();
 
-      // 3. Converte para Base64
       final base64Image = base64Encode(bytes);
 
-      // 4. Atualiza no Firestore
       if (_user != null) {
         _user!.fotoPerfil = base64Image;
         await _firestore.collection('usuarios').doc(_user!.uid).update({
@@ -91,12 +84,8 @@ class UserProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Erro ao atualizar foto de perfil: $e");
+      return;
     }
-  }
-
-  Future<void> continuarComGoogle() async {
-    notifyListeners();
   }
 
   Future<void> carregarUsuario(String uid) async {
