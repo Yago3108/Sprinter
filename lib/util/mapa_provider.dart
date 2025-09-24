@@ -4,6 +4,8 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
+import 'package:myapp/util/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class MapaProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -79,7 +81,7 @@ class MapaProvider extends ChangeNotifier {
   double get distancia => _distancia;
   Duration get tempo => _tempo;
 
-  Future<void> pararAtividade() async {
+  Future<void> pararAtividade(BuildContext context) async {
     _fim = DateTime.now();
     _posicaoStream?.cancel();
 
@@ -89,9 +91,14 @@ class MapaProvider extends ChangeNotifier {
 
     double fatorEmissao = 1.5;
 
-    double emissao = _tempo.inHours*fatorEmissao*(_distancia/1000);
+    double emissao = _tempo.inSeconds*fatorEmissao*(_distancia/1000);
     
-    int pontos = emissao.floor();
+    int pontos = emissao.ceil();
+
+    print("Emissao $emissao, Pontos $pontos");
+
+    final userProvider = Provider.of<UserProvider>(context,listen: false);
+    userProvider.atualizarCC(pontos, emissao, distancia/1000);
 
     if (_uid != null) {
       await _firestore.collection('usuarios').doc(_uid).collection("atividades").add({

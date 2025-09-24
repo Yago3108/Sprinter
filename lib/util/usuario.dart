@@ -5,9 +5,9 @@ final String uid;
   final String email;
   final String cpf;
   final String nascimento;
-  final double carboCoins;
-  final double carbono;
-  final double distancia;
+  int carboCoins;
+  double carbono;
+  double distancia;
   dynamic fotoPerfil;
 
   Usuario({
@@ -31,7 +31,7 @@ final String uid;
       email: map['email'],
       cpf: map['cpf'],
       nascimento: map['nascimento'],
-      carboCoins: (map['carboCoins'] ?? 0).toDouble(),
+      carboCoins: (map['carboCoins'] ?? 0),
       carbono: (map['carbono'] ?? 0).toDouble(),
       distancia: (map['distancia'] ?? 0).toDouble(),
       fotoPerfil: map['Foto_perfil'],

@@ -32,7 +32,7 @@ class UserProvider extends ChangeNotifier {
     required String senha,
     required String cpf,
     required String nascimento,
-    double contPontos = 0,
+    int contPontos = 0,
     double contCarbono = 0,
     double distancia = 0,
     dynamic foto = "",
@@ -199,7 +199,13 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
      
-    
+    void atualizarCC(int pontos, double emissao, double distancia){
+      Usuario user = _user!;  
+      user.distancia = distancia;
+      user.carboCoins = pontos;
+      user.carbono = emissao;
+      atualizarUsuario(user);
+    }
    
   
    

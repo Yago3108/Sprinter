@@ -81,7 +81,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
                         ),
                       );
                     } else {
-                      mapa.pararAtividade();
+                      mapa.pararAtividade(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Atividade parada"),

@@ -200,7 +200,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         nascimento: controllerData.text,
         distancia: 0.0,
         contCarbono: 0.0,
-        contPontos: 0.0,
+        contPontos: 0,
         foto: 0,
       );
       login();
