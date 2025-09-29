@@ -206,8 +206,7 @@ class UserProvider extends ChangeNotifier {
       user.carbono = emissao;
       atualizarUsuario(user);
     }
-   
-  
+    
    
   Future<void> logout() async {
     await _auth.signOut();

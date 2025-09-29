@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myapp/util/user_provider.dart';
 import 'package:myapp/util/usuario.dart';
+import 'package:provider/provider.dart';
 import '../util/produto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -109,14 +111,5 @@ class ProdutoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removerCarboCoins(Usuario user, BuildContext context, double valor) {
-    if (user.carboCoins >= valor) {
-      user.carboCoins -= valor.toInt();
-      notifyListeners();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Saldo insuficiente!")),
-      );
-    }
-  }
+  
 }

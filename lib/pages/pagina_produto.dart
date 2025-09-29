@@ -121,8 +121,8 @@ class PaginaProdutoState extends State<PaginaProduto> {
         ),
       );
       return;
-    }
-    showDialog(
+    } else{
+      showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: WidgetCarrinho(
@@ -135,7 +135,9 @@ class PaginaProdutoState extends State<PaginaProduto> {
         ),
       ),
     );
-  }
+    }
+    
+  
 
   @override
   void initState() {
@@ -155,7 +157,7 @@ class PaginaProdutoState extends State<PaginaProduto> {
     });
 
   }
-
+}
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();

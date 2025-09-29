@@ -38,7 +38,7 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
   }
 
   Comprar(int quantidade, double preco, String produtoid, String userid) {
-    // Lógica de compra aqui
+    
     print("Compra realizada: $quantidade x $nome por \$$preco cada.");
     
   }
