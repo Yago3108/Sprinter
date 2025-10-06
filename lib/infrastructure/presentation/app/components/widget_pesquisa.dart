@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_produto.dart';
 
 class WidgetPesquisa extends StatefulWidget {
   final void Function(String produtoId) onProdutoSelecionado;

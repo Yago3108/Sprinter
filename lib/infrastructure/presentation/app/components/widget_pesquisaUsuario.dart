@@ -84,7 +84,7 @@ class WidgetPesquisaUsuarioState extends State<WidgetPesquisaUsuario> {
   }
   
     void _removerPesquisa() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
 }

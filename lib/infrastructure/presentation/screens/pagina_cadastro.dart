@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
+import 'package:myapp/modules/usuario/usuario_usecases.dart';
 import 'package:provider/provider.dart';
 import 'pagina_login.dart';
 import 'package:intl/intl.dart';
@@ -17,35 +18,21 @@ class PaginaCadastro extends StatefulWidget {
 class _PaginaCadastroState extends State<PaginaCadastro> {
   // controllers
   TextEditingController controllerNome = TextEditingController();
-  TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerCpf = TextEditingController();
   TextEditingController controllerData = TextEditingController();
+  TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerSenha = TextEditingController();
   TextEditingController controllerConfirmarSenha = TextEditingController();
 
   // variáveis de erro
   String? erroNome;
-  String? erroEmail;
   String? erroCPF;
   String? erroData;
+  String? erroEmail;
   String? erroSenha;
   String? erroConfirmarSenha;
 
-  // função para validar a data
-  bool validarData(String date) {
-    try {
-      DateFormat format = DateFormat("dd/MM/yyyy");
-      DateTime data = format.parseStrict(date);
-
-      final agora = DateTime.now();
-      if (data.isAfter(agora)) return false;
-      if (data.year < 1900) return false;
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
+  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
 
   // DatePicker para selecionar a data
   Future<void> _selecionarData(BuildContext context) async {
@@ -80,53 +67,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   // função para verificações e cadastrar o usuário no banco de dados
   void verificarECadastrar() {
     setState(() {
-      if (controllerNome.text.isEmpty) {
-        erroNome = "O nome não pode estar vazio";
-      } else {
-        erroNome = null;
-      }
-
-      if (controllerEmail.text.isEmpty) {
-        erroEmail = "O Email não pode estar vazio";
-      } else if (!controllerEmail.text.contains("@")) {
-        erroEmail = "O Email precisa ter @";
-      } else {
-        erroEmail = null;
-      }
-
-      if (controllerCpf.text.isEmpty) {
-        erroCPF = "O CPF não pode estar vazio";
-      } else if (!CPFValidator.isValid(controllerCpf.text)) {
-        erroCPF = "CPF inválido";
-      } else {
-        erroCPF = null;
-      }
-
-      if (controllerData.text.isEmpty) {
-        erroData = "A data não pode estar vazia";
-      } else if (controllerData.text.length != 10) {
-        erroData = "A data precisa conter 8 dígitos";
-      } else if (!validarData(controllerData.text)) {
-        erroData = "Data inválida";
-      } else {
-        erroData = null;
-      }
-
-      if (controllerSenha.text.isEmpty) {
-        erroSenha = "A senha não pode estar vazia";
-      } else if (controllerSenha.text.length < 8) {
-        erroSenha = "A senha precisa ter, pelo menos, 8 dígitos";
-      } else {
-        erroSenha = null;
-      }
-
-      if (controllerConfirmarSenha.text.isEmpty) {
-        erroConfirmarSenha = "Confirmar senha não pode estar vazio";
-      } else if (controllerConfirmarSenha.text != controllerSenha.text) {
-        erroConfirmarSenha = "Senhas não correspondentes";
-      } else {
-        erroConfirmarSenha = null;
-      }
+      erroNome = usuarioUseCases.validarNome(controllerNome.text);
+      erroCPF = usuarioUseCases.validarCPF(controllerCpf.text);
+      erroData = usuarioUseCases.validarData(controllerData.text);
+      erroEmail = usuarioUseCases.validarEmail(controllerEmail.text);
+      erroSenha = usuarioUseCases.validarSenha(controllerSenha.text);
+      erroConfirmarSenha = usuarioUseCases.validarConfirmarSenha(controllerSenha.text, controllerConfirmarSenha.text);
     });
 
     if (erroNome == null &&
