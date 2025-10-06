@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_produto.dart';
-import 'package:myapp/util/usuario.dart';
+import 'package:myapp/entities/usuario.dart';
 
 class WidgetPesquisaUsuario extends StatefulWidget {
   final void Function(String produtoId) onProdutoSelecionado;

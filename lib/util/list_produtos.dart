@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/util/produto.dart';
-import 'package:myapp/util/produto_provider.dart';
+import 'package:myapp/entities/produto.dart';
+import 'package:myapp/providers/produto_provider.dart';
 import 'package:provider/provider.dart';
 import '../util//modelo_produto.dart';
 

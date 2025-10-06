@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myapp/util/user_provider.dart';
-import 'package:myapp/util/usuario.dart';
+import 'package:myapp/providers/user_provider.dart';
+import 'package:myapp/entities/usuario.dart';
 import 'package:provider/provider.dart';
-import '../util/produto.dart';
+import '../entities/produto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

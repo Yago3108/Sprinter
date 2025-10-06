@@ -1,4 +1,7 @@
+// model de pedido de amizade
 class PedidoAmizade {
+
+  // variáveis
   final String id;
   final String remetenteId;
   final String nomeRemetente;
@@ -6,6 +9,7 @@ class PedidoAmizade {
   final String status;
   final DateTime? dataCriacao;
 
+  // construtor
   PedidoAmizade({
     required this.id,
     required this.remetenteId,

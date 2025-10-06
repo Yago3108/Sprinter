@@ -1,18 +1,9 @@
-import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:myapp/pages/pagina.dart';
-import 'package:myapp/pages/pagina_perfil.dart';
-import 'package:myapp/util/amigo.dart';
-import 'package:myapp/util/amizade_provider.dart';
-import 'package:myapp/util/user_provider.dart';
-import 'package:myapp/util/usuario.dart';
+import 'package:myapp/providers/amizade_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
+import 'package:myapp/entities/usuario.dart';
 import 'package:provider/provider.dart';
-import 'pagina_tela_inicial.dart';
-import 'pagina_compras.dart';
-import 'pagina_mapa.dart';
 
 class PaginaPerfilAmizade extends StatefulWidget {
   final String uidAmigo;

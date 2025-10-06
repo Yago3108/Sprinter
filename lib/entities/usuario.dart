@@ -1,6 +1,9 @@
- class Usuario {
-final List<Usuario> amigos; 
-final String uid;
+// model de usuário
+class Usuario {
+
+  // variáveis
+  final List<Usuario> amigos; 
+  final String uid;
   final String nome;
   final String email;
   final String cpf;
@@ -10,6 +13,7 @@ final String uid;
   double distancia;
   dynamic fotoPerfil;
 
+  // construtor
   Usuario({
     required this.amigos,
     required this.uid,
@@ -23,6 +27,7 @@ final String uid;
     this.fotoPerfil,
   });
 
+  // transforma map em usuário
   factory Usuario.fromMap(Map<String, dynamic> map) {
     return Usuario(
       amigos: [],
@@ -38,6 +43,7 @@ final String uid;
     );
   }
 
+  // transforma usuário em map
   Map<String, dynamic> toMap() {
     return {
       'amigos': amigos,

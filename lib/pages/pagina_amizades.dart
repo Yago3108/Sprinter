@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_perfil_amizade.dart';
-import 'package:myapp/util/amigo.dart';
-import 'package:myapp/util/amizade_provider.dart';
-import 'package:myapp/util/estatistica_provider.dart';
-import 'package:myapp/util/pedido.dart';
-import 'package:myapp/util/user_provider.dart';
-import 'package:myapp/util/usuario.dart';
+import 'package:myapp/entities/amizade.dart';
+import 'package:myapp/providers/amizade_provider.dart';
+import 'package:myapp/providers/estatistica_provider.dart';
+import 'package:myapp/entities/pedido.dart';
+import 'package:myapp/providers/user_provider.dart';
+import 'package:myapp/entities/usuario.dart';
 import 'package:myapp/util/widget_pesquisaUsuario.dart';
 import 'package:provider/provider.dart';
 
