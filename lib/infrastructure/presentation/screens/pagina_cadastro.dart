@@ -1,6 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'pagina_login.dart';
@@ -14,6 +15,7 @@ class PaginaCadastro extends StatefulWidget {
 }
 
 class _PaginaCadastroState extends State<PaginaCadastro> {
+  // controllers
   TextEditingController controllerNome = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerCpf = TextEditingController();
@@ -21,6 +23,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   TextEditingController controllerSenha = TextEditingController();
   TextEditingController controllerConfirmarSenha = TextEditingController();
 
+  // variáveis de erro
   String? erroNome;
   String? erroEmail;
   String? erroCPF;
@@ -28,50 +31,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   String? erroSenha;
   String? erroConfirmarSenha;
 
-  bool nomeValido = true;
-  bool emailValido = true;
-  bool cpfValido = true;
-  bool dataValida = true;
-  bool senhaValida = true;
-  bool confirmarSenhaValida = true;
-  bool _obscureTextSenha = true;
-  bool _obscureTextConfirmarSenha = true;
-
-  List<String> caracteresEspeciais = [
-    "! ",
-    "\"",
-    "#",
-    "\$",
-    "%",
-    "&",
-    "'",
-    "(",
-    ")",
-    "*",
-    "+",
-    ",",
-    "-",
-    ".",
-    "/",
-    ":",
-    ";",
-    "<",
-    "=",
-    ">",
-    "?",
-    "@",
-    "[",
-    "\"",
-    "]",
-    "^",
-    "_",
-    "`",
-    "{",
-    "|",
-    "}",
-    "~",
-  ];
-
+  // função para validar a data
   bool validarData(String date) {
     try {
       DateFormat format = DateFormat("dd/MM/yyyy");
@@ -87,6 +47,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
+  // DatePicker para selecionar a data
   Future<void> _selecionarData(BuildContext context) async {
     DateTime? dataSelecionada = await showDatePicker(
       context: context,
@@ -116,81 +77,64 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
+  // função para verificações e cadastrar o usuário no banco de dados
   void verificarECadastrar() {
     setState(() {
       if (controllerNome.text.isEmpty) {
-        nomeValido = false;
         erroNome = "O nome não pode estar vazio";
       } else {
-        nomeValido = true;
         erroNome = null;
       }
 
       if (controllerEmail.text.isEmpty) {
-        emailValido = false;
         erroEmail = "O Email não pode estar vazio";
       } else if (!controllerEmail.text.contains("@")) {
-        emailValido = false;
         erroEmail = "O Email precisa ter @";
       } else {
-        emailValido = true;
         erroEmail = null;
       }
 
       if (controllerCpf.text.isEmpty) {
-        cpfValido = false;
         erroCPF = "O CPF não pode estar vazio";
       } else if (!CPFValidator.isValid(controllerCpf.text)) {
-        cpfValido = false;
         erroCPF = "CPF inválido";
       } else {
-        cpfValido = true;
         erroCPF = null;
       }
 
       if (controllerData.text.isEmpty) {
-        dataValida = false;
         erroData = "A data não pode estar vazia";
       } else if (controllerData.text.length != 10) {
-        dataValida = false;
         erroData = "A data precisa conter 8 dígitos";
       } else if (!validarData(controllerData.text)) {
-        dataValida = false;
         erroData = "Data inválida";
       } else {
-        dataValida = true;
         erroData = null;
       }
 
       if (controllerSenha.text.isEmpty) {
-        senhaValida = false;
         erroSenha = "A senha não pode estar vazia";
       } else if (controllerSenha.text.length < 8) {
-        senhaValida = false;
         erroSenha = "A senha precisa ter, pelo menos, 8 dígitos";
       } else {
-        senhaValida = true;
         erroSenha = null;
       }
 
       if (controllerConfirmarSenha.text.isEmpty) {
-        confirmarSenhaValida = false;
         erroConfirmarSenha = "Confirmar senha não pode estar vazio";
       } else if (controllerConfirmarSenha.text != controllerSenha.text) {
-        confirmarSenhaValida = false;
         erroConfirmarSenha = "Senhas não correspondentes";
       } else {
-        confirmarSenhaValida = true;
         erroConfirmarSenha = null;
       }
     });
 
-    if (nomeValido &&
-        emailValido &&
-        cpfValido &&
-        dataValida &&
-        senhaValida &&
-        confirmarSenhaValida) {
+    if (erroNome == null &&
+        erroEmail == null &&
+        erroCPF == null &&
+        erroData == null &&
+        erroSenha == null &&
+        erroConfirmarSenha == null) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.registrar(
         nome: controllerNome.text,
@@ -207,12 +151,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
+  // função para ir a tela de login e limpar os text fields
   void login() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
     setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PaginaLogin()),
-      );
       controllerConfirmarSenha.clear();
       controllerData.clear();
       controllerEmail.clear();
@@ -230,52 +172,43 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              SizedBox(height: 20),
+              Padding(padding: EdgeInsets.only(top: 80)),
               Image.asset("assets/images/Logo_Sprinter.png", height: 75),
-              Padding(padding: EdgeInsets.only(top: 15)),
+              Padding(padding: EdgeInsets.only(top: 30)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
-                  controller: controllerNome,
-                  decoration: InputDecoration(
-                    labelText: ("Nome de usuário"),
-                    errorText: erroNome,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Lao Muang Don',
-                    ),
-                    hintText: "Insira o seu nome:",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                  ),
+                child: TextFieldComponente(
+                  controller: controllerNome, 
+                  hint: "Nome do Usuário", 
+                  label: "Nome",
+                  error: erroNome,
                 ),
               ),
-
               Padding(padding: EdgeInsets.only(top: 40)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
-                  controller: controllerEmail,
+                child: TextFormField(
+                  controller: controllerCpf,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CpfInputFormatter(),
+                  ],
                   decoration: InputDecoration(
-                    labelText: ("Email:"),
-                    errorText: erroEmail,
+                    labelText: ("CPF:"),
+                    errorText: erroCPF,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     floatingLabelStyle: TextStyle(
                       color: Colors.black,
                       fontSize: 20,
                       fontFamily: 'Lao Muang Don',
                     ),
-                    hintText: "Insira seu E-mail",
+                    hintText: "000.000.000-00",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
                     ),
                   ),
                 ),
               ),
-
               Padding(padding: EdgeInsets.only(top: 35)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -309,115 +242,46 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               Padding(padding: EdgeInsets.only(top: 35)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextFormField(
-                  controller: controllerCpf,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    CpfInputFormatter(),
-                  ],
-                  decoration: InputDecoration(
-                    labelText: ("CPF:"),
-                    errorText: erroCPF,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Lao Muang Don',
-                    ),
-                    hintText: "000.000.000-00",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                  ),
+                child: TextFieldComponente(
+                  controller: controllerEmail,
+                  hint: "Email do Usuário",
+                  label: "Email",
+                  error: erroEmail,
                 ),
               ),
               Padding(padding: EdgeInsets.only(top: 35)),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFieldComponente(
                   controller: controllerSenha,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: ("Senha:"),
-                    errorText: erroSenha,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureTextSenha
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureTextSenha = !_obscureTextSenha;
-                        });
-                      },
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Lao Muang Don',
-                    ),
-                    hintText: "Insira sua Senha",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                  ),
+                  hint: "Senha do Usuário",
+                  label: "Senha",
+                  error: erroSenha,
+                  isPassword: true,
                 ),
               ),
-
               Padding(padding: EdgeInsets.only(top: 35)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFieldComponente(
                   controller: controllerConfirmarSenha,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: ("Confirmar senha:"),
-                    errorText: erroConfirmarSenha,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureTextConfirmarSenha
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureTextConfirmarSenha =
-                              !_obscureTextConfirmarSenha;
-                        });
-                      },
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Lao Muang Don',
-                    ),
-                    hintText: "Insira sua senha novamente",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                  ),
-                ),
+                  hint: "Confirmar a Senha do Usuário",
+                  label: "Confirmar Senha",
+                  error: erroConfirmarSenha,
+                  isPassword: true,
+                )
               ),
               Padding(padding: EdgeInsets.only(top: 40)),
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color.fromARGB(1000, 5, 106, 12),
-                ),
-                onPressed: () => verificarECadastrar(),
-                child: Container(
-                  height: 50,
-                  width: 320,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "CADASTRAR",
-                    style: TextStyle(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: ElevatedButton(
+                  onPressed: () => verificarECadastrar(),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 60),
+                    backgroundColor: Color.fromARGB(1000, 5, 106, 12),
+                  ), 
+                  child: const Text("Cadastrar", style: 
+                    TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontFamily: 'Lao Muang Don',
@@ -436,6 +300,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ),
               ),
+              Padding(padding: EdgeInsets.only(top: 50)),
             ],
           ),
         ),
