@@ -12,7 +12,7 @@ import 'package:myapp/pages/pagina_mapa.dart';
 import 'package:myapp/pages/pagina_perfil.dart';
 import 'package:myapp/pages/pagina_rendimento.dart';
 import 'package:myapp/pages/pagina_tela_inicial.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Pagina extends StatefulWidget {
@@ -68,7 +68,7 @@ class _PaginaState extends State<Pagina> {
               radius: 25,
             ),
             onPressed: () => {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PaginaPerfil()),
               ),

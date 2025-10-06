@@ -4,7 +4,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class MapaProvider extends ChangeNotifier {

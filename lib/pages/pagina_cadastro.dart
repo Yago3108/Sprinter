@@ -1,7 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'pagina_login.dart';
 import 'package:intl/intl.dart';

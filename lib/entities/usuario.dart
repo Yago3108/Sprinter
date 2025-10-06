@@ -36,7 +36,7 @@ class Usuario {
       email: map['email'],
       cpf: map['cpf'],
       nascimento: map['nascimento'],
-      carboCoins: (map['carboCoins'] ?? 0),
+      carboCoins: (map['carboCoins'].round() ?? 0),
       carbono: (map['carbono'] ?? 0).toDouble(),
       distancia: (map['distancia'] ?? 0).toDouble(),
       fotoPerfil: map['Foto_perfil'],

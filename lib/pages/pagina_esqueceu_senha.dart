@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina.dart';
 import 'package:myapp/pages/pagina_perfil.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PaginaEsqueceuSenha extends StatefulWidget {

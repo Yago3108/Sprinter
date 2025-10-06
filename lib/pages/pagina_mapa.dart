@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:provider/provider.dart';
-import 'package:myapp/util/mapa_provider.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/mapa_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 
 class PaginaMapa extends StatefulWidget {
   const PaginaMapa({super.key});

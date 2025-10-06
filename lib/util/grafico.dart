@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/util/estatistica_provider.dart';
+import 'package:myapp/providers/estatistica_provider.dart';
 import 'package:provider/provider.dart';
 
 enum Periodo { semana, mes, ano }

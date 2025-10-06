@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_rendimento.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInicial extends StatefulWidget {

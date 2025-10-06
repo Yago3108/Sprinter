@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/pages/pagina_produto.dart';
 import 'package:myapp/util/list_produtos.dart';
 import 'package:myapp/util/modelo_produto.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:myapp/util/widget_pesquisa.dart';
 import 'package:provider/provider.dart';
 

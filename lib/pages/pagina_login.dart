@@ -3,7 +3,7 @@ import 'package:myapp/pages/pagina.dart';
 import 'package:myapp/pages/pagina_cadastro.dart';
 import 'package:myapp/pages/pagina_esqueceu_senha.dart';
 import 'package:myapp/pages/pagina_tela_inicial.dart';
-import 'package:myapp/util/user_provider.dart';
+import 'package:myapp/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PaginaLogin extends StatefulWidget {
