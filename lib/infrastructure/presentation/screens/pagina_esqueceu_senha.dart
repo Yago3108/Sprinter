@@ -28,12 +28,8 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
         emailValido = false;
         erroEmail = "Email não pode estar vazio";
       });
-    } else if (emailController.text != email) {
-      setState(() {
-        emailValido = false;
-        erroEmail = "Email inválido";
-      });
-    } else {
+    } 
+    else {
       emailValido = true;
       erroEmail = null;
       await FirebaseAuth.instance.sendPasswordResetEmail(
@@ -44,7 +40,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     emailController.text = email ?? "";
   }
@@ -94,7 +89,7 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextField(
-                
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: ("Digite seu e-mail"),
                   errorText: erroEmail,

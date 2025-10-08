@@ -29,7 +29,7 @@ class AmizadeProvider extends ChangeNotifier {
         .get();
 
     // limpa a lista antes de adicionar as amizades
-    amizades.clear();
+    _amizades.clear();
     for (var doc in snapshot.docs) {
       amizades.add(Amizade(
         id: doc.id,
@@ -50,9 +50,9 @@ class AmizadeProvider extends ChangeNotifier {
         .get();
 
     // limpa a lista antes de adicionar os pedidos de amizade
-    pedidos.clear();
+    _pedidos.clear();
     for (var doc in snapshot.docs) {
-      pedidos.add(PedidoAmizade(
+      _pedidos.add(PedidoAmizade(
         id: doc.id,
         remetenteId: doc['remetenteId'],
         nomeRemetente: doc['nomeRemetente'],
@@ -88,7 +88,7 @@ class AmizadeProvider extends ChangeNotifier {
     final firestore = FirebaseFirestore.instance;
 
     // remove o pedido
-    pedidos.removeWhere((pedido) => pedido.id == uidRemetente);
+    _pedidos.removeWhere((pedido) => pedido.id == uidRemetente);
 
     // adiciona amizade para ambos usuários
     await firestore
@@ -129,13 +129,13 @@ class AmizadeProvider extends ChangeNotifier {
 
   // remove a amizade
   void removerAmizade(String id) {
-    amizades.removeWhere((amizade) => amizade.id == id);
+    _amizades.removeWhere((amizade) => amizade.id == id);
     notifyListeners();
   }
 
   // limpa as amizades
   void limparAmizades() {
-    amizades.clear();
+    _amizades.clear();
     notifyListeners();
   }
 }

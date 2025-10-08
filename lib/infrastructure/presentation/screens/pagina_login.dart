@@ -107,7 +107,19 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 20, right: 30, left: 30),
+                  padding: EdgeInsets.only(left:200),
+                  child: TextButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>PaginaEsqueceuSenha())), 
+                    child: Text("Esqueceu senha?",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: "League Spartan"
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, right: 30, left: 30),
                   child: ButtonComponente(
                     text: "LOGIN", 
                     function: verificarELogar,

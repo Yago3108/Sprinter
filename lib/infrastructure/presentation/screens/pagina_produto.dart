@@ -24,24 +24,6 @@ class PaginaProdutoState extends State<PaginaProduto> {
   OverlayEntry? _overlayEntry;
   Uint8List? imagemBytes;
   Produto? produto;
-
-  Future<Produto?> buscarProdutoPorId(String produtoId) async {
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('produtos')
-          .doc(produtoId)
-          .get();
-
-      if (doc.exists) {
-        return Produto.fromFirestore(doc);
-      }
-    } catch (e) {
-      print('Erro ao buscar produto: $e');
-      return null;
-    }
-    return null;
-  }
-
   void _mostrarPesquisa(BuildContext context) {
     if (_overlayEntry != null) return;
 
@@ -135,28 +117,26 @@ class PaginaProdutoState extends State<PaginaProduto> {
       ),
     );
     }
-    
-  
-
+}
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      context.read<ProdutoProvider>().resetar();
-    });
-    buscarProdutoPorId(widget.produtoId).then((prod) {
+
+    context.read<ProdutoProvider>().carregarProduto(widget.produtoId).then((prod) {
       setState(() {
         produto = prod;
         if (produto != null) {
           try {
             imagemBytes = base64Decode(produto!.imagemBase64);
-          } catch (_) {}
+          } catch (_) {
+            
+          }
         }
       });
     });
+    
 
   }
-}
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();

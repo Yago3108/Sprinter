@@ -175,7 +175,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               ),
                             ),
                             Text(
-                              "${amigo?.carboCoins.toStringAsFixed(0)} Cc",
+                              "${amigo?.carboCoins} Cc",
                               style: TextStyle(
                                 fontFamily: 'League Spartan',
 

@@ -124,9 +124,9 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
               email: doc['email'],
               cpf: doc['cpf'],
               nascimento: doc['nascimento'],
-              carboCoins: (doc['carboCoins'] ?? 0).toDouble(),
-              carbono: (doc['carbono'] ?? 0).toDouble(),
-              distancia: (doc['distancia'] ?? 0).toDouble(),
+              carboCoins: (doc['carboCoins'] ?? 0).round(),
+              carbono: (doc['carbono'] ?? 0),
+              distancia: (doc['distancia'] ?? 0),
               fotoPerfil: base64Decode(doc['Foto_perfil']),
             ),
           );
@@ -230,7 +230,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                 itemBuilder: (context, index) {
                                       Usuario amigo1=amigos[index];
                                   Uint8List? bytes = amigo1.fotoPerfil;
-                                  return amigo1!=null ?Column(
+                                  return amigo1 !=null ?Column(
                                     children: [
                                       Padding(padding: EdgeInsetsGeometry.only(top:10)),
                                       GestureDetector(

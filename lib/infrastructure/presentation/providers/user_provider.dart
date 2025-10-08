@@ -156,7 +156,7 @@ class UserProvider extends ChangeNotifier {
         email: data['email'],
         cpf: data['cpf'],
         nascimento: data['nascimento'],
-        carboCoins: (data['carboCoins'] ?? 0).toDouble(),
+        carboCoins: (data['carboCoins'] ?? 0).round(),
         carbono: (data['carbono'] ?? 0).toDouble(),
         distancia: (data['distancia'] ?? 0).toDouble(),
         fotoPerfil: base64Decode(data['Foto_perfil']),
