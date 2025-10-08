@@ -1,8 +1,13 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/entities/usuario.dart';
+import 'package:myapp/modules/usuario/usuario_repository.dart';
 import 'package:myapp/modules/usuario/usuario_spec.dart';
 
 class UsuarioUseCases implements IUsuarioUseCases {
+
+  final UsuarioRepository usuarioRepository = UsuarioRepository();
 
   // validação de nome
   @override
@@ -84,5 +89,31 @@ class UsuarioUseCases implements IUsuarioUseCases {
     }
 
     return null;
+  }
+
+  @override
+  Future<String?> cadastrarUsuario(Usuario usuario) async {
+    try {
+      final result1 = await usuarioRepository.getUsuarioByEmail(usuario.email);
+      final result2 = await usuarioRepository.getUsuarioByCPF(usuario.cpf);
+
+      if(result1 != null) return "Email já existente";
+      if(result2 != null) return "CPF já existente";
+
+      await usuarioRepository.registrarUsuario(usuario);
+      return null;
+    } catch(e) {
+      throw Exception("Erro no cadastro");
+    }
+  }
+
+  @override
+  Future<UserCredential> logarUsuario(String email, String senha) async {
+    try {
+      final result = await usuarioRepository.login(email, senha);
+      return result;
+    } catch (e) {
+      throw Exception("Erro no Login");
+    }
   }
 }
