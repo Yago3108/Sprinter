@@ -179,11 +179,14 @@ class PaginaProdutoState extends State<PaginaProduto> {
                 ),
                 const SizedBox(height: 15),
                 if (produto != null)
-                  Image.memory(
-                    imagemBytes!,
-                    height: 250,
-                    width: 350,
-                    fit: BoxFit.cover,
+                  ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(10),
+                    child: Image.memory(
+                      imagemBytes!,
+                      height: 250,
+                      width: 350,
+                      fit: BoxFit.cover,
+                    ),
                   )
                 else
                   const SizedBox(
