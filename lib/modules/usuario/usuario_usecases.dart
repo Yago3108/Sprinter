@@ -116,4 +116,9 @@ class UsuarioUseCases implements IUsuarioUseCases {
       throw Exception("Erro no Login");
     }
   }
+
+  @override
+  Future<void> deslogarUsuario() async {
+    await usuarioRepository.logout();
+  }
 }

@@ -68,4 +68,5 @@ class UsuarioRepository {
     final snapshot = await _firestore.collection('usuarios').where(uid).get();
     return snapshot.docs.map((e) => Usuario.fromMap(e.data())).toList();
   }
+
 }

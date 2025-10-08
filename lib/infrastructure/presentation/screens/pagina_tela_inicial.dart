@@ -18,8 +18,8 @@ class PaginaInicialState extends State<PaginaInicial> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final dados = userProvider.getDistanciaEPontos();
+    final user = context.read<UserProvider>().user;
+
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -37,20 +37,19 @@ class PaginaInicialState extends State<PaginaInicial> {
                   );
                 },
                 child: Container(
-                  
                   alignment: Alignment.topCenter,
                   width: 250,
                   height: 150,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(162, 84, 138, 87), 
-        spreadRadius: 5, 
-        blurRadius: 7, 
-        offset: Offset(0, 3), 
-      ),
-    ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(162, 84, 138, 87), 
+                        spreadRadius: 5, 
+                        blurRadius: 7, 
+                        offset: Offset(0, 3), 
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromARGB(255, 230, 230, 230),
                   ),
@@ -58,7 +57,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                     children: [
                       Padding(padding: EdgeInsets.only(top: 20)),
                       Text(
-                        "${dados?['distancia'].toStringAsFixed(1)}km",
+                        "${user!.distancia.toStringAsFixed(1)}km",
                         style: TextStyle(
                           color: Color.fromARGB(255, 5, 106, 12),
                           fontSize: 40,
@@ -78,14 +77,9 @@ class PaginaInicialState extends State<PaginaInicial> {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 45)),
+              Padding(padding: EdgeInsets.only(top: 45)),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PaginaRendimento()),
-                  );
-                },
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaRendimento())),
                 child: Container(
                   alignment: Alignment.center,
                   width: 250,
@@ -93,13 +87,13 @@ class PaginaInicialState extends State<PaginaInicial> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(162, 84, 138, 87), 
-        spreadRadius: 5, 
-        blurRadius: 7, 
-        offset: Offset(0, 3), 
-      ),
-    ],
+                      BoxShadow(
+                        color: Color.fromARGB(162, 84, 138, 87), 
+                        spreadRadius: 5, 
+                        blurRadius: 7, 
+                        offset: Offset(0, 3), 
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromARGB(255, 230, 230, 230),
                   ),
@@ -114,7 +108,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                         ),
                       ),
                       Text(
-                        "${dados?['pontos']}",
+                        "${user.carboCoins}",
                         style: TextStyle(
                           color: Color.fromARGB(255, 5, 106, 12),
                           fontSize: 40,

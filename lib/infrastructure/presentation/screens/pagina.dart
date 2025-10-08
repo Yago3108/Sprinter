@@ -11,6 +11,7 @@ import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_rendimento.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_tela_inicial.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
+import 'package:myapp/modules/usuario/usuario_usecases.dart';
 import 'package:provider/provider.dart';
 
 class Pagina extends StatefulWidget {
@@ -31,31 +32,24 @@ class _PaginaState extends State<Pagina> {
     PaginaRendimento(),
   ];
   Uint8List? bytes;
-  @override
-  initState() {
-    super.initState();
-  }
 
-  
-  
-  
+  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
 
   @override
   Widget build(BuildContext context) {
-        final userProvider = context.watch<UserProvider>();
-      final fotoBase64 = userProvider.user?.fotoPerfil;
+    final userProvider = context.watch<UserProvider>();
+    final fotoBase64 = userProvider.user?.fotoPerfil;
 
-      if (fotoBase64 != null) {
-        setState(() {
-          bytes = base64Decode(fotoBase64);
-        });
-      }
+    if (fotoBase64 != null) {
+      setState(() {
+        bytes = base64Decode(fotoBase64);
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         actionsPadding: EdgeInsets.only(right: 10),
         backgroundColor: Color.fromARGB(255, 5, 106, 12),
         iconTheme: IconThemeData(color: Colors.white),
-
         centerTitle: true,
         actions: [
           IconButton(
@@ -65,16 +59,10 @@ class _PaginaState extends State<Pagina> {
                   : AssetImage("assets/images/perfil_basico.jpg"),
               radius: 25,
             ),
-            onPressed: () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => PaginaPerfil()),
-              ),
-            },
+            onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaginaPerfil())),
           ),
         ],
       ),
-
       drawer: Drawer(
         child: ListView(
           children: [
@@ -84,34 +72,19 @@ class _PaginaState extends State<Pagina> {
             ListTile(
               leading: Icon(Icons.settings, color: Colors.black),
               title: Text("Configurações"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaConfiguracao()),
-                );
-              },
+              onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaginaConfiguracao())),
             ),
             ListTile(
               leading: Icon(Icons.shopping_basket),
               title: Text("Cadastrar Produtos"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CriarProdutoPage()),
-                );
-              },
+              onTap: () =>Navigator.push(context, MaterialPageRoute(builder: (context) => CriarProdutoPage())),
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Fazer Logout"),
               onTap: () {
-                UserProvider userProvider =
-                    Provider.of<UserProvider>(context, listen: false);
-                    userProvider.logout();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaLogin()),
-                );
+                usuarioUseCases.deslogarUsuario();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
               },
             ),
           ],

@@ -17,62 +17,6 @@ class PaginaAmizades extends StatefulWidget {
   @override
   State<PaginaAmizades> createState() => _PaginaAmizadesState();
 }
-OverlayEntry? _overlayEntry;
-
-
-  void _mostrarPesquisa(BuildContext context) {
-    if (_overlayEntry != null) return;
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned.fill(
-        child: GestureDetector(
-          onTap: _removerPesquisa,
-          child: Material(
-            color: const Color.fromARGB(85, 0, 0, 0),
-            
-             // fundo semitransparente
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 85, left: 16, right: 16),
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      WidgetPesquisaUsuario(
-                        onProdutoSelecionado: (uidAmigo) {
-                        _removerPesquisa();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaginaPerfilAmizade(null, uidAmigo: uidAmigo, ),
-                          ),
-                        );
-                      }
-                      ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: _removerPesquisa,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-  void _removerPesquisa() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
 
 class _PaginaAmizadesState extends State<PaginaAmizades> {
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -143,6 +87,60 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
         carregando = false;
       });
     }
+  }
+
+  OverlayEntry? _overlayEntry;
+
+  void _mostrarPesquisa(BuildContext context) {
+    if (_overlayEntry != null) return;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: GestureDetector(
+          onTap: _removerPesquisa,
+          child: Material(
+            color: const Color.fromARGB(85, 0, 0, 0),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 85, left: 16, right: 16),
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      WidgetPesquisaUsuario(
+                        onProdutoSelecionado: (uidAmigo) {
+                        _removerPesquisa();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PaginaPerfilAmizade(null, uidAmigo: uidAmigo, ),
+                          ),
+                        );
+                      }
+                      ),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: _removerPesquisa,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+  void _removerPesquisa() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   @override

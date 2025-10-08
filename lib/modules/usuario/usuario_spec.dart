@@ -17,4 +17,6 @@ abstract class IUsuarioUseCases {
   Future<String?> cadastrarUsuario(Usuario usuario);
 
   Future<UserCredential> logarUsuario(String email, String senha);
+
+  Future<void> deslogarUsuario();
 }
