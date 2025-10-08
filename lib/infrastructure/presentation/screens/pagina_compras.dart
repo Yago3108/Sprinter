@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/app/components/produto_carrossel.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_produto.dart';
 import 'package:myapp/infrastructure/presentation/app/components/modelo_produto.dart';
 import 'package:myapp/infrastructure/presentation/app/components/widget_pesquisa.dart';
@@ -13,7 +15,11 @@ class PaginaCompras extends StatefulWidget {
 
 class PaginaComprasState extends State<PaginaCompras> {
   OverlayEntry? _overlayEntry;
-
+  List<String> listaDeProdutos=[
+    "f80gFP9HAIo5woMkUFFY",
+    "W7ypyI5wvzlvw1FjE4q4",
+    "Rg3UsIfL6mCWI1u6Ymhb"
+  ];
   void _mostrarPesquisa(BuildContext context) {
     if (_overlayEntry != null) return;
 
@@ -107,18 +113,27 @@ class PaginaComprasState extends State<PaginaCompras> {
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
-                const Text("Destaque:"),
+                Text("Destaques:",style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: "League Spartan"
+                ),),
                 Padding(padding: EdgeInsets.only(top: 10)),
-                Container(
-                  height: 200,
-                  width: 320,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                  ),
-                  child: Column(children: [
-                  ],
-                ),
-                ),
+                CarouselSlider.builder(
+               itemCount: listaDeProdutos.length,
+               itemBuilder: (context, index, realIndex) {
+               final produto = listaDeProdutos[index];
+               return ProdutoCarrossel(produtoId: produto); 
+            },
+         options: CarouselOptions(
+        height: 300.0,
+        autoPlay: true, 
+        enlargeCenterPage: true, 
+        aspectRatio: 16/9,
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enableInfiniteScroll: true, 
+        viewportFraction: 0.7,
+      ),
+    ),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 const Text("mais vendidos"),
                 Padding(padding: EdgeInsets.only(top: 10)),
@@ -134,7 +149,7 @@ class PaginaComprasState extends State<PaginaCompras> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
+                      ProdutoCard(produtoId: "Rg3UsIfL6mCWI1u6Ymhb"),
                       ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
                     ],
                   ),

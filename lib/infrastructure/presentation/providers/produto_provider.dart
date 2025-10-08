@@ -84,7 +84,17 @@ class ProdutoProvider extends ChangeNotifier {
     try {
       final doc = await _firestore.collection('produtos').doc(id).get();
       if (doc.exists) {
-        return Produto.fromFirestore(doc);
+        final data=doc.data();
+        Produto prod=Produto(
+          descricao: data!["descricao"],
+          id: id,
+          nome: data["nome"],
+          imagemBase64: data["imagemBase64"],
+          preco: data["preco"],
+          quantidade: data["quantidade"],
+          tipo: data["tipo"]
+        );
+        return prod;
       }
       return null;
     } catch (e) {

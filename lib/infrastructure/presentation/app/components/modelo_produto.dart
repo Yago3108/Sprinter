@@ -30,7 +30,7 @@ class ProdutoCard extends StatelessWidget {
         // Decodifica a imagem Base64
         Uint8List? imagemBytes;
         try {
-          imagemBytes = base64Decode(produto['imagem']);
+          imagemBytes = base64Decode(produto['imagemBase64']);
         } catch (_) {}
 
         return IconButton(
@@ -58,7 +58,7 @@ class ProdutoCard extends StatelessWidget {
                           imagemBytes,
                           height: 200,
                           width: 250,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         )
                       : const SizedBox(
                           height: 150,

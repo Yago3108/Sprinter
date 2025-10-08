@@ -315,12 +315,15 @@ class PaginaProdutoState extends State<PaginaProduto> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  produto?.descricao ?? 'Carregando...',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'League Spartan',
-                    color: Color.fromARGB(255, 29, 64, 26),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    produto?.descricao ?? 'Carregando...',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'League Spartan',
+                      color: Color.fromARGB(255, 29, 64, 26),
+                    ),
                   ),
                 ),
 
