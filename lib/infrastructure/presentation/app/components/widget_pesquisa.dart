@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/app/components/produto_carrossel.dart';
 
 class WidgetPesquisa extends StatefulWidget {
   final void Function(String produtoId) onProdutoSelecionado;
@@ -40,6 +41,41 @@ class WidgetPesquisaState extends State<WidgetPesquisa> {
               });
             },
           ),
+           Padding(padding: EdgeInsetsGeometry.only(top: 5)),
+           query==""?
+          Column(
+            children: [
+               Padding(padding: EdgeInsetsGeometry.only(top: 5)),
+               Text(
+                      "Principais produtos:",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'League Spartan',
+                        color: const Color.fromARGB(255, 29, 64, 26),
+                      ),
+                    ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 1,
+                  children: [
+                      ProdutoCarrossel(produtoId: "Rg3UsIfL6mCWI1u6Ymhb", height: 150, width: 150),
+                      ProdutoCarrossel(produtoId: "W7ypyI5wvzlvw1FjE4q4", height: 150, width: 150),
+                      ProdutoCarrossel(produtoId: "f80gFP9HAIo5woMkUFFY", height: 150, width: 150),
+                  ],
+                ),
+              ),
+            ],
+          ):SizedBox(),
+          Padding(padding: EdgeInsetsGeometry.only(top: 8)),
+            Text(
+                      "Outros produtos:",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'League Spartan',
+                        color: const Color.fromARGB(255, 29, 64, 26),
+                      ),
+                    ),
           StreamBuilder<QuerySnapshot>(
             stream: (query.isEmpty)
                 ? FirebaseFirestore.instance

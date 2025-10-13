@@ -6,8 +6,9 @@ import 'package:myapp/infrastructure/presentation/screens/pagina_produto.dart';
 
 class ProdutoCarrossel extends StatelessWidget {
   final String produtoId; // ID do documento no Firestore
-
-  const ProdutoCarrossel({super.key, required this.produtoId});
+  final double? height;
+  final double? width;
+  const ProdutoCarrossel({super.key, required this.produtoId,required this.height,required this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +42,8 @@ class ProdutoCarrossel extends StatelessWidget {
             );
           },
           icon: Container(
-            width: 250,
-            height: 250,
+            width: width,
+            height: height,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 230, 230, 230),
@@ -58,8 +59,8 @@ class ProdutoCarrossel extends StatelessWidget {
                     child: imagemBytes != null
                         ? Image.memory(
                             imagemBytes,
-                            height: 170,
-                            width: 250,
+                            height: (height!-80),
+                            width: width,
                             fit: BoxFit.fill,
                           )
                         : const SizedBox(
@@ -71,10 +72,10 @@ class ProdutoCarrossel extends StatelessWidget {
                   Flexible(
                     child: Text(
                       produto['nome'],
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: TextStyle(
+                        fontSize: (height!*0.09),
                         fontFamily: 'League Spartan',
-                        color: Color.fromARGB(255, 29, 64, 26),
+                        color: const Color.fromARGB(255, 29, 64, 26),
                       ),
                     ),
                   ),

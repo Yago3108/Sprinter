@@ -122,10 +122,11 @@ class PaginaComprasState extends State<PaginaCompras> {
                itemCount: listaDeProdutos.length,
                itemBuilder: (context, index, realIndex) {
                final produto = listaDeProdutos[index];
-               return ProdutoCarrossel(produtoId: produto); 
+               return ProdutoCarrossel(produtoId: produto,    width: 250,
+            height: 250,); 
             },
          options: CarouselOptions(
-        height: 300.0,
+        height: 305.0,
         autoPlay: true, 
         enlargeCenterPage: true, 
         aspectRatio: 16/9,

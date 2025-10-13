@@ -128,7 +128,7 @@ class _PaginaState extends State<Pagina> {
         },
         iconSize: 30,
         selectedItemColor: Color.fromARGB(255, 5, 106, 12),
-        unselectedItemColor: Color.fromARGB(255, 5, 106, 12),
+        unselectedItemColor: Color.fromARGB(255, 63, 77, 64),
         backgroundColor: Color.fromARGB(255, 5, 106, 12),
         showUnselectedLabels: false,
         selectedLabelStyle: TextStyle(
