@@ -5,6 +5,7 @@ import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_cadastro.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_esqueceu_senha.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
+import 'package:myapp/modules/usuario/usuario_usecases.dart';
 import 'package:provider/provider.dart';
 
 class PaginaLogin extends StatefulWidget {
@@ -23,44 +24,32 @@ class _PaginaLoginState extends State<PaginaLogin> {
   String? erroEmail;
   String? erroSenha;
 
+  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
+
   void verificarELogar() async {
     setState(() {
-      if (controllerEmail.text.isEmpty) {
-        erroEmail = "Email não pode estar vazio";
-      } else if (!controllerEmail.text.contains("@")) {
-        erroEmail = "Email precisa conter @";
-      } else {
-        erroEmail = null;
-      }
-
-      if (controllerSenha.text.isEmpty) {
-        erroSenha = "Senha não pode estar vazia";
-      } else if (controllerSenha.text.length < 8) {
-        erroSenha = "Senha precisa ter, pelo menos, 8 dígitos";
-      } else {
-        erroSenha = null;
-      }
+      erroEmail = usuarioUseCases.validarEmail(controllerEmail.text);
+      erroSenha = usuarioUseCases.validarSenha(controllerSenha.text);
     });
 
     if (erroEmail == null && erroSenha == null) {
       try {
-        UserProvider userProvider = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        );
+        final usuario = await usuarioUseCases.logarUsuario(controllerEmail.text, controllerSenha.text);
 
-        var uid = await userProvider.login(
-          controllerEmail.text,
-          controllerSenha.text,
-        );
+        if (usuario != null) {
+          await context.read<UserProvider>().registrarUsuario(usuario);
 
-        if (uid != null) {
           // limpa os controllers
           controllerEmail.clear();
           controllerSenha.clear();
 
           // navega para a página inicial
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Pagina()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina()));
+        } else {
+          setState(() {
+            erroEmail = "Login inválido";
+            erroSenha = "Login inválido";
+          });
         }
       } catch (e) {
         setState(() {
@@ -86,7 +75,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     "assets/images/Logo_Sprinter.png",
                     height: 75,
                   ),
-                ), //textfields
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 50, right: 30, left: 30),
                   child: TextFieldComponente(

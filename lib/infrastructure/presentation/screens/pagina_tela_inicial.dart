@@ -18,7 +18,7 @@ class PaginaInicialState extends State<PaginaInicial> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserProvider>().user;
+    final user = context.read<UserProvider>().usuario;
 
     return Scaffold(
       body: Container(

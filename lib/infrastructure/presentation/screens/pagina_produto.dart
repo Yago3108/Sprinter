@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/modelo_produto.dart';
 import 'package:myapp/entities/produto.dart';
@@ -83,7 +82,7 @@ class PaginaProdutoState extends State<PaginaProduto> {
   void comprar() {
     final userProvider = context.read<UserProvider>();
     final quantidade = context.read<ProdutoProvider>().qtdCompra;
-    final dados = userProvider.user;
+    final dados = userProvider.usuario;
 
     if (produto == null || dados == null) return;
 
@@ -140,7 +139,7 @@ class PaginaProdutoState extends State<PaginaProduto> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final dados = userProvider.user;
+    final dados = userProvider.usuario;
 
     return Scaffold(
       appBar: AppBar(

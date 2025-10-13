@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // verifica se o usuário já está logado
-      home: userProvider.user != null ? const Pagina() : const PaginaLogin(),
+      home: userProvider.usuario != null ? const Pagina() : const PaginaLogin(),
     );
   }
 }

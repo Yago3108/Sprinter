@@ -92,28 +92,42 @@ class UsuarioUseCases implements IUsuarioUseCases {
   }
 
   @override
-  Future<String?> cadastrarUsuario(Usuario usuario) async {
+  Future<String?> cadastrarUsuario(String nome, String cpf, String data, String email) async {
     try {
-      final result1 = await usuarioRepository.getUsuarioByEmail(usuario.email);
-      final result2 = await usuarioRepository.getUsuarioByCPF(usuario.cpf);
-
+      final result1 = await usuarioRepository.getUsuarioByEmail(email);
       if(result1 != null) return "Email já existente";
+
+      final result2 = await usuarioRepository.getUsuarioByCPF(cpf);
       if(result2 != null) return "CPF já existente";
+
+      Usuario usuario = Usuario(
+        amigos: [], 
+        uid: "", 
+        nome: nome, 
+        email: email, 
+        cpf: cpf, 
+        nascimento: data, 
+        carboCoins: 0, 
+        carbono: 0, 
+        distancia: 0,
+      );
 
       await usuarioRepository.registrarUsuario(usuario);
       return null;
     } catch(e) {
-      throw Exception("Erro no cadastro");
+      return "Erro no Cadastro do Usuário";
     }
   }
 
   @override
-  Future<UserCredential> logarUsuario(String email, String senha) async {
+  Future<Usuario?> logarUsuario(String email, String senha) async {
     try {
       final result = await usuarioRepository.login(email, senha);
-      return result;
+      User user = result.user!;
+      Usuario usuario = Usuario.fromFirebaseUser(user);
+      return usuario;
     } catch (e) {
-      throw Exception("Erro no Login");
+      return null;
     }
   }
 

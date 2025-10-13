@@ -49,7 +49,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final fotoBase64 = userProvider.user?.fotoPerfil;
+    final fotoBase64 = userProvider.usuario?.fotoPerfil;
     Uint8List? bytes;
     if (fotoBase64 != null && fotoBase64.isNotEmpty) {
       bytes = base64Decode(fotoBase64);

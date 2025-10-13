@@ -21,8 +21,8 @@ class _PaginaMapaState extends State<PaginaMapa> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     _mapaProvider = Provider.of<MapaProvider>(context, listen: false);
 
-    if (userProvider.user != null) {
-      _mapaProvider.setUid(userProvider.user!.uid);
+    if (userProvider.usuario != null) {
+      _mapaProvider.setUid(userProvider.usuario!.uid);
     }
     
   }

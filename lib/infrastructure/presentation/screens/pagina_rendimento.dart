@@ -40,7 +40,7 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
               children: [
                 Padding(padding: EdgeInsetsGeometry.only(left: 10)),
                 IconButton(onPressed: (){
-                    estatisticaProvider.carregarAtividades(userProvider.user!.uid);
+                    estatisticaProvider.carregarAtividades(userProvider.usuario!.uid);
                 }, icon: Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(

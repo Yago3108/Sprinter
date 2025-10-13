@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/entities/usuario.dart';
 
 abstract class IUsuarioUseCases {
@@ -14,9 +13,9 @@ abstract class IUsuarioUseCases {
 
   String? validarConfirmarSenha(String senha, String confirmarSenha);
 
-  Future<String?> cadastrarUsuario(Usuario usuario);
+  Future<String?> cadastrarUsuario(String nome, String cpf, String data, String email);
 
-  Future<UserCredential> logarUsuario(String email, String senha);
+  Future<Usuario?> logarUsuario(String email, String senha);
 
   Future<void> deslogarUsuario();
 }

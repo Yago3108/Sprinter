@@ -38,7 +38,7 @@ class _PaginaState extends State<Pagina> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final fotoBase64 = userProvider.user?.fotoPerfil;
+    final fotoBase64 = userProvider.usuario?.fotoPerfil;
 
     if (fotoBase64 != null) {
       setState(() {

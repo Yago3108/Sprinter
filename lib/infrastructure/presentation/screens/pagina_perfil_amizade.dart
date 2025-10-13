@@ -26,12 +26,12 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
 
   Future<void> _carregarAmigo() async {
     final userProvider = context.read<UserProvider>();
-    final usuario = await userProvider.getUsuarioByUid(widget.uidAmigo);
+    //final usuario = await userProvider.getUsuarioByUid(widget.uidAmigo);
     if (mounted) {
       setState(() {
-        amigo = userProvider.usuarioPesquisado;
+        //amigo = userProvider.usuarioPesquisado;
           try {
-            fotoBytes = userProvider.usuarioPesquisado?.fotoPerfil!;
+            //fotoBytes = userProvider.usuarioPesquisado?.fotoPerfil!;
           } catch (_) {
             fotoBytes = null;
           }
@@ -215,8 +215,8 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                   IconButton(
                     onPressed: () {
                       amizadeProvider.enviarPedidoAmizade(
-                        userProvider.user!.nome,
-                        userProvider.user!.uid,
+                        userProvider.usuario!.nome,
+                        userProvider.usuario!.uid,
                         widget.uidAmigo,
                       );
                       Navigator.pop(context);

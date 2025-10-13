@@ -1,4 +1,6 @@
 // model de usuário
+import 'package:firebase_auth/firebase_auth.dart';
+
 class Usuario {
 
   // variáveis
@@ -26,6 +28,21 @@ class Usuario {
     required this.distancia,
     this.fotoPerfil,
   });
+
+  factory Usuario.fromFirebaseUser(User user) {
+    return Usuario(
+      amigos: [],
+      uid: user.uid,
+      nome: user.displayName ?? '',
+      email: user.email ?? '',
+      cpf: '',
+      nascimento: '',
+      carboCoins: 0,
+      carbono: 0.0,
+      distancia: 0.0,
+      fotoPerfil: user.photoURL,
+    );
+  }
 
   // transforma map em usuário
   factory Usuario.fromMap(Map<String, dynamic> map) {

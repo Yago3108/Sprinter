@@ -18,7 +18,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final fotoBase64 = userProvider.user!.fotoPerfil;
+    final fotoBase64 = userProvider.usuario!.fotoPerfil;
     Uint8List? bytes;
     if (fotoBase64!=null ) {
 bytes = base64Decode(fotoBase64);
@@ -102,7 +102,7 @@ bytes = base64Decode(fotoBase64);
                            
                             Padding(padding: EdgeInsets.only(top: 60)),
                             Text(
-                              userProvider.user?.nome ?? "",
+                              userProvider.usuario?.nome ?? "",
                               style: TextStyle(
                                 fontFamily: 'League Spartan',
                                 fontSize: 40,
@@ -125,7 +125,7 @@ bytes = base64Decode(fotoBase64);
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    userProvider.user?.email ?? "",
+                                    userProvider.usuario?.email ?? "",
                                     style: TextStyle(
                                       fontFamily: 'Lao Muang Don',
                                       fontSize: 15,
@@ -151,7 +151,7 @@ bytes = base64Decode(fotoBase64);
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    userProvider.user?.nascimento ?? "",
+                                    userProvider.usuario?.nascimento ?? "",
                                     style: TextStyle(
                                       fontFamily: 'League Spartan',
                                       fontSize: 15,
@@ -179,7 +179,7 @@ bytes = base64Decode(fotoBase64);
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "${userProvider.user?.carbono} kg CO2",
+                                    "${userProvider.usuario?.carbono} kg CO2",
                                     style: TextStyle(
                                       fontFamily: 'League Spartan',
                         
@@ -239,7 +239,7 @@ bytes = base64Decode(fotoBase64);
                               ),
                             ),
                             Text(
-                              "${userProvider.user?.carboCoins.toStringAsFixed(0)} Cc",
+                              "${userProvider.usuario?.carboCoins.toStringAsFixed(0)} Cc",
                               style: TextStyle(
                                 fontFamily: 'League Spartan',
  

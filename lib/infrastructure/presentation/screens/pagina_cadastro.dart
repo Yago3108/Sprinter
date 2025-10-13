@@ -2,9 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
-import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/modules/usuario/usuario_usecases.dart';
-import 'package:provider/provider.dart';
 import 'pagina_login.dart';
 import 'package:intl/intl.dart';
 
@@ -32,7 +30,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   String? erroSenha;
   String? erroConfirmarSenha;
 
-  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
+  final UsuarioUseCases usuarioUseCases = UsuarioUseCases(); // use cases do usuário
 
   // DatePicker para selecionar a data
   Future<void> _selecionarData(BuildContext context) async {
@@ -65,7 +63,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   }
 
   // função para verificações e cadastrar o usuário no banco de dados
-  void verificarECadastrar() {
+  void verificarECadastrar() async {
     setState(() {
       erroNome = usuarioUseCases.validarNome(controllerNome.text);
       erroCPF = usuarioUseCases.validarCPF(controllerCpf.text);
@@ -75,25 +73,52 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       erroConfirmarSenha = usuarioUseCases.validarConfirmarSenha(controllerSenha.text, controllerConfirmarSenha.text);
     });
 
-    if (erroNome == null &&
-        erroEmail == null &&
-        erroCPF == null &&
-        erroData == null &&
-        erroSenha == null &&
-        erroConfirmarSenha == null) {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.registrar(
-        nome: controllerNome.text,
-        email: controllerEmail.text,
-        senha: controllerSenha.text,
-        cpf: controllerCpf.text,
-        nascimento: controllerData.text,
-        distancia: 0.0,
-        contCarbono: 0.0,
-        contPontos: 0,
-        foto: 0,
-      );
-      login();
+    if(erroNome == null && erroCPF == null && erroData == null && erroEmail == null && erroSenha == null && erroConfirmarSenha == null) {
+      try {
+        final result = await usuarioUseCases.cadastrarUsuario(controllerNome.text, controllerCpf.text, controllerData.text, controllerEmail.text);
+
+        if(result != null) {
+          showDialog(
+            context: context, 
+            builder: (context) => AlertDialog(
+              title: Text(result),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(), 
+                  child: const Text("Fechar"),
+                ),
+              ],
+            ),
+          );
+        } else {
+          login();
+          showDialog(
+            context: context, 
+            builder: (context) => AlertDialog(
+              title: Text("Usuário Cadastrado"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(), 
+                  child: const Text("Fechar"),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch(e) {
+        showDialog(
+          context: context, 
+          builder: (context) => AlertDialog(
+            title: Text("Erro no Cadastro"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(), 
+                child: const Text("Fechar"),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

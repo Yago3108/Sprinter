@@ -29,7 +29,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     super.didChangeDependencies();
     final estatisticaProvider =
         Provider.of<EstatisticaProvider>(context, listen: false);
-    _rankingFuture ??= estatisticaProvider.rankingSemanal(context.watch<UserProvider>().user!.uid);
+    _rankingFuture ??= estatisticaProvider.rankingSemanal(context.watch<UserProvider>().usuario!.uid);
   }
 
 
@@ -43,7 +43,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> carregarTodosAmigos() async {
     try {
       final userProvider = context.read<UserProvider>();
-      final Usuario? user = userProvider.user;
+      final Usuario? user = userProvider.usuario;
 
       if (user == null) return;
 
@@ -151,8 +151,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
 
   setState(() {
-      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
-  amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
+      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().usuario!.uid);
+  amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().usuario!.uid);
   });
 
 
@@ -205,8 +205,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                 child: GestureDetector(
                   onTap: () {
                     
-                    amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
-                    amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
+                    amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().usuario!.uid);
+                    amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().usuario!.uid);
                   },
                   child: TabBarView(
                     children: [
@@ -440,8 +440,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                           alignment: Alignment.topCenter,
                                           onPressed: (){
                                           setState(() {
-                                             amizadeProvider.aceitarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().user!.uid);
-                                              amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().user!.uid);
+                                             amizadeProvider.aceitarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().usuario!.uid);
+                                              amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().usuario!.uid);
                                                carregarTodosAmigos();
                                           });
                                          
@@ -451,8 +451,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                           alignment: Alignment.topCenter,
                                           onPressed: (){
                                           setState(() {
-                                             amizadeProvider.negarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().user!.uid);
-                                             amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().user!.uid);
+                                             amizadeProvider.negarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().usuario!.uid);
+                                             amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().usuario!.uid);
                                           });
                                          
                                         }, icon: Icon(Icons.close,color: Colors.red,)),
