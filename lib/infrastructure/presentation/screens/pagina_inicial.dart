@@ -11,14 +11,10 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class PaginaInicialState extends State<PaginaInicial> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserProvider>().usuario;
+    final usuario = context.read<UserProvider>().usuario;
 
     return Scaffold(
       body: Container(
@@ -57,7 +53,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                     children: [
                       Padding(padding: EdgeInsets.only(top: 20)),
                       Text(
-                        "${user!.distancia.toStringAsFixed(1)}km",
+                        "${usuario!.distancia.toStringAsFixed(1)}km",
                         style: TextStyle(
                           color: Color.fromARGB(255, 5, 106, 12),
                           fontSize: 40,
@@ -108,7 +104,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                         ),
                       ),
                       Text(
-                        "${user.carboCoins}",
+                        "${usuario.carboCoins}",
                         style: TextStyle(
                           color: Color.fromARGB(255, 5, 106, 12),
                           fontSize: 40,

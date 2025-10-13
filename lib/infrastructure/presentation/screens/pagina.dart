@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_configuracao.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_cria_produto.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_cadastrar_produto.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_mapa.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_rendimento.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_tela_inicial.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_inicial.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/modules/usuario/usuario_usecases.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +77,7 @@ class _PaginaState extends State<Pagina> {
             ListTile(
               leading: Icon(Icons.shopping_basket),
               title: Text("Cadastrar Produtos"),
-              onTap: () =>Navigator.push(context, MaterialPageRoute(builder: (context) => CriarProdutoPage())),
+              onTap: () =>Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaCadastrarProduto())),
             ),
             ListTile(
               leading: Icon(Icons.logout),
