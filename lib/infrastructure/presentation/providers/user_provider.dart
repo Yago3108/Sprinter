@@ -203,6 +203,12 @@ class UserProvider extends ChangeNotifier {
       user.carbono = emissao;
       atualizarUsuario(user);
     }
+
+    void retirarCC(int pontos){
+      Usuario user = _user!;
+      user.carboCoins = user.carboCoins-pontos;
+      atualizarUsuario(user);
+    }
     
    
   Future<void> logout() async {

@@ -12,6 +12,9 @@ class ProdutoProvider extends ChangeNotifier {
 
   int qtdCompra = 1;
 
+  // Produto carregado
+  Produto? _produto;
+
   // Lista de produtos carregados
   List<Produto> _produtos = [];
   List<Produto> get produtos => _produtos;
@@ -20,7 +23,7 @@ class ProdutoProvider extends ChangeNotifier {
   Future<void> adicionarProduto(
     String nome,
     String descricao,
-    double preco,
+    int preco,
     String tipo,
     File imagem,
     int quantidade,
@@ -66,6 +69,17 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
 
+  // Atualizar o produto no banco de dados
+  Future<void> atualizarProduto(Produto novoProduto) async {
+    await _firestore
+        .collection('produtos')
+        .doc(novoProduto.id)
+        .update(novoProduto.toMap());
+
+    _produto = novoProduto;
+    notifyListeners();
+  }
+
   // Carregar todos os produtos
   Future<List<Produto>> carregarProdutos() async {
     try {
@@ -85,12 +99,21 @@ class ProdutoProvider extends ChangeNotifier {
       final doc = await _firestore.collection('produtos').doc(id).get();
       if (doc.exists) {
         final data=doc.data();
+        _produto = Produto(
+          descricao: data!["descricao"],
+          id: id,
+          nome: data["nome"],
+          imagemBase64: data["imagemBase64"],
+          preco: data["preco"].round(),
+          quantidade: data["quantidade"],
+          tipo: data["tipo"]
+        );
         Produto prod=Produto(
           descricao: data!["descricao"],
           id: id,
           nome: data["nome"],
           imagemBase64: data["imagemBase64"],
-          preco: data["preco"],
+          preco: data["preco"].round(),
           quantidade: data["quantidade"],
           tipo: data["tipo"]
         );
@@ -102,6 +125,7 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
 
+  //Aumentar quantidade comprada
   void incrementar(Produto pro) {
     if (qtdCompra < pro.quantidade) {
       qtdCompra++;
@@ -109,6 +133,7 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
 
+  //Diminuar quantidade comprada
   void decrementar() {
     if (qtdCompra > 1) {
       qtdCompra--;
@@ -116,6 +141,14 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
 
+  //Atualizar quantidade do produto
+  void atualizarQtdProd(int qtdCompra){
+    Produto produto = _produto!;
+    produto.quantidade = produto.quantidade - qtdCompra;
+    atualizarProduto(produto);
+  }
+
+  //Reseta a quantidade comprada
   void resetar() {
     qtdCompra = 1;
     notifyListeners();
