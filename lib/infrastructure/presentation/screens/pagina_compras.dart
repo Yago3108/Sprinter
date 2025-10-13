@@ -136,7 +136,10 @@ class PaginaComprasState extends State<PaginaCompras> {
       ),
     ),
                 Padding(padding: EdgeInsets.only(top: 10)),
-                const Text("mais vendidos"),
+                  Text("Mais vendidos",style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: "League Spartan"
+                ),),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 Container(
                   height: 5,

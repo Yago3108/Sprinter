@@ -54,14 +54,19 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
     if (fotoBase64 != null && fotoBase64.isNotEmpty) {
       bytes = base64Decode(fotoBase64);
     }
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           actionsPadding: EdgeInsets.only(right: 10),
           backgroundColor: Color.fromARGB(255, 5, 106, 12),
           iconTheme: IconThemeData(color: Colors.white),
 
           centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>Pagina(key: null,)));
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
           actions: [
             IconButton(
               icon: CircleAvatar(
@@ -79,34 +84,171 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
             ),
           ],
         ),
-
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              DrawerHeader(
-                child: Image.asset("assets/images/Sprinter_simples.png"),
+        body: Column(
+          children: [
+             Padding(padding: EdgeInsets.only(top: 10)),
+              Image.asset("assets/images/Logo_Sprinter.png", height: 100),
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Padding(
+                padding: const EdgeInsets.only(right: 210),
+                child: Text("Olá, ${userProvider.user!.nome}!",
+                style: TextStyle(
+                      fontSize: 36,
+                      fontFamily: "League Spartan"
+                    ),
+                ),
               ),
-              ListTile(
-                leading: Icon(Icons.home, color: Colors.black),
-                title: Text("Página Inicial"),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Pagina()),
-                  );
-                },
+               Padding(padding: EdgeInsets.only(top: 10)),
+                  Padding(
+                padding: const EdgeInsets.only(right: 230),
+                child: Text("Configurações:",
+                style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: "League Spartan"
+                    ),
+                ),
               ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Fazer Logout"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+                Padding(padding: EdgeInsets.only(top: 15)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                    BoxShadow(
+                    color: Color.fromARGB(160, 108, 109, 108), 
+                    spreadRadius: 2, 
+                    blurRadius: 7, 
+                    offset: Offset(0, 3), 
+                     ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.lock),
+                    title: Text("Alterar Credenciais",style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: "League Spartan"
+                  ),),
+                    trailing: Icon(Icons.arrow_drop_down),
+                  ),
+                ),
               ),
-            ],
-          ),
+                 Padding(padding: EdgeInsets.only(top: 20)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                    BoxShadow(
+                    color: Color.fromARGB(160, 108, 109, 108), 
+                    spreadRadius: 2, 
+                    blurRadius: 7, 
+                    offset: Offset(0, 3), 
+                     ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.chat_bubble),
+                    title: Text("Suporte",style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: "League Spartan"
+                  ),),
+                    trailing: Icon(Icons.arrow_drop_down),
+                  ),
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(top: 20)),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                    BoxShadow(
+                    color: Color.fromARGB(160, 108, 109, 108), 
+                    spreadRadius: 2, 
+                    blurRadius: 7, 
+                    offset: Offset(0, 3), 
+                     ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.info_outline),
+                    title: Text("Sobre",style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: "League Spartan"
+                  ),),
+                    trailing: Icon(Icons.arrow_drop_down),
+                  ),
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(top: 20)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                    BoxShadow(
+                    color: Color.fromARGB(160, 108, 109, 108), 
+                    spreadRadius: 2, 
+                    blurRadius: 7, 
+                    offset: Offset(0, 3), 
+                     ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.delete_outline_rounded,
+                    color: Colors.red,
+                    ),
+                    title: Text("Excluir conta",style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontFamily: "League Spartan"
+                  ),),
+                  ),
+                ),
+              ),
+                 Padding(padding: EdgeInsets.only(top: 20)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                    BoxShadow(
+                    color: Color.fromARGB(160, 108, 109, 108), 
+                    spreadRadius: 2, 
+                    blurRadius: 7, 
+                    offset: Offset(0, 3), 
+                     ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.logout_rounded,
+                    color: Colors.red,
+                    ),
+                    title: Text("Sair",style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontFamily: "League Spartan"
+                  ),),
+                  ),
+                ),
+              ),
+          ],
         ),
-      ),
-    );
-  }
+      );
+}
 }
