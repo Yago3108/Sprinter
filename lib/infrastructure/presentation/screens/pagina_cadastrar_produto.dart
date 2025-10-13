@@ -50,7 +50,48 @@ class _PaginaCadastrarProdutoState extends State<PaginaCadastrarProduto> {
 
   Future<void> _cadastrarProduto() async {
     try {
-      await produtoUseCases.cadastrarProduto(_controllerNome.text, _controllerDescricao, _controllerPreco, _controllerTipo, _controllerQuantidade);
+      final result = await produtoUseCases.cadastrarProduto(_controllerNome.text, _controllerDescricao.text, _controllerPreco.text, _controllerTipo.text, _controllerQuantidade.text, _imagemSelecionada!.path);
+      
+      if(result!=null) {
+        showDialog(
+          context: context, 
+          builder: (context) => AlertDialog(
+            title: Text(result),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(), 
+                child: const Text("Fechar"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context, 
+          builder: (context) => AlertDialog(
+            title: const Text("Produto Cadastrado"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(), 
+                child: const Text("Fechar"),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch(e) {
+      showDialog(
+        context: context, 
+        builder: (context) => AlertDialog(
+          title: Text("Erro no Cadastro do Produto"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(), 
+              child: const Text("Fechar"),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -111,7 +152,7 @@ class _PaginaCadastrarProdutoState extends State<PaginaCadastrarProduto> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _salvarProduto,
+                onPressed: _cadastrarProduto,
                 child: const Text('Salvar Produto'),
               ),
             ],
