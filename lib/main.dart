@@ -17,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // inicializa o binding
   await Firebase.initializeApp(); // inicializa o firebase
 
-  final usuarioRepository = UsuarioRepository();
+  final usuarioRepository = UsuarioRepositoryImpl();
   final usuarioUseCase = UsuarioUseCase(usuarioRepository);
 
   runApp(

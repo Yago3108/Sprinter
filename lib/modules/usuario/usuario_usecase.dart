@@ -7,7 +7,7 @@ import 'package:myapp/modules/usuario/usuario_spec.dart';
 class UsuarioUseCase {
   UsuarioUseCase(this._repository);
 
-  final IUsuarioRepository _repository;
+  final UsuarioRepository _repository;
 
   String? validarNome(String nome) => nome.isEmpty ? "Nome não pode estar vazio" : null;
 

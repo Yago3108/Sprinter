@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/entities/usuario.dart';
 import 'package:myapp/modules/usuario/usuario_spec.dart';
 
-class UsuarioRepository implements IUsuarioRepository {
+class UsuarioRepositoryImpl implements UsuarioRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

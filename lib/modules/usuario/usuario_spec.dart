@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/entities/usuario.dart';
 
-abstract class IUsuarioRepository {
+abstract class UsuarioRepository {
   Future<Usuario?> getUsuarioByUid(String uid);
   Future<Usuario?> getUsuarioByCPF(String cpf);
   Future<Usuario?> getUsuarioByEmail(String email);
