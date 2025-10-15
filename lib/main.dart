@@ -8,7 +8,6 @@ import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dar
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/mapa_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart'; 
-import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/infrastructure/presentation/usuario/estado_usuario.dart';
 import 'package:myapp/modules/usuario/usuario_repository.dart';
 import 'package:myapp/modules/usuario/usuario_usecase.dart';
@@ -43,13 +42,13 @@ class MyApp extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = context.watch<UserProvider>();
+    final usuario = context.watch<UsuarioProvider>().usuario;
      
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
       // verifica se o usuário já está logado
-      home: userProvider.usuario != null ? const Pagina() : const PaginaLogin(),
+      home: usuario != null ? const Pagina() : const PaginaLogin(),
     );
   }
 }
