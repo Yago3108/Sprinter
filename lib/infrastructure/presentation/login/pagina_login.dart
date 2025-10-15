@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/button_componente.dart';
 import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
+import 'package:myapp/infrastructure/presentation/login/estado_login.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_cadastro.dart';
+import 'package:myapp/infrastructure/presentation/cadastro-usuario/pagina_cadastro.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_esqueceu_senha.dart';
-import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/modules/usuario/usuario_usecases.dart';
+import 'package:myapp/infrastructure/presentation/usuario/estado_usuario.dart';
 import 'package:provider/provider.dart';
 
 class PaginaLogin extends StatefulWidget {
@@ -20,48 +20,55 @@ class _PaginaLoginState extends State<PaginaLogin> {
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerSenha = TextEditingController();
 
-  // variáveis de erro
-  String? erroEmail;
-  String? erroSenha;
+  void fazerLogin() async {
+    final provider = context.read<LoginProvider>();
 
-  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
+    final isValid = provider.validarCampos(controllerEmail.text, controllerSenha.text);
+    if (!isValid) return;
 
-  void verificarELogar() async {
-    setState(() {
-      erroEmail = usuarioUseCases.validarEmail(controllerEmail.text);
-      erroSenha = usuarioUseCases.validarSenha(controllerSenha.text);
-    });
+    final usuario = await provider.fazerLogin(controllerEmail.text, controllerSenha.text);
 
-    if (erroEmail == null && erroSenha == null) {
-      try {
-        final usuario = await usuarioUseCases.logarUsuario(controllerEmail.text, controllerSenha.text);
-
-        if (usuario != null) {
-          await context.read<UserProvider>().registrarUsuario(usuario);
-
-          // limpa os controllers
-          controllerEmail.clear();
-          controllerSenha.clear();
-
-          // navega para a página inicial
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina()));
-        } else {
-          setState(() {
-            erroEmail = "Login inválido";
-            erroSenha = "Login inválido";
-          });
-        }
-      } catch (e) {
-        setState(() {
-          erroEmail = "Login inválido";
-          erroSenha = "Login inválido";
-        });
-      }
+    if (usuario != null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Sucesso no Login"),
+          content: Text("Welcome, ${usuario.nome}!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.read<UsuarioProvider>().registrarUsuario(usuario);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina()));
+              },
+              child: const Text("Continuar"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Falha no Login"),
+          content: const Text("Email ou Senha incorretos"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<LoginProvider>();
+
     return Scaffold(
       body: Center(
         child: ListView(
@@ -82,7 +89,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     controller: controllerEmail,
                     hint: "Email do Usuário",
                     label: "Email",
-                    error: erroEmail,
+                    error: provider.erroEmail,
                   ),
                 ),
                 Padding(
@@ -91,7 +98,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     controller: controllerSenha,
                     hint: "Senha do Usuário",
                     label: "Senha",
-                    error: erroSenha,
+                    error: provider.erroPassword,
                     isPassword: true,
                   ),
                 ),
@@ -111,7 +118,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   padding: EdgeInsets.only(top: 10, right: 30, left: 30),
                   child: ButtonComponente(
                     text: "LOGIN", 
-                    function: verificarELogar,
+                    function: fazerLogin,
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 5)),

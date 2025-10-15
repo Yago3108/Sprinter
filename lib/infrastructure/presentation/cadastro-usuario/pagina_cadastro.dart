@@ -2,8 +2,9 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
-import 'package:myapp/modules/usuario/usuario_usecases.dart';
-import 'pagina_login.dart';
+import 'package:myapp/infrastructure/presentation/cadastro-usuario/estado_cadastro.dart';
+import 'package:provider/provider.dart';
+import '../login/pagina_login.dart';
 import 'package:intl/intl.dart';
 
 class PaginaCadastro extends StatefulWidget {
@@ -21,16 +22,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerSenha = TextEditingController();
   TextEditingController controllerConfirmarSenha = TextEditingController();
-
-  // variáveis de erro
-  String? erroNome;
-  String? erroCPF;
-  String? erroData;
-  String? erroEmail;
-  String? erroSenha;
-  String? erroConfirmarSenha;
-
-  final UsuarioUseCases usuarioUseCases = UsuarioUseCases(); // use cases do usuário
 
   // DatePicker para selecionar a data
   Future<void> _selecionarData(BuildContext context) async {
@@ -62,57 +53,45 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
-  // função para verificações e cadastrar o usuário no banco de dados
   void verificarECadastrar() async {
-    setState(() {
-      erroNome = usuarioUseCases.validarNome(controllerNome.text);
-      erroCPF = usuarioUseCases.validarCPF(controllerCpf.text);
-      erroData = usuarioUseCases.validarData(controllerData.text);
-      erroEmail = usuarioUseCases.validarEmail(controllerEmail.text);
-      erroSenha = usuarioUseCases.validarSenha(controllerSenha.text);
-      erroConfirmarSenha = usuarioUseCases.validarConfirmarSenha(controllerSenha.text, controllerConfirmarSenha.text);
-    });
+    final provider = context.read<CadastroProvider>();
 
-    if(erroNome == null && erroCPF == null && erroData == null && erroEmail == null && erroSenha == null && erroConfirmarSenha == null) {
-      try {
-        final result = await usuarioUseCases.cadastrarUsuario(controllerNome.text, controllerCpf.text, controllerData.text, controllerEmail.text);
+    final result = await provider.cadastrarUsuario(
+      nome: controllerNome.text,
+      cpf: controllerCpf.text,
+      data: controllerData.text,
+      email: controllerEmail.text,
+      senha: controllerSenha.text,
+    );
 
-        if(result != null) {
-          showDialog(
-            context: context, 
-            builder: (context) => AlertDialog(
-              title: Text(result),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(), 
-                  child: const Text("Fechar"),
-                ),
-              ],
-            ),
-          );
-        } else {
-          login();
-          showDialog(
-            context: context, 
-            builder: (context) => AlertDialog(
-              title: Text("Usuário Cadastrado"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(), 
-                  child: const Text("Fechar"),
-                ),
-              ],
-            ),
-          );
-        }
-      } catch(e) {
+    if (result != null) {
+      if (result == 'Erro ao cadastrar usuário') {
         showDialog(
-          context: context, 
+          context: context,
           builder: (context) => AlertDialog(
-            title: Text("Erro no Cadastro"),
+            title: const Text("Erro no Cadastro"),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(), 
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Fechar"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(result),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => PaginaLogin()),
+                  );
+                },
                 child: const Text("Fechar"),
               ),
             ],
@@ -122,21 +101,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
   }
 
-  // função para ir a tela de login e limpar os text fields
-  void login() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
-    setState(() {
-      controllerConfirmarSenha.clear();
-      controllerData.clear();
-      controllerEmail.clear();
-      controllerNome.clear();
-      controllerSenha.clear();
-      controllerCpf.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<CadastroProvider>();
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -152,7 +120,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   controller: controllerNome, 
                   hint: "Nome do Usuário", 
                   label: "Nome",
-                  error: erroNome,
+                  error: provider.erroNome,
                 ),
               ),
               Padding(padding: EdgeInsets.only(top: 40)),
@@ -166,7 +134,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ],
                   decoration: InputDecoration(
                     labelText: ("CPF:"),
-                    errorText: erroCPF,
+                    errorText: provider.erroCpf,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     floatingLabelStyle: TextStyle(
                       color: Colors.black,
@@ -192,7 +160,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ],
                   decoration: InputDecoration(
                     labelText: ("Data de Nascimento:"),
-                    errorText: erroData,
+                    errorText: provider.erroData,
                     suffixIcon: IconButton(
                       onPressed: () => _selecionarData(context),
                       icon: Icon(Icons.calendar_today),
@@ -217,7 +185,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   controller: controllerEmail,
                   hint: "Email do Usuário",
                   label: "Email",
-                  error: erroEmail,
+                  error: provider.erroEmail,
                 ),
               ),
               Padding(padding: EdgeInsets.only(top: 35)),
@@ -227,7 +195,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   controller: controllerSenha,
                   hint: "Senha do Usuário",
                   label: "Senha",
-                  error: erroSenha,
+                  error: provider.erroSenha,
                   isPassword: true,
                 ),
               ),
@@ -238,7 +206,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   controller: controllerConfirmarSenha,
                   hint: "Confirmar a Senha do Usuário",
                   label: "Confirmar Senha",
-                  error: erroConfirmarSenha,
+                  error: provider.erroConfirmarSenha,
                   isPassword: true,
                 )
               ),
@@ -261,7 +229,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                 ),
               ),
               TextButton(
-                onPressed: () => login(),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaLogin())),
                 child: Text(
                   "Já tem uma conta? Faça login!",
                   style: TextStyle(

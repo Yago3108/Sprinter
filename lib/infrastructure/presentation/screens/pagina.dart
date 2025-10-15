@@ -5,13 +5,13 @@ import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_configuracao.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_cadastrar_produto.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
+import 'package:myapp/infrastructure/presentation/login/pagina_login.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_mapa.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_rendimento.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_inicial.dart';
+import 'package:myapp/infrastructure/presentation/tela-inicial/pagina_inicial.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/modules/usuario/usuario_usecases.dart';
+import 'package:myapp/modules/usuario/usuario_usecase.dart';
 import 'package:provider/provider.dart';
 
 class Pagina extends StatefulWidget {
@@ -31,9 +31,8 @@ class _PaginaState extends State<Pagina> {
     PaginaMapa(),
     PaginaRendimento(),
   ];
-  Uint8List? bytes;
 
-  final UsuarioUseCases usuarioUseCases = UsuarioUseCases();
+  Uint8List? bytes;
 
   @override
   Widget build(BuildContext context) {
