@@ -33,4 +33,14 @@ class UsuarioProvider with ChangeNotifier {
     _usuario = usuario;
     notifyListeners();
   }
+
+  Future<void> deslogarUsuario() async {
+    try {
+      await _auth.signOut();
+      _usuario = null;
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Erro ao deslogar: $e');
+    }
+  }
 }

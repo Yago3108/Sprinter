@@ -10,8 +10,7 @@ import 'package:myapp/infrastructure/presentation/screens/pagina_mapa.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_rendimento.dart';
 import 'package:myapp/infrastructure/presentation/tela-inicial/pagina_inicial.dart';
-import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/modules/usuario/usuario_usecase.dart';
+import 'package:myapp/infrastructure/presentation/usuario/estado_usuario.dart';
 import 'package:provider/provider.dart';
 
 class Pagina extends StatefulWidget {
@@ -36,12 +35,12 @@ class _PaginaState extends State<Pagina> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final fotoBase64 = userProvider.usuario?.fotoPerfil;
+    final provider = context.read<UsuarioProvider>();
+    final usuario = context.watch<UsuarioProvider>().usuario;
 
-    if (fotoBase64 != null) {
+    if (usuario!.fotoPerfil != null) {
       setState(() {
-        bytes = base64Decode(fotoBase64);
+        bytes = base64Decode(usuario.fotoPerfil);
       });
     }
     return Scaffold(
@@ -82,7 +81,7 @@ class _PaginaState extends State<Pagina> {
               leading: Icon(Icons.logout),
               title: Text("Fazer Logout"),
               onTap: () {
-                usuarioUseCases.deslogarUsuario();
+                provider.deslogarUsuario();
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
               },
             ),
