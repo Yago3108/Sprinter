@@ -2,7 +2,7 @@
 class PedidoAmizade {
 
   // variáveis
-  final String id;
+  final String? id;
   final String remetenteId;
   final String nomeRemetente;
   final String destinatario;
@@ -10,12 +10,5 @@ class PedidoAmizade {
   final DateTime? dataCriacao;
 
   // construtor
-  PedidoAmizade({
-    required this.id,
-    required this.remetenteId,
-    required this.nomeRemetente,
-    required this.destinatario,
-    required this.status,
-    this.dataCriacao,
-  });
+  PedidoAmizade({ this.id, required this.remetenteId, required this.nomeRemetente, required this.destinatario, required this.status, this.dataCriacao });
 }

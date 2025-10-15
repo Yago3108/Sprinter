@@ -1,62 +1,46 @@
 // model de usuário
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Usuario {
 
   // variáveis
-  final List<Usuario> amigos; 
-  final String uid;
+  final String? uid;
   final String nome;
-  final String email;
   final String cpf;
   final String nascimento;
-  int carboCoins;
-  double carbono;
-  double distancia;
-  dynamic fotoPerfil;
+  final String email;
+  final int? carboCoins;
+  final double? carbono;
+  final double? distancia;
+  final dynamic? fotoPerfil;
+  final List<Usuario>? amigos; 
 
   // construtor
   Usuario({
-    required this.amigos,
-    required this.uid,
+    this.uid,
     required this.nome,
-    required this.email,
     required this.cpf,
     required this.nascimento,
-    required this.carboCoins,
-    required this.carbono,
-    required this.distancia,
+    required this.email,
+    this.carboCoins,
+    this.carbono,
+    this.distancia,
     this.fotoPerfil,
+    this.amigos,  
   });
 
-  factory Usuario.fromFirebaseUser(User user) {
+  factory Usuario.fromFirebaseUser(DocumentSnapshot doc) {
     return Usuario(
-      amigos: [],
-      uid: user.uid,
-      nome: user.displayName ?? '',
-      email: user.email ?? '',
-      cpf: '',
-      nascimento: '',
-      carboCoins: 0,
-      carbono: 0.0,
-      distancia: 0.0,
-      fotoPerfil: user.photoURL,
-    );
-  }
-
-  // transforma map em usuário
-  factory Usuario.fromMap(Map<String, dynamic> map) {
-    return Usuario(
-      amigos: [],
-      uid: map['uid'],
-      nome: map['nome'],
-      email: map['email'],
-      cpf: map['cpf'],
-      nascimento: map['nascimento'],
-      carboCoins: (map['carboCoins'] ?? 0).round(),
-      carbono: (map['carbono'] ?? 0).toDouble(),
-      distancia: (map['distancia'] ?? 0).toDouble(),
-      fotoPerfil: map['Foto_perfil'],
+      uid: doc['uid'],
+      nome: doc['nome'],
+      cpf: doc['cpf'],
+      nascimento: doc['nascimento'],
+      email: doc['email'],
+      carboCoins: doc['carboCoins'],
+      carbono: doc['carbono'],
+      distancia: doc['distancia'],
+      fotoPerfil: doc['fotoPerfil'],
     );
   }
 

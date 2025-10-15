@@ -25,7 +25,6 @@ class Produto {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'nome': nome,
       'descricao': descricao,
       'preco': preco,
@@ -37,15 +36,14 @@ class Produto {
 
   // transforma map em produto
   factory Produto.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map;
     return Produto(
-      nome: data['nome'],
-      id: doc.id,
-      descricao: data['descricao'],
-      preco: data['preco'],
-      tipo: data['tipo'],
-      imagemBase64: data['imagem'],
-      quantidade: data['quantidade'],
+      id: doc['id'],
+      nome: doc['nome'],
+      descricao: doc['descricao'],
+      preco: doc['preco'],
+      tipo: doc['tipo'],
+      imagemBase64: doc['imagem'],
+      quantidade: doc['quantidade'],
     );
   }
 }
