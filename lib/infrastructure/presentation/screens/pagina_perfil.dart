@@ -147,10 +147,10 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   padding: EdgeInsetsGeometry.only(top: 5),
                                 ),
                                 Text(
-                                  "carboCoins",
+                                  "CarboCoins",
                                   style: TextStyle(
                                     fontFamily: 'League Spartan',
-                                    fontSize: 15,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ],
@@ -181,7 +181,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   "Distância",
                                   style: TextStyle(
                                     fontFamily: 'League Spartan',
-                                    fontSize: 15,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ],
@@ -209,10 +209,10 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   padding: EdgeInsetsGeometry.only(top: 5),
                                 ),
                                 Text(
-                                  "carbono",
+                                  "Carbono",
                                   style: TextStyle(
                                     fontFamily: 'League Spartan',
-                                    fontSize: 15,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ],
@@ -230,7 +230,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                         // 1. Usamos Container para aplicar a decoração de fundo e borda arredondada
                    
                      
-                        height: 500, 
+                        height: 590, 
                         child: DefaultTabController(
                           length: 2,
                           initialIndex: 1,
@@ -274,7 +274,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   children: [
                                     // Aba 1: Últimas Atividades
                                     Container(
-                                      // Padding para o conteúdo da TabBarView, se necessário
+                                     
                                     ),
                                     
                                 
@@ -282,14 +282,17 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                       padding: EdgeInsets.all(20),
                                            decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
-                          color: Colors.white, // Fundo branco para a seção de abas
+                          color: Colors.white,
                         ),
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Padding(padding: EdgeInsets.only(top: 10)),
                                           
-                
+                                           Text("Email",
+                                          style: TextStyle(
+                                            fontFamily: 'League Spartan', fontSize: 18
+                                          ),),
                                           Container(
                                             width: 300,
                                             height: 50,
@@ -297,6 +300,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                               border: Border.all(color: Colors.black, width: 1),
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(30),
+                                              
                                             ),
                                             child: Center(
                                               child: Text(
@@ -307,7 +311,10 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                           ),
                                           Padding(padding: EdgeInsets.only(top: 30)),
                                           
-                                     
+                                         Text("Data de nascimento",
+                                          style: TextStyle(
+                                            fontFamily: 'League Spartan', fontSize: 18
+                                          ),),
                                           Container(
                                             width: 300,
                                             height: 50,
@@ -324,7 +331,10 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                             ),
                                           ),
                                           Padding(padding: EdgeInsets.only(top: 30)),
-                            
+                                          Text("Carbono não emitido",
+                                          style: TextStyle(
+                                            fontFamily: 'League Spartan', fontSize: 18
+                                          ),),
                                           Container(
                                             width: 300,
                                             height: 50,
@@ -335,13 +345,16 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                             ),
                                             child: Center(
                                               child: Text(
-                                                "${userProvider.user?.carbono} kg CO2",
+                                                "${userProvider.user?.carbono.toStringAsFixed(2)} kg CO2",
                                                 style: TextStyle(fontFamily: 'League Spartan', fontSize: 15),
                                               ),
                                             ),
                                           ),
                                           Padding(padding: EdgeInsets.only(top: 30)),
-                                          
+                                           Text("Senha",
+                                          style: TextStyle(
+                                            fontFamily: 'League Spartan', fontSize: 18
+                                          ),),
                                           // Bloco Senha
                                           Container(
                                             width: 300,
@@ -352,10 +365,22 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                               borderRadius: BorderRadius.circular(30),
                                             ),
                                             child: Center(
-                                              child: Text(
-                                                "...........",
-                                                style: TextStyle(fontFamily: 'League Spartan', fontSize: 40),
-                                              ),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                spacing: 5,
+                                                children: [
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                  Icon(Icons.circle,size: 12,),
+                                                ],
+                                              )
                                             ),
                                           ),
                                           Padding(padding: EdgeInsets.only(top: 5)),

@@ -88,6 +88,13 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
+                                Text(
+                                  "Email",
+                                  style: TextStyle(
+                                    fontFamily: 'League Spartan',
+                                    fontSize: 18,
+                                  ),
+                                ),
                             Container(
                               width: 300,
                               height: 50,
@@ -114,6 +121,13 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
+                                Text(
+                                  "Data de nascimento",
+                                  style: TextStyle(
+                                    fontFamily: 'League Spartan',
+                                    fontSize: 18,
+                                  ),
+                                ),
                             Container(
                               width: 300,
                               height: 50,
@@ -139,6 +153,13 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
+                                Text(
+                                  "Carbono não emitido",
+                                  style: TextStyle(
+                                    fontFamily: 'League Spartan',
+                                    fontSize: 18,
+                                  ),
+                                ),
                             Container(
                               width: 300,
                               height: 50,
