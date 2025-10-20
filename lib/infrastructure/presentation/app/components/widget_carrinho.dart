@@ -4,7 +4,7 @@ class WidgetCarrinho extends StatefulWidget {
   final String produtoId;
   final int quantidade;
   final String userId;
-  final double preco;
+  final int preco;
   final String nome;
 
   const WidgetCarrinho(
@@ -20,10 +20,12 @@ class WidgetCarrinho extends StatefulWidget {
   _WidgetCarrinhoState createState() => _WidgetCarrinhoState();
 }
 
+
+
 class _WidgetCarrinhoState extends State<WidgetCarrinho> {
   int quantidade = 1;
   String nome = "";
-  double preco = 0.0;
+  int preco = 0;
   String userid = "";
   String produtoid = "";
   @override
@@ -36,7 +38,7 @@ class _WidgetCarrinhoState extends State<WidgetCarrinho> {
     produtoid = widget.produtoId;
   }
 
-  Comprar(int quantidade, double preco, String produtoid, String userid) {
+  void Comprar(int quantidade, int preco, String produtoid, String userid) {
     
     print("Compra realizada: $quantidade x $nome por \$$preco cada.");
     

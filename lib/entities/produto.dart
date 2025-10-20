@@ -7,10 +7,10 @@ class Produto {
   final String id;
   final String nome;
   final String descricao;
-  final double preco;
+  final int preco;
   final String tipo;
   final String imagemBase64;
-  final int quantidade;
+  int quantidade;
 
   // construtor
   Produto({
@@ -35,5 +35,18 @@ class Produto {
       imagemBase64: data['imagem'],
       quantidade: data['quantidade'],
     );
+  }
+
+  // transforma produto em map
+  Map<String, dynamic> toMap() {
+    return{
+      'nome': nome,
+      'id': id,
+      'descricao': descricao,
+      'preco': preco,
+      'tipo': tipo,
+      'imagem': imagemBase64,
+      'quantidade': quantidade
+    };
   }
 }

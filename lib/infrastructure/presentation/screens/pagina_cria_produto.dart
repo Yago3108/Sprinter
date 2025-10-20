@@ -54,7 +54,7 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
       ).adicionarProduto(
         _nomeController.text,
         _descricaoController.text,
-        double.parse(_precoController.text),
+        int.parse(_precoController.text),
         _tipoController.text,
         _imagemSelecionada!,
         int.parse(_quantidadeController.text),
