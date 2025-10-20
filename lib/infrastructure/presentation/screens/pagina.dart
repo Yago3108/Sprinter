@@ -9,7 +9,7 @@ import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_mapa.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_rendimento.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_tela_inicial.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_inicial.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +55,6 @@ class _PaginaState extends State<Pagina> {
         actionsPadding: EdgeInsets.only(right: 10),
         backgroundColor: Color.fromARGB(255, 5, 106, 12),
         iconTheme: IconThemeData(color: Colors.white),
-
         centerTitle: true,
         actions: [
           IconButton(
