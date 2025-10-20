@@ -43,14 +43,14 @@ class PaginaInicialState extends State<PaginaInicial> {
                   height: 150,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(162, 84, 138, 87), 
-        spreadRadius: 5, 
-        blurRadius: 7, 
-        offset: Offset(0, 3), 
-      ),
-    ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(162, 84, 138, 87), 
+                        spreadRadius: 5, 
+                        blurRadius: 7, 
+                        offset: Offset(0, 3), 
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromARGB(255, 230, 230, 230),
                   ),
