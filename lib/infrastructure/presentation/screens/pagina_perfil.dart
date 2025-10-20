@@ -271,7 +271,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                               Expanded(
                                 child: TabBarView(
                                   children: [
-                                    // Aba 1: Últimas Atividades
+                                    
                                     Container(
                                      
                                     ),

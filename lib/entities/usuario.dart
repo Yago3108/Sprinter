@@ -4,7 +4,7 @@ class Usuario {
   // variáveis
   final List<Usuario> amigos; 
   final String uid;
-  final String nome;
+  String nome;
   final String email;
   final String cpf;
   final String nascimento;

@@ -121,6 +121,7 @@ class UserProvider extends ChangeNotifier {
         .update(novoUsuario.toMap());
 
     _user = novoUsuario;
+    carregarUsuario(_user!.uid);
     notifyListeners();
   }
 
@@ -245,5 +246,9 @@ try {
     await _auth.sendPasswordResetEmail(email: _user!.email);
     notifyListeners();
   }
-  
+   void atualizarNome(String nome){
+      Usuario user = _user!;  
+      user.nome =nome;
+      atualizarUsuario(user);
+    }
 }

@@ -46,6 +46,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
       });
     }
   }
+  TextEditingController controllerNome=TextEditingController();
   TextEditingController controllerChat=TextEditingController();
   int senhaTestada=0;
   int cont=0;
@@ -78,8 +79,10 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             onPressed: () async {
                                   final userProvider = context.read<UserProvider>();
                                   bool funciona=await userProvider.redefinirCredenciais(controllersSenha.text);
+                                 
                                   if(funciona==true){
                                     setState(() {
+                                       controllerNome.text=userProvider.user!.nome;
                                        credWid=true;
                                     });
                                    
@@ -198,9 +201,32 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                         enabled: credWid,
                           children: [
                         SizedBox(
-                          height: 500,
+                          height: 150,
                           child: Column(
-                            
+                            children: [
+                              Padding(padding: EdgeInsets.only(top: 15)),
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 20),
+                                child: TextFieldComponente(
+                                  controller: controllerNome,
+                                  hint: "Digite o novo nome",
+                                  isPassword: false,
+                                  label: "Nome",
+                                ),
+                              ),
+                                 Padding(padding: EdgeInsets.only(top: 15)),
+                                 TextButton(
+                            onPressed: () {
+                              userProvider.atualizarNome(controllerNome.text);
+                            },
+                            child: Text('Salvar',
+                            style: TextStyle(
+                              fontSize: 20,
+                            fontFamily: "League Spartan",
+                            color: Color.fromARGB(255, 5, 106,12 ),  
+                            ),),
+                          ),
+                            ],
                           ),
                         )
                       ],
