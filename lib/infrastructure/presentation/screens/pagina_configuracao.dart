@@ -47,7 +47,58 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
     }
   }
   TextEditingController controllerChat=TextEditingController();
+  int senhaTestada=0;
   int cont=0;
+  bool credWid=false;
+  void testeSenha(BuildContext context){
+       TextEditingController controllersSenha=TextEditingController();
+      showDialog(context: context, builder:(context) => Dialog(
+        child: SizedBox(
+          width: 350,
+          height: 250,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                   Padding(padding: EdgeInsets.only(top: 10)),
+              ListTile(
+                            leading: Icon(Icons.lock),
+                            title: Text('Digite sua senha')),
+              Padding(padding: EdgeInsets.only(top: 30)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextFieldComponente(
+                              controller:controllersSenha ,
+                              hint: "Digite sua senha",
+                              isPassword: true,
+                              label: "Senha",
+                            ),
+                      ),
+                   Padding(padding: EdgeInsets.only(top: 20)),
+                          TextButton(
+                            onPressed: () async {
+                                  final userProvider = context.read<UserProvider>();
+                                  bool funciona=await userProvider.redefinirCredenciais(controllersSenha.text);
+                                  if(funciona==true){
+                                    setState(() {
+                                       credWid=true;
+                                    });
+                                   
+                                  }
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK',
+                            style: TextStyle(
+                            fontFamily: "League Spartan",
+                            color: Color.fromARGB(255, 5, 106,12 ),  
+                            ),),
+                          ),
+                
+            ],
+          ),
+        ),
+                        
+                    ),);
+  }
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -114,31 +165,42 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                   Padding(padding: EdgeInsets.only(top: 15)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: ExpansionTile(
-                      collapsedBackgroundColor: Colors.white,
-                      collapsedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide.none, 
-                    ),
-                    shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide.none, 
-                    ),
-                    iconColor: Color.fromARGB(255, 5, 106,12 ),  
-                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
-                    backgroundColor: Colors.white,
-                      title:ListTile(
-                        leading: Icon(Icons.lock),
-                        title: Text("Alterar credenciais",style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: "League Spartan"
-                      ),),
+                    child: GestureDetector(
+                      onTap: () {
+                          if(senhaTestada==0 && credWid==false){
+                          testeSenha(context);
+                          senhaTestada++;
+                        }
+                        if(senhaTestada==1){
+                          senhaTestada=0;
+                        }
+                      },
+                      child: ExpansionTile(
+                        collapsedBackgroundColor: Colors.white,
+                        collapsedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide.none, 
                       ),
-          
-                        children: [
-                      Container(height: 300,)
-                    ],
+                      shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide.none, 
                       ),
+                      iconColor: Color.fromARGB(255, 5, 106,12 ),  
+                      textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                      backgroundColor: Colors.white,
+                        title:ListTile(
+                          leading: Icon(Icons.lock),
+                          title: Text("Alterar credenciais",style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: "League Spartan"
+                        ),),
+                        ),
+                        enabled: credWid,
+                          children: [
+                        Container(height: 300,)
+                      ],
+                        ),
+                    ),
                       
                   ),
                    Padding(padding: EdgeInsets.only(top: 20)),
@@ -165,10 +227,12 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                       ),),
                       ),
                       onExpansionChanged: (value) {
-               
+                        
                         if(cont==0){
                            showDialog(context: context, builder:(context) => AlertDialog(
-                        title:Text('Informação'),
+                        title:ListTile(
+                          leading: Icon(Icons.info_outline_rounded),
+                          title: Text('Informação')),
                         content: Text('Suas dúvidas serão enviadas para o Email de suporte e serão respondidas APENAS no seu e-mail'),
                         actions: [
                         TextButton(

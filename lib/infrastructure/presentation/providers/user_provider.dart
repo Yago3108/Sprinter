@@ -210,6 +210,30 @@ class UserProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+  Future<bool> redefinirCredenciais(String senha) async {
+    final AuthCredential credential = EmailAuthProvider.credential(
+  email: user!.email, 
+  password: senha,      
+);
+try {
+  await _auth.currentUser!.reauthenticateWithCredential(credential);
+  
+  debugPrint('Reautenticação bem-sucedida! Pode continuar com a operação.');
+  return true;
+} on FirebaseAuthException catch (e) {
+  // ERRO! A senha estava incorreta ou outro problema de autenticação.
+  if (e.code == 'wrong-password') {
+    debugPrint('A senha digitada está incorreta.');
+    return false;
+  } else {
+    debugPrint('Erro durante a reautenticação: ${e.message}');
+     return false;
+  }
+} catch (e) {
+  debugPrint('Erro inesperado: $e');
+   return false;
+}
+  }
 
   Future<void> esqueceuSenha() async {
     await _auth.sendPasswordResetEmail(email: _user!.email);
