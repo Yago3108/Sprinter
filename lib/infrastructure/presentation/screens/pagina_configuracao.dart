@@ -197,7 +197,12 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                         ),
                         enabled: credWid,
                           children: [
-                        Container(height: 300,)
+                        SizedBox(
+                          height: 500,
+                          child: Column(
+                            
+                          ),
+                        )
                       ],
                         ),
                     ),

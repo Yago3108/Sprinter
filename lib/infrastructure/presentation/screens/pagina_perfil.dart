@@ -7,7 +7,6 @@ import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_esqueceu_senha.dart';
 import 'package:provider/provider.dart';
-import 'pagina_tela_inicial.dart';
 import 'pagina_compras.dart';
 import 'pagina_mapa.dart';
 
