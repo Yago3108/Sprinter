@@ -16,33 +16,33 @@ class PaginaLogin extends StatefulWidget {
 
 class _PaginaLoginState extends State<PaginaLogin> {
   // controllers
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerSenha = TextEditingController();
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
 
   // variáveis de erro
-  String? erroEmail;
-  String? erroSenha;
+  String? _erroEmail;
+  String? _erroSenha;
 
   void verificarELogar() async {
     setState(() {
-      if (controllerEmail.text.isEmpty) {
-        erroEmail = "Email não pode estar vazio";
-      } else if (!controllerEmail.text.contains("@")) {
-        erroEmail = "Email precisa conter @";
+      if (_controllerEmail.text.isEmpty) {
+        _erroEmail = "Email não pode estar vazio";
+      } else if (!_controllerEmail.text.contains("@")) {
+        _erroEmail = "Email precisa conter @";
       } else {
-        erroEmail = null;
+        _erroEmail = null;
       }
 
-      if (controllerSenha.text.isEmpty) {
-        erroSenha = "Senha não pode estar vazia";
-      } else if (controllerSenha.text.length < 8) {
-        erroSenha = "Senha precisa ter, pelo menos, 8 dígitos";
+      if (_controllerSenha.text.isEmpty) {
+        _erroSenha = "Senha não pode estar vazia";
+      } else if (_controllerSenha.text.length < 8) {
+        _erroSenha = "Senha precisa ter, pelo menos, 8 dígitos";
       } else {
-        erroSenha = null;
+        _erroSenha = null;
       }
     });
 
-    if (erroEmail == null && erroSenha == null) {
+    if (_erroEmail == null && _erroSenha == null) {
       try {
         UserProvider userProvider = Provider.of<UserProvider>(
           context,
@@ -50,22 +50,22 @@ class _PaginaLoginState extends State<PaginaLogin> {
         );
 
         var uid = await userProvider.login(
-          controllerEmail.text,
-          controllerSenha.text,
+          _controllerEmail.text,
+          _controllerSenha.text,
         );
 
         if (uid != null) {
           // limpa os controllers
-          controllerEmail.clear();
-          controllerSenha.clear();
+          _controllerEmail.clear();
+          _controllerSenha.clear();
 
           // navega para a página inicial
           Navigator.push(context, MaterialPageRoute(builder: (context) => Pagina()));
         }
       } catch (e) {
         setState(() {
-          erroEmail = "Login inválido";
-          erroSenha = "Login inválido";
+          _erroEmail = "Login inválido";
+          _erroSenha = "Login inválido";
         });
       }
     }
@@ -86,23 +86,23 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     "assets/images/Logo_Sprinter.png",
                     height: 75,
                   ),
-                ), //textfields
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 50, right: 30, left: 30),
                   child: TextFieldComponente(
-                    controller: controllerEmail,
+                    controller: _controllerEmail,
                     hint: "Email do Usuário",
                     label: "Email",
-                    error: erroEmail,
+                    error: _erroEmail,
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 30, right: 30, left: 30),
                   child: TextFieldComponente(
-                    controller: controllerSenha,
+                    controller: _controllerSenha,
                     hint: "Senha do Usuário",
                     label: "Senha",
-                    error: erroSenha,
+                    error: _erroSenha,
                     isPassword: true,
                   ),
                 ),
@@ -119,9 +119,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, right: 30, left: 30),
+                  padding: EdgeInsets.only(right: 30, left: 30),
                   child: ButtonComponente(
-                    text: "LOGIN", 
+                    text: "Login", 
                     function: verificarELogar,
                   ),
                 ),

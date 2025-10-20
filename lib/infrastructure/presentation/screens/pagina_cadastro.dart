@@ -72,6 +72,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
       if(_controllerCpf.text.isEmpty) {
         _erroCPF = "CPF não pode estar vazio";
+      } else if(_controllerCpf.text.length!=11) {
+        _erroCPF = "CPF tem que ter 11 números";
       } else if(!CPFValidator.isValid(_controllerCpf.text)) {
         _erroCPF = "CPF inválido";
       } else {
@@ -86,12 +88,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
       if(_controllerEmail.text.isEmpty) {
         _erroEmail = "Email não pode estar vazio";
+      } else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_controllerEmail.text)) {
+        _erroEmail = "Formato de Email inválido";
       } else {
         _erroEmail = null;
       }
 
       if(_controllerSenha.text.isEmpty) {
         _erroSenha = "Senha não pode estar vazia";
+      } else if(_controllerSenha.text.length < 8) {
+        _erroSenha = "Senha tem que ter 8 dígitos";
       } else {
         _erroSenha = null;
       }
@@ -99,7 +105,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if(_controllerConfirmarSenha.text.isEmpty) {
         _erroConfirmarSenha = "Confirmar senha não pode estar vazia";
       } else if(_controllerSenha.text != _controllerConfirmarSenha.text) {
-        _erroConfirmarSenha = "Confirmar senha diferente da senha";
+        _erroConfirmarSenha = "Confirmar Senha diferente da Senha";
       } else {
         _erroConfirmarSenha = null;
       }
