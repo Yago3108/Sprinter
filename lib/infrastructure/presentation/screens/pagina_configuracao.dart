@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
@@ -45,7 +46,8 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
       });
     }
   }
-
+  TextEditingController controllerChat=TextEditingController();
+  int cont=0;
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -84,170 +86,220 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-             Padding(padding: EdgeInsets.only(top: 10)),
-              Image.asset("assets/images/Logo_Sprinter.png", height: 100),
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Padding(
-                padding: const EdgeInsets.only(right: 210),
-                child: Text("Olá, ${userProvider.user!.nome}!",
-                style: TextStyle(
-                      fontSize: 36,
-                      fontFamily: "League Spartan"
-                    ),
-                ),
-              ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
                Padding(padding: EdgeInsets.only(top: 10)),
+                Image.asset("assets/images/Logo_Sprinter.png", height: 100),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Padding(
+                  padding: const EdgeInsets.only(right: 210),
+                  child: Text("Olá, ${userProvider.user!.nome}!",
+                  style: TextStyle(
+                        fontSize: 36,
+                        fontFamily: "League Spartan"
+                      ),
+                  ),
+                ),
+                 Padding(padding: EdgeInsets.only(top: 10)),
+                    Padding(
+                  padding: const EdgeInsets.only(right: 230),
+                  child: Text("Configurações:",
+                  style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "League Spartan"
+                      ),
+                  ),
+                ),
+                  Padding(padding: EdgeInsets.only(top: 15)),
                   Padding(
-                padding: const EdgeInsets.only(right: 230),
-                child: Text("Configurações:",
-                style: TextStyle(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: ExpansionTile(
+                      collapsedBackgroundColor: Colors.white,
+                      collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    iconColor: Color.fromARGB(255, 5, 106,12 ),  
+                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                    backgroundColor: Colors.white,
+                      title:ListTile(
+                        leading: Icon(Icons.lock),
+                        title: Text("Alterar credenciais",style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "League Spartan"
+                      ),),
+                      ),
+          
+                        children: [
+                      Container(height: 300,)
+                    ],
+                      ),
+                      
+                  ),
+                   Padding(padding: EdgeInsets.only(top: 20)),
+               Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ExpansionTile(
+                      collapsedBackgroundColor: Colors.white,
+                      collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    iconColor: Color.fromARGB(255, 5, 106,12 ),  
+                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                    backgroundColor: Colors.white,
+                      title:ListTile(
+                        leading: Icon(Icons.chat_bubble),
+                        title: Text("Suporte",style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "League Spartan"
+                      ),),
+                      ),
+                      onExpansionChanged: (value) {
+               
+                        if(cont==0){
+                           showDialog(context: context, builder:(context) => AlertDialog(
+                        title:Text('Informação'),
+                        content: Text('Suas dúvidas serão enviadas para o Email de suporte e serão respondidas APENAS no seu e-mail'),
+                        actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK',
+                          style: TextStyle(
+                          fontFamily: "League Spartan",
+                          color: Color.fromARGB(255, 5, 106,12 ),  
+                          ),),
+                        ),
+                      ],
+                    ),);
+                        }
+                                 cont++;
+                       
+                      },
+                        children: [
+                      SizedBox(
+                        height: 250,
+                        child: Column(
+                          children: [
+                        
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        title: TextFieldComponente(key: null,
+                        controller: controllerChat,
+                        hint: "Digite a sua dúvida",
+                        isPassword: false,
+                        label: "",),
+                        trailing: IconButton(onPressed: (){}, icon: Icon(Icons.send)),
+                        )
+                    ],
+                      ),
+                      
+                  ),
+                Padding(padding: EdgeInsets.only(top: 20)),
+                 Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ExpansionTile(
+                      collapsedBackgroundColor: Colors.white,
+                      collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    iconColor: Color.fromARGB(255, 5, 106,12 ),  
+                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                    backgroundColor: Colors.white,
+                      title:ListTile(
+                        leading: Icon(Icons.info_outline_rounded),
+                        title: Text("Sobre",style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "League Spartan"
+                      ),),
+                      ),
+          
+                        children: [
+                     Padding(padding: EdgeInsets.only(top: 5)),
+                     Image.asset("assets/images/Sprinter_simples.png", height: 70),
+                      Padding(padding: EdgeInsets.only(top: 15)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: ListTile(title: Text("Versão: 1.0.0",style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "League Spartan"
+                      ),),),
+                      ),
+                         Padding(padding: EdgeInsets.only(top: 5)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: ListTile(title: Text("Contato:sprintersuporte@gmail.com",style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "League Spartan"
+                      ),),),
+                      ),
+                         Padding(padding: EdgeInsets.only(top: 15)),
+                    ],
+                      ),
+                      
+                  ),
+                Padding(padding: EdgeInsets.only(top: 20)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 70,
+                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.delete_outline_rounded,
+                      color: Colors.red,
+                      ),
+                      title: Text("Excluir conta",style: TextStyle(
+                      color: Colors.red,
                       fontSize: 20,
                       fontFamily: "League Spartan"
+                    ),),
                     ),
-                ),
-              ),
-                Padding(padding: EdgeInsets.only(top: 15)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                    BoxShadow(
-                    color: Color.fromARGB(160, 108, 109, 108), 
-                    spreadRadius: 2, 
-                    blurRadius: 7, 
-                    offset: Offset(0, 3), 
-                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.lock),
-                    title: Text("Alterar Credenciais",style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: "League Spartan"
-                  ),),
-                    trailing: Icon(Icons.arrow_drop_down),
                   ),
                 ),
-              ),
-                 Padding(padding: EdgeInsets.only(top: 20)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                    BoxShadow(
-                    color: Color.fromARGB(160, 108, 109, 108), 
-                    spreadRadius: 2, 
-                    blurRadius: 7, 
-                    offset: Offset(0, 3), 
-                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.chat_bubble),
-                    title: Text("Suporte",style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: "League Spartan"
-                  ),),
-                    trailing: Icon(Icons.arrow_drop_down),
-                  ),
-                ),
-              ),
-              Padding(padding: EdgeInsets.only(top: 20)),
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                    BoxShadow(
-                    color: Color.fromARGB(160, 108, 109, 108), 
-                    spreadRadius: 2, 
-                    blurRadius: 7, 
-                    offset: Offset(0, 3), 
-                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.info_outline),
-                    title: Text("Sobre",style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: "League Spartan"
-                  ),),
-                    trailing: Icon(Icons.arrow_drop_down),
-                  ),
-                ),
-              ),
-              Padding(padding: EdgeInsets.only(top: 20)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                    BoxShadow(
-                    color: Color.fromARGB(160, 108, 109, 108), 
-                    spreadRadius: 2, 
-                    blurRadius: 7, 
-                    offset: Offset(0, 3), 
-                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.delete_outline_rounded,
-                    color: Colors.red,
+                   Padding(padding: EdgeInsets.only(top: 20)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 70,
+                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15)
                     ),
-                    title: Text("Excluir conta",style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontFamily: "League Spartan"
-                  ),),
-                  ),
-                ),
-              ),
-                 Padding(padding: EdgeInsets.only(top: 20)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                    BoxShadow(
-                    color: Color.fromARGB(160, 108, 109, 108), 
-                    spreadRadius: 2, 
-                    blurRadius: 7, 
-                    offset: Offset(0, 3), 
-                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.logout_rounded,
-                    color: Colors.red,
+                    child: ListTile(
+                      leading: Icon(Icons.logout_rounded,
+                      color: Colors.red,
+                      ),
+                      title: Text("Sair",style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 20,
+                      fontFamily: "League Spartan"
+                    ),),
                     ),
-                    title: Text("Sair",style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontFamily: "League Spartan"
-                  ),),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
 }
