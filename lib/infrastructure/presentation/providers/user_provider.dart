@@ -199,9 +199,9 @@ class UserProvider extends ChangeNotifier {
      
     void atualizarCC(int pontos, double emissao, double distancia){
       Usuario user = _user!;  
-      user.distancia = distancia;
-      user.carboCoins = pontos;
-      user.carbono = emissao;
+      user.distancia += distancia;
+      user.carboCoins += pontos;
+      user.carbono += emissao;
       atualizarUsuario(user);
     }
 
