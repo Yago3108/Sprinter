@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_configuracao.dart';
@@ -34,6 +35,7 @@ class _PaginaState extends State<Pagina> {
   @override
   initState() {
     super.initState();
+       
   }
 
   
@@ -42,7 +44,9 @@ class _PaginaState extends State<Pagina> {
 
   @override
   Widget build(BuildContext context) {
-        final userProvider = context.watch<UserProvider>();
+          final userProvider = context.read<UserProvider>();
+        final estatisticaProvider = context.read<EstatisticaProvider>();
+        estatisticaProvider.carregarAtividades(userProvider.user!.uid);
       final fotoBase64 = userProvider.user?.fotoPerfil;
 
       if (fotoBase64 != null) {

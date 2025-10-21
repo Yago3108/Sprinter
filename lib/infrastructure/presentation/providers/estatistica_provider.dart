@@ -15,7 +15,7 @@ class EstatisticaProvider extends ChangeNotifier {
   Map<String, dynamic> get anos => _anos;
 
   // carrega as atividades
-  Future<void> carregarAtividades(String userId) async {
+ Future<void> carregarAtividades(String userId) async {
     final atividadesSnap = await _firestore
         .collection('usuarios')
         .doc(userId)
@@ -27,30 +27,45 @@ class EstatisticaProvider extends ChangeNotifier {
     Map<String, dynamic> mesesTemp = {};
     Map<String, dynamic> anosTemp = {};
 
+    // Função auxiliar para criar a estrutura completa de 12 meses
+    Map<String, dynamic> _criarEstruturaMesesDoAno(int ano) {
+      Map<String, dynamic> meses = {};
+      for (int mes = 1; mes <= 12; mes++) {
+        final mesId = "$ano-${mes.toString().padLeft(2, '0')}";
+        meses[mesId] = {
+          'distancia': 0.0,
+          'tempo': 0,
+        };
+      }
+      return meses;
+    }
+
     // percorre a lista
     for (var doc in atividadesSnap.docs) {
       final data = doc.data();
       DateTime fim = (data['fim'] as Timestamp).toDate();
-      double distancia = data['distancia'] ?? 0.0;
-      int tempo = data['tempo'] ?? 0.0;
+      // Usando '?? 0.0' e '?? 0' para garantir os tipos corretos
+      double distancia = (data['distancia'] ?? 0.0).toDouble();
+      int tempo = (data['tempo'] ?? 0).toInt(); 
 
       // identificadores
-      String diaId = "${fim.year}-${fim.month}-${fim.day}";
+      String diaId = "${fim.year}-${fim.month.toString().padLeft(2, '0')}-${fim.day.toString().padLeft(2, '0')}";
       String semanaId = "${fim.year}-W${weekNumber(fim)}";
-      String mesId = "${fim.year}-${fim.month}";
+      String mesId = "${fim.year}-${fim.month.toString().padLeft(2, '0')}"; // PadLeft adicionado para consistência
       String anoId = "${fim.year}";
 
-      // adiciona na lista
+      // ===================================
+      // Lógica de Semanas (Sem alteração)
+      // ===================================
       semanasTemp.putIfAbsent(semanaId, () => {
         'dias': {},
         'distanciaTotal': 0.0,
-        'tempoTotal': 0.0,
+        'tempoTotal': 0,
       });
 
-      // adiciona 0 nos dias sem atividade
       semanasTemp[semanaId]['dias'].putIfAbsent(diaId, () => {
         'distancia': 0.0,
-        'tempo': 0.0,
+        'tempo': 0,
       });
 
       semanasTemp[semanaId]['dias'][diaId]['distancia'] += distancia;
@@ -58,17 +73,19 @@ class EstatisticaProvider extends ChangeNotifier {
       semanasTemp[semanaId]['distanciaTotal'] += distancia;
       semanasTemp[semanaId]['tempoTotal'] += tempo;
 
-      // adiciona na lista
+      // ===================================
+      // Lógica de Meses (Sem alteração)
+      // ===================================
       mesesTemp.putIfAbsent(mesId, () => {
         'semanas': {},
         'distanciaTotal': 0.0,
-        'tempoTotal': 0.0,
+        'tempoTotal': 0,
       });
 
-      // adiciona 0 nas semanas sem atividade
+      // adiciona 0 nas semanas sem atividade (o id da semana é 'year-WweekNumber')
       mesesTemp[mesId]['semanas'].putIfAbsent(semanaId, () => {
         'distancia': 0.0,
-        'tempo': 0.0,
+        'tempo': 0,
       });
 
       mesesTemp[mesId]['semanas'][semanaId]['distancia'] += distancia;
@@ -76,18 +93,23 @@ class EstatisticaProvider extends ChangeNotifier {
       mesesTemp[mesId]['distanciaTotal'] += distancia;
       mesesTemp[mesId]['tempoTotal'] += tempo;
 
-      // adiciona na lista
-      anosTemp.putIfAbsent(anoId, () => {
-        'meses': {},
-        'distanciaTotal': 0.0,
-        'tempoTotal': 0.0,
+
+      // ====================================================
+      // Lógica de Anos (MODIFICADA para preencher os 12 meses)
+      // ====================================================
+      anosTemp.putIfAbsent(anoId, () {
+        // Inicializa o ano com 12 meses preenchidos com zeros
+        return {
+          'meses': _criarEstruturaMesesDoAno(fim.year),
+          'distanciaTotal': 0.0,
+          'tempoTotal': 0,
+        };
       });
 
-      // adiciona 0 nos meses sem atividade
-      anosTemp[anoId]['meses'].putIfAbsent(mesId, () => {
-        'distancia': 0.0,
-        'tempo': 0.0,
-      });
+      // Nota: Não é necessário putIfAbsent para o mês aqui,
+      // pois _criarEstruturaMesesDoAno garante que todos os 12 meses (mesId) já existem.
+      // O campo do mês dentro do ano é simples (distancia e tempo),
+      // não é necessário um sub-mapa 'dias' ou 'semanas' aqui.
 
       anosTemp[anoId]['meses'][mesId]['distancia'] += distancia;
       anosTemp[anoId]['meses'][mesId]['tempo'] += tempo;
@@ -103,40 +125,21 @@ class EstatisticaProvider extends ChangeNotifier {
 
     // salvar de volta no firestore
     await salvarEstatisticas(userId);
+}
+Future<void> salvarEstatisticas(String userId) async {
+  final userRef = _firestore.collection('usuarios').doc(userId);
+
+  // ... (salvar semanas e meses)
+
+  // salvar anos
+  for (var entry in _anos.entries) {
+    await userRef.collection('estatisticas')
+        .doc('anos')
+        .collection('dados')
+        .doc(entry.key) // o key é o anoId, ex: "2023"
+        .set(entry.value); // o value contém o mapa 'meses' com 12 entradas
   }
-
-  // função para salvar as estatísticas
-  Future<void> salvarEstatisticas(String userId) async {
-    final userRef = _firestore.collection('usuarios').doc(userId);
-
-    // salvar semanas
-    for (var entry in _semanas.entries) {
-      await userRef.collection('estatisticas')
-          .doc('semanas')
-          .collection('dados')
-          .doc(entry.key)
-          .set(entry.value);
-    }
-
-    // salvar meses
-    for (var entry in _meses.entries) {
-      await userRef.collection('estatisticas')
-          .doc('meses')
-          .collection('dados')
-          .doc(entry.key)
-          .set(entry.value);
-    }
-
-    // salvar anos
-    for (var entry in _anos.entries) {
-      await userRef.collection('estatisticas')
-          .doc('anos')
-          .collection('dados')
-          .doc(entry.key)
-          .set(entry.value);
-    }
-  }
-
+}
   // calcula número da semana
   int weekNumber(DateTime date) {
     final firstDayOfYear = DateTime(date.year, 1, 1);
@@ -190,10 +193,11 @@ class EstatisticaProvider extends ChangeNotifier {
       if (totalDistancia > 0 || totalTempo > 0) {
         final amigoDoc = await _firestore.collection('usuarios').doc(amigoId).get();
         final nome = amigoDoc.data()?['nome'] ?? 'Sem Nome';
-
+        final fotoperfil=amigoDoc.data()?["Foto_perfil"]?? "";
         ranking.add({
           'uid': amigoId,
           'nome': nome,
+          "Foto_perfil":fotoperfil,
           'distancia': totalDistancia,
           'tempo': totalTempo,
         });

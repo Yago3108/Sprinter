@@ -102,7 +102,7 @@ class MapaProvider extends ChangeNotifier {
 
     if (_uid != null) {
       await _firestore.collection('usuarios').doc(_uid).collection("atividades").add({
-        'rota': _rota.map((ponto) => {'latitude': ponto.latitude, 'longitude': ponto.longitude}).toList(),
+        'rota': _rota.map((ponto) => { 'latitude': ponto.latitude, 'longitude': ponto.longitude}).toList(),
         'uid': _uid,
         'distancia': _distancia,
         'tempo': _tempo.inSeconds,

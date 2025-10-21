@@ -29,33 +29,11 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
   }
   @override
   Widget build(BuildContext context) {
-    final estatisticaProvider=context.watch<EstatisticaProvider>();
-    final userProvider=context.watch<UserProvider>();
     return Scaffold(
       body: Center(
         child: Column(
           children: [
                 Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-            Row(
-              children: [
-                Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                IconButton(onPressed: (){
-                    estatisticaProvider.carregarAtividades(userProvider.user!.uid);
-                }, icon: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.red,
-                  ),
-                  child: Icon(Icons.replay_outlined,color: Colors.white,),
-                )),
-                Padding(padding: EdgeInsetsGeometry.only(right: 10)),
-                Text("Recarregar estatísticas",style: TextStyle(
-                  fontFamily: "League Spartan",
-                  fontSize: 18,
-                ),)
-              ],
-            ),
             Padding(padding: EdgeInsetsGeometry.only(top: 15)),
             Container(
               height: 300,
@@ -110,11 +88,11 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
                 controller: _tabController,
                 children: [
                   //semanal
-                    Center(child: GraficoHistorico(periodo: Periodo.semana,)),
+                    Center(child: GraficoHistorico(periodo: Periodo.semana,dataReferencia: DateTime.now(),)),
                     //mensal
-                    Center(child: GraficoHistorico(periodo: Periodo.mes,)),
+                    Center(child: GraficoHistorico(periodo: Periodo.mes,dataReferencia: DateTime.now())),
                     //anual
-                    Center(child: GraficoHistorico(periodo: Periodo.ano,)),
+                    Center(child: GraficoHistorico(periodo: Periodo.ano,dataReferencia: DateTime.now())),
                 ],
               ),
               )

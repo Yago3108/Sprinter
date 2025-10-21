@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/app/components/widget_podio.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil_amizade.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
@@ -76,16 +77,49 @@ OverlayEntry? _overlayEntry;
 
 class _PaginaAmizadesState extends State<PaginaAmizades> {
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<Map<String, dynamic>>? _rankingFuture;
+  Future<Map<String, dynamic>>? _rankingFuture; 
+  
+  // Variáveis para guardar os dados do ranking
+  List<Map<String, dynamic>> _rankingList = []; 
+  int? _posicaoUsuario;
+  bool _carregandoRanking = true; 
+  String? _erroRanking;
 
   List<Usuario> amigos = [];
   bool carregando = true;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final estatisticaProvider =
-        Provider.of<EstatisticaProvider>(context, listen: false);
-    _rankingFuture ??= estatisticaProvider.rankingSemanal(context.watch<UserProvider>().user!.uid);
+    if (_rankingFuture == null) {
+      _carregarRanking();
+    }
+  }
+
+  
+  Future<void> _carregarRanking() async {
+    final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
+    final uid = context.read<UserProvider>().user!.uid;
+
+    setState(() {
+      _carregandoRanking = true;
+      _erroRanking = null;
+    });
+
+    try {
+      final data = await estatisticaProvider.rankingSemanal(uid);
+      setState(() {
+        _rankingList = data['ranking'] as List<Map<String, dynamic>>;
+        _posicaoUsuario = data['posicaoUsuario'] as int?;
+        _carregandoRanking = false;
+      });
+    } catch (e) {
+      setState(() {
+        _erroRanking = "Erro ao carregar o ranking.";
+        _carregandoRanking = false;
+        print("Erro ao carregar ranking: $e");
+      });
+    }
   }
 
 
@@ -93,6 +127,14 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   void initState() {
     super.initState();
        carregarTodosAmigos();
+      AmizadeProvider amizadeProvider = context.read<AmizadeProvider>();
+  
+
+  setState(() {
+      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
+  amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
+  });
+
        
   }
 
@@ -147,15 +189,9 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    
-  AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
+      AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
   final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
-  
 
-  setState(() {
-      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
-  amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
-  });
 
 
     return DefaultTabController(
@@ -165,6 +201,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
         body: Center(
           child: Column(
             children: [
+             
               Padding(padding: EdgeInsets.only(top: 20)),
                 Container(
                   height: 40,
@@ -189,6 +226,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                     ),
                   ),
                 ),
+                 Padding(padding: EdgeInsets.only(top: 20)),
+                 WidgetPodioRanking(ranking: _rankingList),
               Padding(padding: EdgeInsets.only(top: 60)),
               TabBar(
                 dividerColor: Colors.white,
@@ -204,13 +243,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
               SizedBox(
                 height: 300,
                 width: double.infinity,
-                child: GestureDetector(
-                  onTap: () {
-                    
-                    amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
-                    amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
-                  },
-                  child: TabBarView(
+                child:TabBarView(
                     children: [
                   
                       //amizades
@@ -271,7 +304,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                                   Text(amigo1.nome,style: TextStyle(
                                                     fontSize: 15,
                                                                                     
-                                                                                    fontFamily: 'League Spartan',
+                                                  fontFamily: 'League Spartan',
                                                     color: Color.fromARGB(255, 5, 106, 12
                                                   ),),),
                                                   Padding(padding: EdgeInsets.only(left: 20)),
@@ -306,76 +339,71 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
                       //ranking
-                      Center(child: FutureBuilder<Map<String, dynamic>>(
-        future: _rankingFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text("Erro: ${snapshot.error}"));
-          }
-
-          if (!snapshot.hasData || (snapshot.data?['ranking'] as List).isEmpty) {
-            return const Center(child: Text("Nenhum dado encontrado."));
-          }
-
-          final ranking = snapshot.data!['ranking'] as List<Map<String, dynamic>>;
-          final posicaoUsuario = snapshot.data!['posicaoUsuario'] as int?;
-
-          return Column(
-            children: [
-              if (posicaoUsuario != null)
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    "Você está em $posicaoUsuarioº lugar esta semana!",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontFamily: "League Spartan",
-                      color: Color.fromARGB(255, 5, 106, 12)
-                    ),
-                  ),
-                ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: ranking.length,
+                    Center(
+  child: _carregandoRanking
+      ? const Center(child: CircularProgressIndicator())
+      :_rankingList.isEmpty
+              ? const Center(child: Text("Nenhum dado encontrado."))
+              : ListView.builder(
+                  itemCount: 1 + _rankingList.length, 
                   itemBuilder: (context, index) {
-                    final item = ranking[index];
+
+                    if (index == 0) {
+                      // NOVA POSIÇÃO 0: A POSIÇÃO DO USUÁRIO
+                      if (_posicaoUsuario != null) {
+                        return Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Você está em $_posicaoUsuarioº lugar esta semana!",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontFamily: "League Spartan",
+                              color: Color.fromARGB(255, 5, 106, 12)
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink(); 
+                    }
+
+                  
+                    final rankingIndex = index - 1;
+                    final item = _rankingList[rankingIndex];
+                    final posicao = rankingIndex + 1; 
                     return Padding(
-                      padding: EdgeInsets.only(top:8.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          border: BoxBorder.all(
-                            color: Color.fromARGB(255, 5, 106, 12),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 5, 106, 12),
                             width: 2,
-),
+                          ),
                           borderRadius: BorderRadius.circular(35)
                         ),
-                       height: 80,
-                       width: 300,
+                        height: 80,
+                        width: 300,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                            child: Text("${index + 1}º",style: TextStyle(
+                            backgroundColor: const Color.fromARGB(255, 5, 106, 12),
+                            child: Text("${posicao}º", style: const TextStyle(
                               color: Colors.white
-                            ),),
+                            )),
                           ),
-                          title: Text(item['nome'],style: TextStyle(
-                                  fontSize: 19
-                                ),),
+                          title: Text(item['nome'], style: const TextStyle(
+                            fontSize: 19
+                          )),
                           subtitle: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
                                 Text(
-                                  "Distância: ${item['distancia'].toStringAsFixed(2)} m",style: TextStyle(
-                                  fontSize: 17
+                                  "Distância: ${item['distancia'].toStringAsFixed(2)} m", style: const TextStyle(
+                                    fontSize: 17
+                                  ),
                                 ),
-                                ),
-                                Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                                Text("Tempo: ${item['tempo'].toStringAsFixed(1)} seg",style: TextStyle(
+                                const Padding(padding: EdgeInsets.only(right: 5)),
+                                Text("Tempo: ${item['tempo'].toStringAsFixed(1)} seg", style: const TextStyle(
                                   fontSize: 17
                                 ),)
                               ],
@@ -386,11 +414,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                     );
                   },
                 ),
-              ),
-            ],
-          );
-        },
-      ),),
+),
                       //pedidos
                       Center(child: Container(
                           padding: EdgeInsets.all(12),
@@ -466,8 +490,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                       )),
                     ],
                   ),
-                ),
               ),
+            
             ],
           ),
         ),
