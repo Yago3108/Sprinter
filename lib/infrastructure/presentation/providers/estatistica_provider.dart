@@ -97,23 +97,48 @@ class EstatisticaProvider extends ChangeNotifier {
       // ====================================================
       // Lógica de Anos (MODIFICADA para preencher os 12 meses)
       // ====================================================
-    else if (widget.periodo == Periodo.ano) {
-    final anoId = "${dataReferencia.year}";
-    
-    dadosPeriodo = estatisticaProvider.anos[anoId]; 
-    final mesesComDados = Map<String, dynamic>.from(dadosPeriodo?['meses'] ?? {});
+    anosTemp.putIfAbsent(anoId, () {
+        // Inicializa o ano com 12 meses preenchidos com zeros
+        return {
+          'meses': _criarEstruturaMesesDoAno(fim.year),
+          'distanciaTotal': 0.0,
+          'tempoTotal': 0,
+        };
+      });
 
-    for (int mes = 1; mes <= 12; mes++) {
-        final chaveMes = "${dataReferencia.year}-${mes.toString().padLeft(2, '0')}"; 
-        
-        final dadosMes = mesesComDados[chaveMes];
-        
-        final distanciaKm = ((dadosMes?['distancia'] ?? 0.0) as num).toDouble() / 1000.0;
-        
-        distanciasCompletas.add(distanciaKm);
+      // Nota: Não é necessário putIfAbsent para o mês aqui,
+      // pois _criarEstruturaMesesDoAno garante que todos os 12 meses (mesId) já existem.
+      // O campo do mês dentro do ano é simples (distancia e tempo),
+      // não é necessário um sub-mapa 'dias' ou 'semanas' aqui.
+
+      anosTemp[anoId]['meses'][mesId]['distancia'] += distancia;
+      anosTemp[anoId]['meses'][mesId]['tempo'] += tempo;
+      anosTemp[anoId]['distanciaTotal'] += distancia;
+      anosTemp[anoId]['tempoTotal'] += tempo;
     }
-    maxX = 11; 
+
+    _semanas = semanasTemp;
+    _meses = mesesTemp;
+    _anos = anosTemp;
+
+    notifyListeners();
+
+    // salvar de volta no firestore
+    await salvarEstatisticas(userId);
 }
+Future<void> salvarEstatisticas(String userId) async {
+  final userRef = _firestore.collection('usuarios').doc(userId);
+
+  // ... (salvar semanas e meses)
+
+  // salvar anos
+  for (var entry in _anos.entries) {
+    await userRef.collection('estatisticas')
+        .doc('anos')
+        .collection('dados')
+        .doc(entry.key) // o key é o anoId, ex: "2023"
+        .set(entry.value); // o value contém o mapa 'meses' com 12 entradas
+  }
 }
   // calcula número da semana
   int weekNumber(DateTime date) {
