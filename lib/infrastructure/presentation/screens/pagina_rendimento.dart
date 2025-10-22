@@ -29,6 +29,9 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
   }
   @override
   Widget build(BuildContext context) {
+              final userProvider = context.read<UserProvider>();
+     final estatisticaProvider = context.read<EstatisticaProvider>();
+        estatisticaProvider.carregarAtividades(userProvider.user!.uid);
     return Scaffold(
       body: Center(
         child: Column(

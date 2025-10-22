@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_perfil_amizade.dart';
+import 'package:provider/provider.dart';
 
 class WidgetPodioRanking extends StatefulWidget {
   final List<Map<String, dynamic>>? ranking;
@@ -23,6 +27,7 @@ class _WidgetPodioRankingState extends State<WidgetPodioRanking> {
 
   // Função auxiliar para exibir a posição (1º, 2º ou 3º)
   Widget _buildPodiumItem(BuildContext context, int position) {
+    final userProvider = context.read<UserProvider>();
     final user = _getTopUser(position);
     final String label = "${position}º";
        final fotoBase64 = user?["Foto_perfil"];
@@ -57,14 +62,25 @@ class _WidgetPodioRankingState extends State<WidgetPodioRanking> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Foto de Perfil / Nome
+        
         if (user != null) ...[
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: bytes != null
-                  ? MemoryImage(bytes!)
-                  : AssetImage("assets/images/perfil_basico.jpg"),
-            
+          GestureDetector(
+            onTap: () => {
+               
+              if(user["uid"]!=userProvider.user!.uid){
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PaginaPerfilAmizade(null, uidAmigo: user["uid"],)),
+              ),
+              }
+            },
+            child: CircleAvatar(
+              radius: 25,
+              backgroundImage: bytes != null
+                    ? MemoryImage(bytes!)
+                    : AssetImage("assets/images/perfil_basico.jpg"),
+              
+            ),
           ),
           const SizedBox(height: 4),
           Text(

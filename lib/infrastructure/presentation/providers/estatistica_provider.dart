@@ -85,7 +85,7 @@ class EstatisticaProvider extends ChangeNotifier {
       // adiciona 0 nas semanas sem atividade (o id da semana é 'year-WweekNumber')
       mesesTemp[mesId]['semanas'].putIfAbsent(semanaId, () => {
         'distancia': 0.0,
-        'tempo': 0,
+        'tempo': 0, 
       });
 
       mesesTemp[mesId]['semanas'][semanaId]['distancia'] += distancia;
@@ -106,10 +106,7 @@ class EstatisticaProvider extends ChangeNotifier {
         };
       });
 
-      // Nota: Não é necessário putIfAbsent para o mês aqui,
-      // pois _criarEstruturaMesesDoAno garante que todos os 12 meses (mesId) já existem.
-      // O campo do mês dentro do ano é simples (distancia e tempo),
-      // não é necessário um sub-mapa 'dias' ou 'semanas' aqui.
+     
 
       anosTemp[anoId]['meses'][mesId]['distancia'] += distancia;
       anosTemp[anoId]['meses'][mesId]['tempo'] += tempo;

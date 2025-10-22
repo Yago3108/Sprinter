@@ -45,8 +45,6 @@ class _PaginaState extends State<Pagina> {
   @override
   Widget build(BuildContext context) {
           final userProvider = context.read<UserProvider>();
-        final estatisticaProvider = context.read<EstatisticaProvider>();
-        estatisticaProvider.carregarAtividades(userProvider.user!.uid);
       final fotoBase64 = userProvider.user?.fotoPerfil;
 
       if (fotoBase64 != null) {
