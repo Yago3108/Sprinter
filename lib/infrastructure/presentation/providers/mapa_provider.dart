@@ -93,7 +93,7 @@ class MapaProvider extends ChangeNotifier {
 
     double emissao = _tempo.inSeconds*fatorEmissao*(_distancia/1000);
     
-    int pontos = emissao.ceil();
+    int pontos = (emissao/100).floor();
 
     print("Emissao $emissao, Pontos $pontos");
 
