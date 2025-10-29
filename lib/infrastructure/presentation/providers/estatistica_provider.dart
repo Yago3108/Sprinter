@@ -126,7 +126,22 @@ class EstatisticaProvider extends ChangeNotifier {
 Future<void> salvarEstatisticas(String userId) async {
   final userRef = _firestore.collection('usuarios').doc(userId);
 
-  // ... (salvar semanas e meses)
+  for (var entry in _semanas.entries) {
+          await userRef.collection('estatisticas')
+              .doc('semanas')
+              .collection('dados')
+              .doc(entry.key)
+              .set(entry.value);
+      }
+
+      // SALVAR MESES
+      for (var entry in _meses.entries) {
+          await userRef.collection('estatisticas')
+              .doc('meses')
+              .collection('dados')
+              .doc(entry.key)
+              .set(entry.value);
+      }
 
   // salvar anos
   for (var entry in _anos.entries) {
@@ -153,7 +168,7 @@ Future<void> salvarEstatisticas(String userId) async {
 
     // descobre a semana atual
     final semanaId = "${agora.year}-W${weekNumber(agora)}";
-
+    print(semanaId);
     final userRef = _firestore.collection('usuarios').doc(userId);
 
     // buscar lista de amigos
@@ -200,7 +215,6 @@ Future<void> salvarEstatisticas(String userId) async {
         });
       }
     }
-
     // Ordena por distância (maior primeiro)
     ranking.sort((a, b) => b['distancia'].compareTo(a['distancia']));
 
