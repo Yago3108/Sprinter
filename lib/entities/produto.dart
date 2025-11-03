@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// model de produto
 class Produto {
-
-  // variáveis de produto
   final String id;
   final String nome;
   final String descricao;
@@ -12,7 +9,6 @@ class Produto {
   final String imagemBase64;
   int quantidade;
 
-  // construtor
   Produto({
     required this.id,
     required this.nome,

@@ -189,10 +189,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-      AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
-  final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
-
-
+    AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
+    final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
 
     return DefaultTabController(
       length: 3,

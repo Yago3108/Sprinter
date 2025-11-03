@@ -2,9 +2,11 @@ import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/produto_carrossel.dart';
+import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_produto.dart';
 import 'package:myapp/infrastructure/presentation/app/components/modelo_produto.dart';
 import 'package:myapp/infrastructure/presentation/app/components/widget_pesquisa.dart';
+import 'package:provider/provider.dart';
 
 class PaginaCompras extends StatefulWidget {
   const PaginaCompras({super.key});
@@ -81,6 +83,8 @@ class PaginaComprasState extends State<PaginaCompras> {
 
   @override
   Widget build(BuildContext context) {
+    final maisVendidos = context.watch<ProdutoProvider>().produtos;
+
     return Scaffold(
       body: ListView(
         children: [
@@ -149,13 +153,12 @@ class PaginaComprasState extends State<PaginaCompras> {
                 Padding(padding: EdgeInsets.only(top: 20)),
                 SizedBox(
                   height: 380,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "Rg3UsIfL6mCWI1u6Ymhb"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                    ],
+                  child: ListView.builder(
+                    itemCount: maisVendidos.length,
+                    itemBuilder: (context, index) {
+                      final maisVendido = maisVendidos[index];
+                      return ProdutoCard(produtoId: maisVendido.id);
+                    }
                   ),
                 ),
               ],

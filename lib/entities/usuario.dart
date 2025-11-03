@@ -1,7 +1,4 @@
-// model de usuário
 class Usuario {
-
-  // variáveis
   final List<Usuario> amigos; 
   final String uid;
   String nome;
@@ -13,7 +10,6 @@ class Usuario {
   double distancia;
   dynamic fotoPerfil;
 
-  // construtor
   Usuario({
     required this.amigos,
     required this.uid,
