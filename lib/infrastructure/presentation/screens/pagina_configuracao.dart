@@ -324,7 +324,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                       side: BorderSide.none, 
                     ),
                     iconColor: Color.fromARGB(255, 5, 106,12 ),  
-                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                    textColor:Color.fromARGB(255, 5, 106,12 ),
                     backgroundColor: Colors.white,
                       title:ListTile(
                         leading: Icon(Icons.info_outline_rounded),

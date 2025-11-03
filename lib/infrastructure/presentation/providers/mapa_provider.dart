@@ -16,6 +16,7 @@ class MapaProvider extends ChangeNotifier {
   Duration _tempo = Duration.zero;
   DateTime? _inicio;
   DateTime? _fim;
+  DateTime? _ultimoTempo;
   Position? _ultimaPosicao;
   
 
@@ -27,12 +28,13 @@ class MapaProvider extends ChangeNotifier {
   );
   StreamSubscription<Position>? _posicaoStream;
 
-  void iniciarAtividade() {
+  void iniciarAtividade(BuildContext context) {
     rota.clear();
     _distancia = 0.0;
     _tempo = Duration.zero;
     _inicio = DateTime.now();
     _ultimaPosicao = null;
+    _ultimoTempo = null;
 
     _posicaoStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -46,16 +48,49 @@ class MapaProvider extends ChangeNotifier {
       // Atualiza a posição no mapa
       await controller.moveTo(ponto);
 
-      // Calcula distância acumulada
-      if (_ultimaPosicao != null) {
+      if(_ultimaPosicao != null && _ultimoTempo != null){
         final distanciaLocal = Distance().as(
           LengthUnit.Meter,
           LatLng(_ultimaPosicao!.latitude, _ultimaPosicao!.longitude),
           LatLng(pos.latitude, pos.longitude),
         );
         _distancia += distanciaLocal;
+
+        final Duration tempoLocal = pos.timestamp.difference(_ultimoTempo!);
+
+        if(tempoLocal.inSeconds > 0){
+          final double velocidade = distanciaLocal / tempoLocal.inSeconds;
+
+          final double velocidadeKm = velocidade * 3.6;
+
+          if(velocidadeKm>40){
+            if(ModalRoute.of(context)?.isCurrent ?? false){
+              showDialog(context: context, 
+              builder: (ctx) => AlertDialog(
+                title: const Text("Alerta de velocidade!"),
+                content: Text("Você está andando acima da velocidade permitida do aplicativo!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(), 
+                    child: const Text("Entendi"))
+                ],
+              )
+              );
+            }
+          }
+        }
       }
-      _ultimaPosicao = pos;
+
+      // Calcula distância acumulada
+      // if (_ultimaPosicao != null) {
+      //   final distanciaLocal = Distance().as(
+      //     LengthUnit.Meter,
+      //     LatLng(_ultimaPosicao!.latitude, _ultimaPosicao!.longitude),
+      //     LatLng(pos.latitude, pos.longitude),
+      //   );
+      //   _distancia += distanciaLocal;
+      // }
+      // _ultimaPosicao = pos;
 
       // Desenha a rota se houver pelo menos 2 pontos e forem diferentes
       if (rota.length >= 2) {

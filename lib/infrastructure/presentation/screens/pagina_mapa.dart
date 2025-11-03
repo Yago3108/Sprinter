@@ -73,7 +73,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
                     });
 
                     if (clicou) {
-                      mapa.iniciarAtividade();
+                      mapa.iniciarAtividade(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Atividade iniciada"),
