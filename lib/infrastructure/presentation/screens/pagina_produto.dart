@@ -104,6 +104,10 @@ class PaginaProdutoState extends State<PaginaProduto> {
     } else{
       context.read<ProdutoProvider>().atualizarQtdProd(quantidade);
       context.read<UserProvider>().retirarCC(produto!.preco*quantidade);
+       context.read<ProdutoProvider>().registrarCompra(
+        userProvider.user!.uid,widget.produtoId,
+       context.read<ProdutoProvider>().qtdCompra,
+       produto!.preco*quantidade.toDouble());
       showDialog(
       context: context,
       builder: (context) => AlertDialog(
