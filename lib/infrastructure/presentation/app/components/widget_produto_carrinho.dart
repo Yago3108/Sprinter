@@ -58,38 +58,60 @@ class _WidgetProdutoCarrinhoState extends State<WidgetProdutoCarrinho> {
           }
           return Padding(
             padding: const EdgeInsets.only(top: 10,right: 15,left: 15),
-            child: Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-                boxShadow:  [
-                 BoxShadow(
-                  color: Color.fromARGB(117, 15, 15, 15), 
-                  spreadRadius: 2, 
-                  blurRadius: 3, 
-                  offset: Offset(0, 3), 
-                ),
-              ],
+            child: ExpansionTile(
+            collapsedBackgroundColor: Colors.white,
+                      collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide.none, 
+                    ),
+                    iconColor: Color.fromARGB(255, 5, 106,12 ),  
+                    textColor:Color.fromARGB(255, 5, 106,12 ) ,
+                    backgroundColor: Colors.white,
+              title: ListTile(
+                leading:   ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: imagemBytes != null
+                          ? Image.memory(
+                              imagemBytes,
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.fill,
+                            )
+                          : const Icon(Icons.shopping_bag, size: 30),
+                    ),
+                    title:   Text(produto['nome'] ?? 'Produto sem nome', style: TextStyle(fontSize: 16)),
               ),
-              child: Row(
-                children: [
-                  // Exibe a imagem ou um placeholder
-                  imagemBytes != null
-                      ? Image.memory(
-                          imagemBytes,
-                          height: 40,
-                          width: 40,
-                          fit: BoxFit.fill,
-                        )
-                      : const Icon(Icons.shopping_bag, size: 30),
-                  // ADICIONE AQUI OUTRAS INFORMAÇÕES DO PRODUTO (NOME, PREÇO, ETC.)
-                  Padding(padding: EdgeInsets.only(left: 10)),
-                  Text(produto['nome'] ?? 'Produto sem nome', style: TextStyle(fontSize: 16)),
-                  // ...
+              children:[
+                Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow:  [
+                   BoxShadow(
+                    color: Color.fromARGB(117, 15, 15, 15), 
+                    spreadRadius: 2, 
+                    blurRadius: 3, 
+                    offset: Offset(0, 3), 
+                  ),
                 ],
+                ),
+                child: Row(
+                  children: [
+            
+                    Padding(padding: EdgeInsets.only(left: 10)),
+                  
+       
+                  ],
+                ),
               ),
+              ]
+
+              
             ),
           );
         }

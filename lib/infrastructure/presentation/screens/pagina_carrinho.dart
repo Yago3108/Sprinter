@@ -52,6 +52,19 @@ class PaginaCarrinho extends StatelessWidget {
 
         child: Column(
           children: [
+            Padding(padding: EdgeInsets.only(top: 15)),
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: ListTile(
+              
+                title: Text(" Seus Ingressos",style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 5, 106, 12)
+                ),),
+              leading: Icon(Icons.shopping_cart_outlined,size:50,color: Color.fromARGB(255, 5, 106, 12),),
+              ),
+            ),
+             Padding(padding: EdgeInsets.only(top: 15)),
             WidgetProdutoCarrinho(id:"Rg3UsIfL6mCWI1u6Ymhb")
           ],
         ),
