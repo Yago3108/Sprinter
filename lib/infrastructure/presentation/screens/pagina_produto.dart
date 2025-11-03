@@ -187,7 +187,7 @@ class PaginaProdutoState extends State<PaginaProduto> {
                       imagemBytes!,
                       height: 250,
                       width: 350,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.cover, 
                     ),
                   )
                 else

@@ -18,7 +18,7 @@ class ProdutoCard extends StatelessWidget {
           .get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return SizedBox();
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {

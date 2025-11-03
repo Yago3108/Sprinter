@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_configuracao.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_cria_produto.dart';
@@ -23,7 +24,7 @@ class Pagina extends StatefulWidget {
 
 class _PaginaState extends State<Pagina> {
   int _paginaAtual = 2;
-
+  bool isAdmin=false;
   final List<Widget> _paginas = [
     PaginaAmizades(),
     PaginaCompras(),
@@ -35,7 +36,6 @@ class _PaginaState extends State<Pagina> {
   @override
   initState() {
     super.initState();
-       
   }
 
   
@@ -46,7 +46,11 @@ class _PaginaState extends State<Pagina> {
   Widget build(BuildContext context) {
           final userProvider = context.read<UserProvider>();
       final fotoBase64 = userProvider.user?.fotoPerfil;
-
+       if((userProvider.user?.email=="yrtoiu1515@gmail.com") || (userProvider.user?.email=="vitor.fn@aluno.ifsc.edu.br") || (userProvider.user?.email=="gustavocampos@gmail.com")){
+        setState(() {
+                  isAdmin=true;
+        });
+       }
       if (fotoBase64 != null) {
         setState(() {
           bytes = base64Decode(fotoBase64);
@@ -93,6 +97,7 @@ class _PaginaState extends State<Pagina> {
                 );
               },
             ),
+            isAdmin?
             ListTile(
               leading: Icon(Icons.shopping_basket),
               title: Text("Cadastrar Produtos"),
@@ -100,6 +105,17 @@ class _PaginaState extends State<Pagina> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CriarProdutoPage()),
+                );
+              },
+            ):SizedBox(),
+                           ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text("Carrinho"),
+              onTap: () {
+              
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaginaCarrinho()),
                 );
               },
             ),
@@ -116,6 +132,7 @@ class _PaginaState extends State<Pagina> {
                 );
               },
             ),
+      
           ],
         ),
       ),

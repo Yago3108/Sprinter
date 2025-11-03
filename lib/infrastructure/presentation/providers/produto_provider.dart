@@ -14,7 +14,6 @@ class ProdutoProvider extends ChangeNotifier {
 
   // Produto carregado
   Produto? _produto;
-
   // Lista de produtos carregados
   List<Produto> _produtos = [];
   List<Produto> get produtos => _produtos;

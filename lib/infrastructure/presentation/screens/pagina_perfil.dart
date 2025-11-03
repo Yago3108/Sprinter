@@ -26,9 +26,8 @@ class PaginaPerfilState extends State<PaginaPerfil> {
     if (fotoBase64 != null) {
       bytes = base64Decode(fotoBase64);
     }
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    
+    return Scaffold(
         appBar: AppBar(
           actionsPadding: EdgeInsets.only(right: 10),
           backgroundColor: Color.fromARGB(255, 5, 106, 12),
@@ -420,7 +419,6 @@ class PaginaPerfilState extends State<PaginaPerfil> {
             ),
           ),
         ),
-      ),
     );
   }
 }
