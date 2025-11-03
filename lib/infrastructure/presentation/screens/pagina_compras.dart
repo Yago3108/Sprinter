@@ -80,7 +80,11 @@ class PaginaComprasState extends State<PaginaCompras> {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
-
+  @override
+  void initState() {
+    super.initState();
+  
+  }
   @override
   Widget build(BuildContext context) {
     final maisVendidos = context.watch<ProdutoProvider>().produtos;

@@ -26,9 +26,9 @@ class Produto {
       nome: data['nome'],
       id: doc.id,
       descricao: data['descricao'],
-      preco: data['preco'],
+      preco: data['preco'].toInt(),
       tipo: data['tipo'],
-      imagemBase64: data['imagem'],
+      imagemBase64: data['imagemBase64'],
       quantidade: data['quantidade'],
     );
   }

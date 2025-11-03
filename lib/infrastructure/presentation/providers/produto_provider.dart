@@ -11,7 +11,9 @@ class ProdutoProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   int qtdCompra = 1;
-
+  ProdutoProvider(){
+    carregarProdutos();
+  }
   // Produto carregado
   Produto? _produto;
   // Lista de produtos carregados
@@ -84,7 +86,8 @@ class ProdutoProvider extends ChangeNotifier {
     try {
       QuerySnapshot snapshot = await _firestore.collection('produtos').get();
       _produtos =
-          snapshot.docs.map((doc) => Produto.fromFirestore(doc)).toList();
+          snapshot.docs.map((doc) => 
+          Produto.fromFirestore(doc)).toList();
       notifyListeners();
       return _produtos;
     } catch (e) {
@@ -142,6 +145,7 @@ class ProdutoProvider extends ChangeNotifier {
 
   //Atualizar quantidade do produto
   void atualizarQtdProd(int qtdCompra){
+
     Produto produto = _produto!;
     produto.quantidade = produto.quantidade - qtdCompra;
     atualizarProduto(produto);
@@ -152,6 +156,34 @@ class ProdutoProvider extends ChangeNotifier {
     qtdCompra = 1;
     notifyListeners();
   }
+Future<void> registrarCompra(
+    String userId,
+    String productId,
+    int quantidade,
+    double carbocoinsGastos,
+) async {
+    // 1. Define a referência à subcoleção 'compras' do usuário
+    final comprasCollectionRef = _firestore
+        .collection('usuarios')
+        .doc(userId)
+        .collection('compras');
 
+    // 2. Cria o registro da compra
+    final novoRegistroDeCompra = {
+        'produtoId': productId,
+        'quantidade': quantidade,
+        'carbocoins': carbocoinsGastos,
+        'dataCompra': DateTime.now(), 
+    };
+
+    try {
+        await comprasCollectionRef.add(novoRegistroDeCompra);
+        print("Compra do produto $productId registrada com sucesso para o usuário $userId.");
+
+    } catch (e) {
+        print("Erro ao registrar a compra no Firestore: $e");
+        rethrow; 
+    }
+}
   
 }

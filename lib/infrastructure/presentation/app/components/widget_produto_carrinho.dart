@@ -102,7 +102,7 @@ class _WidgetProdutoCarrinhoState extends State<WidgetProdutoCarrinho> {
                 ),
                 child: Row(
                   children: [
-            
+                    
                     Padding(padding: EdgeInsets.only(left: 10)),
                   
        
