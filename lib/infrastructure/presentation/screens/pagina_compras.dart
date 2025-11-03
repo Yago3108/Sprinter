@@ -158,6 +158,7 @@ class PaginaComprasState extends State<PaginaCompras> {
                 SizedBox(
                   height: 380,
                   child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
                     itemCount: maisVendidos.length,
                     itemBuilder: (context, index) {
                       final maisVendido = maisVendidos[index];

@@ -26,7 +26,6 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
 
   Future<void> _carregarAmigo() async {
     final userProvider = context.read<UserProvider>();
-    final usuario = await userProvider.getUsuarioByUid(widget.uidAmigo);
     if (mounted) {
       setState(() {
         amigo = userProvider.usuarioPesquisado;

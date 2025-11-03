@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';

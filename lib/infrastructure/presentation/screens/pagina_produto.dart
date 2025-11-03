@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/modelo_produto.dart';
 import 'package:myapp/entities/produto.dart';
@@ -141,9 +140,6 @@ class PaginaProdutoState extends State<PaginaProduto> {
   }
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final dados = userProvider.user;
-
     return Scaffold(
       appBar: AppBar(
         actionsPadding: const EdgeInsets.only(right: 10),
