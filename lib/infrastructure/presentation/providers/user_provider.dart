@@ -21,6 +21,7 @@ class UserProvider extends ChangeNotifier {
         await carregarUsuario(firebaseUser.uid);
       } else {
         _user = null;
+        _isInitialized = true;
         notifyListeners();
       }
     });
