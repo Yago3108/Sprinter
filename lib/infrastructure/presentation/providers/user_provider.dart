@@ -16,15 +16,7 @@ class UserProvider extends ChangeNotifier {
   bool get isInitialized => _isInitialized;
 
   UserProvider() {
-    _auth.authStateChanges().listen((firebaseUser) async {
-      if (firebaseUser != null) {
-        await carregarUsuario(firebaseUser.uid);
-      } else {
-        _user = null;
-        _isInitialized = true;
-        notifyListeners();
-      }
-    });
+    carregarUsuario();
   }
 
   Future<void> registrar({
@@ -100,14 +92,13 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> carregarUsuario(String uid) async {
-    _isInitialized = false;
-    notifyListeners();
-
-    final doc = await _firestore.collection('usuarios').doc(uid).get();
-    if (doc.exists) {
-      _user = Usuario.fromMap(doc.data()!);
-    }
+  Future<void> carregarUsuario() async {
+    _auth.authStateChanges().listen((firebaseUser) async {
+      final doc = await _firestore.collection('usuarios').doc(firebaseUser!.uid).get();
+      if (doc.exists) {
+        _user = Usuario.fromMap(doc.data()!);
+      }
+    });
 
     _isInitialized = true;
     notifyListeners();
@@ -123,7 +114,7 @@ class UserProvider extends ChangeNotifier {
 
     _user = novoUsuario;
 
-    carregarUsuario(_user!.uid);
+    carregarUsuario();
 
     notifyListeners();
   }
