@@ -3,71 +3,139 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/app/components/widget_produto_carrinho.dart';
+import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:provider/provider.dart';
 
-class PaginaCarrinho extends StatelessWidget {
+class PaginaCarrinho extends StatefulWidget {
   const PaginaCarrinho({super.key});
 
   @override
+  State<PaginaCarrinho> createState() => _PaginaCarrinhoState();
+}
+
+class _PaginaCarrinhoState extends State<PaginaCarrinho> {
+  // Mantém a lógica de inicialização segura
+  late Future<List<WidgetProdutoCarrinho>> _comprasFuture;
+  bool _isFutureInitialized = false; 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Inicializa o Future apenas na primeira vez
+    if (!_isFutureInitialized) {
+        _initializeFuture();
+    }
+  }
+
+  void _initializeFuture() {
+    final userProvider = context.read<UserProvider>();
+    final produtoProvider = context.read<ProdutoProvider>();
+    final userId = userProvider.user!.uid;
+    _comprasFuture = produtoProvider.carregarTodasAsCompras(userId); 
+    _isFutureInitialized = true;
+  }
+
+  @override
   Widget build(BuildContext context) {
-       final userProvider = context.watch<UserProvider>();
+    final userProvider = context.watch<UserProvider>();
     final fotoBase64 = userProvider.user!.fotoPerfil;
     Uint8List? bytes;
-    if (fotoBase64 != null) {
-      bytes = base64Decode(fotoBase64);
+    if (fotoBase64 != null && fotoBase64.isNotEmpty) {
+      try {
+        bytes = base64Decode(fotoBase64);
+      } catch (_) { /* Ignora */ }
     }
+
     return Scaffold(
-       appBar: AppBar(
-          actionsPadding: EdgeInsets.only(right: 10),
-          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-          iconTheme: IconThemeData(color: Colors.white),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>Pagina(key: null,)));
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: CircleAvatar(
-                backgroundImage: bytes != null
-                    ? MemoryImage(bytes)
-                    : AssetImage("assets/images/perfil_basico.jpg"),
-                radius: 25,
+      appBar: AppBar(
+        actionsPadding: const EdgeInsets.only(right: 10),
+        backgroundColor: const Color.fromARGB(255, 5, 106, 12),
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>const Pagina(key: null,)));
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: CircleAvatar(
+              backgroundImage: bytes != null
+                  ? MemoryImage(bytes)
+                  : const AssetImage("assets/images/perfil_basico.jpg") as ImageProvider,
+              radius: 25,
+            ),
+            onPressed: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => PaginaPerfil()),
               ),
-              onPressed: () => {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaPerfil()),
-                ),
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(padding: EdgeInsets.only(top: 15)),
+          Padding(
+            padding: EdgeInsets.only(right: 15, left: 15),
+            child: Text(
+              "Seus Ingressos",
+              style: TextStyle(
+                fontSize: 28,
+                fontFamily: "League Spartan",
+                fontWeight:FontWeight.w900,
+                color: const Color.fromARGB(255, 5, 106, 12)
+              ),
+            ),
+          ),
+          const Padding(padding: EdgeInsets.only(top: 15)),
+          
+ 
+          Expanded( 
+            child: FutureBuilder<List<WidgetProdutoCarrinho>>(
+              future: _comprasFuture,
+              builder: (context, snapshot) {
+  
+                if (snapshot.connectionState == ConnectionState.waiting) {
+   
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                // 2. Erro
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text("Erro ao carregar compras: ${snapshot.error}", textAlign: TextAlign.center),
+                    ),
+                  );
+                }
+
+                // 3. Dados Carregados
+                final List<WidgetProdutoCarrinho> produtosComprados = snapshot.data ?? [];
+
+                // 4. Lista Vazia
+                if (produtosComprados.isEmpty) {
+                  return const Center(
+                    child: Text("Nenhuma compra encontrada.", style: TextStyle(fontSize: 18)),
+                  );
+                }
+
+        
+                return ListView(
+                  children: produtosComprados,
+                );
               },
             ),
-          ],
-        ),
-      body: SingleChildScrollView(
-
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.only(top: 15)),
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: ListTile(
-              
-                title: Text(" Seus Ingressos",style: TextStyle(
-                  fontSize: 20,
-                  color: Color.fromARGB(255, 5, 106, 12)
-                ),),
-              leading: Icon(Icons.shopping_cart_outlined,size:50,color: Color.fromARGB(255, 5, 106, 12),),
-              ),
-            ),
-             Padding(padding: EdgeInsets.only(top: 15)),
-            WidgetProdutoCarrinho(id:"Rg3UsIfL6mCWI1u6Ymhb")
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myapp/infrastructure/presentation/app/components/widget_produto_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/entities/usuario.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +95,32 @@ class ProdutoProvider extends ChangeNotifier {
       throw Exception("Erro ao carregar produtos: $e");
     }
   }
+  Future<List<WidgetProdutoCarrinho>> carregarTodasAsCompras(String userId) async {
+  try {
+    final comprasSnapshot = await _firestore
+        .collection('usuarios')
+        .doc(userId)
+        .collection('compras')
+       
+        .orderBy('dataCompra', descending: true) 
+        .get();
 
+   final List<WidgetProdutoCarrinho> listaWidgets = comprasSnapshot.docs.map((doc) {
+            
+        
+            final compraId = doc.id;   
+            return WidgetProdutoCarrinho(
+                id: compraId, 
+            );
+            
+        }).toList();
+        return listaWidgets;
+  } catch (e) {
+    print("Erro ao carregar lista de compras: $e");
+
+    throw Exception("Falha ao carregar histórico de compras.");
+  }
+}
   // Carregar apenas 1 produto pelo ID
   Future<Produto?> carregarProduto(String id) async {
     try {
