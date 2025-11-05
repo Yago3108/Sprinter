@@ -12,14 +12,13 @@ class PaginaMapa extends StatefulWidget {
 }
 
 class _PaginaMapaState extends State<PaginaMapa> {
-  late MapaProvider _mapaProvider;
-  bool clicou = false;
+
 
   @override
   void initState() {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    _mapaProvider = Provider.of<MapaProvider>(context, listen: false);
+    final _mapaProvider = Provider.of<MapaProvider>(context, listen: false);
 
     if (userProvider.user != null) {
       _mapaProvider.setUid(userProvider.user!.uid);
@@ -30,6 +29,7 @@ class _PaginaMapaState extends State<PaginaMapa> {
   @override
   Widget build(BuildContext context) {
     final mapa = context.watch<MapaProvider>();
+    final bool isAtividadeAtiva = mapa.isAtividadeAtiva;
 
     return Scaffold(
       body: Stack(
@@ -67,12 +67,17 @@ class _PaginaMapaState extends State<PaginaMapa> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      clicou = !clicou;
-                    });
+                  onPressed: () async {
 
-                    if (clicou) {
+                    if (isAtividadeAtiva) {
+                      await mapa.pararAtividade(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Atividade parada"),
+                          backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                        ),
+                      );
+                    } else {
                       mapa.iniciarAtividade(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -80,18 +85,10 @@ class _PaginaMapaState extends State<PaginaMapa> {
                           backgroundColor: Color.fromARGB(255, 5, 106, 12),
                         ),
                       );
-                    } else {
-                      mapa.pararAtividade(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Atividade parada"),
-                          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                        ),
-                      );
                     }
                   },
                   child: Icon(
-                    clicou ? Icons.stop : Icons.play_arrow_rounded,
+                    isAtividadeAtiva ? Icons.stop : Icons.play_arrow_rounded,
                     color: Colors.white,
                     size: 30,
                   ),

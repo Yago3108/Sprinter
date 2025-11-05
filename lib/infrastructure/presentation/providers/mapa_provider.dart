@@ -18,7 +18,6 @@ class MapaProvider extends ChangeNotifier {
   DateTime? _fim;
   DateTime? _ultimoTempo;
   Position? _ultimaPosicao;
-  
 
   void setUid(String uid) {
     _uid = uid;
@@ -27,6 +26,8 @@ class MapaProvider extends ChangeNotifier {
     initMapWithUserPosition: UserTrackingOption(enableTracking: false),
   );
   StreamSubscription<Position>? _posicaoStream;
+
+  bool get isAtividadeAtiva => _posicaoStream != null;
 
   void iniciarAtividade(BuildContext context) {
     rota.clear();
@@ -48,6 +49,8 @@ class MapaProvider extends ChangeNotifier {
       // Atualiza a posição no mapa
       await controller.moveTo(ponto);
 
+      bool atividadeParada = false;
+
       if(_ultimaPosicao != null && _ultimoTempo != null){
         final distanciaLocal = Distance().as(
           LengthUnit.Meter,
@@ -64,52 +67,95 @@ class MapaProvider extends ChangeNotifier {
           final double velocidadeKm = velocidade * 3.6;
 
           if(velocidadeKm>40){
-            if(ModalRoute.of(context)?.isCurrent ?? false){
-              showDialog(context: context, 
-              builder: (ctx) => AlertDialog(
-                title: const Text("Alerta de velocidade!"),
-                content: Text("Você está andando acima da velocidade permitida do aplicativo!"),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(), 
-                    child: const Text("Entendi"))
-                ],
-              )
+
+            atividadeParada = true;
+
+            await pararAtividade(context);
+
+            if (ModalRoute.of(context)?.isCurrent ?? false) {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  
+                  title: Row(
+                    children: [
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        color: Color.fromARGB(255, 5, 106, 12),
+                        size: 30,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Alerta de Velocidade!",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  content: const Text(
+                    "Você está andando acima da velocidade permitida do aplicativo! Diminua a velocidade e reinicie a atividade.",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  
+                  actions: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      child: const Text(
+                        "Entendi",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               );
             }
+            
+            notifyListeners();
+            return;
           }
         }
       }
 
-      // Calcula distância acumulada
-      // if (_ultimaPosicao != null) {
-      //   final distanciaLocal = Distance().as(
-      //     LengthUnit.Meter,
-      //     LatLng(_ultimaPosicao!.latitude, _ultimaPosicao!.longitude),
-      //     LatLng(pos.latitude, pos.longitude),
-      //   );
-      //   _distancia += distanciaLocal;
-      // }
-      // _ultimaPosicao = pos;
+      if(!atividadeParada){
+        _ultimaPosicao = pos;
+        _ultimoTempo = pos.timestamp;
 
-      // Desenha a rota se houver pelo menos 2 pontos e forem diferentes
-      if (rota.length >= 2) {
-        final GeoPoint start = rota[rota.length - 2];
-        final GeoPoint end = rota.last;
+          if (rota.length >= 2) {
+          final GeoPoint start = rota[rota.length - 2];
+          final GeoPoint end = rota.last;
 
-        if (start.latitude != end.latitude || start.longitude != end.longitude) {
-          await controller.drawRoad(
-            start,
-            end,
-            roadOption: const RoadOption(
-              roadColor: Colors.green,
-              roadWidth: 6,
-            ),
-          );
+          if (start.latitude != end.latitude || start.longitude != end.longitude) {
+            await controller.drawRoad(
+              start,
+              end,
+              roadOption: const RoadOption(
+                roadColor: Colors.green,
+                roadWidth: 6,
+              ),
+            );
+          }
         }
       }
 
       notifyListeners();
+  
     });
   }
   List<GeoPoint> get rota => _rota;
@@ -119,6 +165,7 @@ class MapaProvider extends ChangeNotifier {
   Future<void> pararAtividade(BuildContext context) async {
     _fim = DateTime.now();
     _posicaoStream?.cancel();
+    _posicaoStream = null;
 
     if (_inicio != null && _fim != null) {
       _tempo = _fim!.difference(_inicio!);
@@ -129,8 +176,7 @@ class MapaProvider extends ChangeNotifier {
     double emissao = _tempo.inSeconds*fatorEmissao*(_distancia/1000);
     
     int pontos = (emissao/100).floor();
-
-    print("Emissao $emissao, Pontos $pontos");
+    
 
     final userProvider = Provider.of<UserProvider>(context,listen: false);
     userProvider.atualizarCC(pontos, emissao, distancia/1000);
