@@ -8,8 +8,8 @@ import 'package:myapp/entities/usuario.dart';
 class UserProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Usuario? _user;
 
+  Usuario? _user;
   Usuario? get user => _user;
 
   UserProvider() {
@@ -109,27 +109,21 @@ class UserProvider extends ChangeNotifier {
     return {'fotoPerfil': _user!.fotoPerfil};
   }
 
-  Map<String, dynamic>? getDistanciaEPontos() {
-    if (_user == null) return null;
-    return {'distancia': _user!.distancia, 'pontos': _user!.carboCoins};
-  }
-
   Future<void> atualizarUsuario(Usuario novoUsuario) async {
-    await _firestore
-        .collection('usuarios')
-        .doc(novoUsuario.uid)
-        .update(novoUsuario.toMap());
+    await _firestore.collection('usuarios').doc(novoUsuario.uid).update(novoUsuario.toMap());
 
     _user = novoUsuario;
+
     carregarUsuario(_user!.uid);
+
     notifyListeners();
   }
 
-  Future<String?> login(String email, String senha) async {
+  Future<User?> login(String email, String senha) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: senha);
-      return userCredential.user?.uid;
+      return userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw Exception("Usuário não encontrado.");
@@ -142,7 +136,9 @@ class UserProvider extends ChangeNotifier {
       }
     }
   }
+
   Usuario? usuarioPesquisado;
+  
   Future<Usuario?> getUsuarioByUid(String uid) async {
     try {
       final doc = await _firestore.collection('usuarios').doc(uid).get();

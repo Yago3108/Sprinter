@@ -15,11 +15,9 @@ class PaginaLogin extends StatefulWidget {
 }
 
 class _PaginaLoginState extends State<PaginaLogin> {
-  // controllers
-  TextEditingController _controllerEmail = TextEditingController();
-  TextEditingController _controllerSenha = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerSenha = TextEditingController();
 
-  // variáveis de erro
   String? _erroEmail;
   String? _erroSenha;
 
@@ -43,18 +41,12 @@ class _PaginaLoginState extends State<PaginaLogin> {
     });
 
     if (_erroEmail == null && _erroSenha == null) {
+      final userProvider = context.read<UserProvider>();
+
       try {
-        UserProvider userProvider = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        );
+        final user = await userProvider.login(_controllerEmail.text, _controllerSenha.text);
 
-        var uid = await userProvider.login(
-          _controllerEmail.text,
-          _controllerSenha.text,
-        );
-
-        if (uid != null) {
+        if (user != null) {
           // limpa os controllers
           _controllerEmail.clear();
           _controllerSenha.clear();
