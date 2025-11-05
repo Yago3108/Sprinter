@@ -12,6 +12,9 @@ class UserProvider extends ChangeNotifier {
   Usuario? _user;
   Usuario? get user => _user;
 
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
   UserProvider() {
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
@@ -97,11 +100,16 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> carregarUsuario(String uid) async {
+    _isInitialized = false;
+    notifyListeners();
+
     final doc = await _firestore.collection('usuarios').doc(uid).get();
     if (doc.exists) {
       _user = Usuario.fromMap(doc.data()!);
-      notifyListeners();
     }
+
+    _isInitialized = true;
+    notifyListeners();
   }
 
   Map<String, dynamic>? getFotoPerfil() {

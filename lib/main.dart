@@ -33,6 +33,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
+
+    if(!userProvider.isInitialized) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(30),
+                  width: 250,
+                  height: 250,
+                  child: Image.asset("assets/images/Sprinter_simples.png"),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
      
     return MaterialApp(
       debugShowCheckedModeBanner: false,
