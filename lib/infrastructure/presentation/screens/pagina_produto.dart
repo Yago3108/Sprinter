@@ -144,6 +144,8 @@ class PaginaProdutoState extends State<PaginaProduto> {
   }
   @override
   Widget build(BuildContext context) {
+    final maisVendidos = context.watch<ProdutoProvider>().produtos;
+
     return Scaffold(
       appBar: AppBar(
         actionsPadding: const EdgeInsets.only(right: 10),
@@ -352,13 +354,13 @@ class PaginaProdutoState extends State<PaginaProduto> {
                 const SizedBox(height: 5),
                 SizedBox(
                   height: 380,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: const [
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                      ProdutoCard(produtoId: "p139gzs4M5MTjmLd6AcO"),
-                    ],
+                    itemCount: maisVendidos.length,
+                    itemBuilder: (context, index) {
+                      final maisVendido = maisVendidos[index];
+                      return ProdutoCard(produtoId: maisVendido.id);
+                    }
                   ),
                 ),
               ],
