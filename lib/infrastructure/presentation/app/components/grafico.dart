@@ -28,13 +28,9 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
   @override
   void initState() {
     super.initState();
-    // NÃO CHAME _setDados aqui. Ele depende do Provider, que ainda não está pronto 
-    // após a chamada ao construtor. Mantenha no didChangeDependencies (ou chame no build
-    // como você estava fazendo, mas de forma otimizada). 
+   
   }
 
-  // Refatorado para ser chamado apenas uma vez no build (ou didChangeDependencies)
-  // e aceitar a data de referência.
   int calcularSemanaDoMes(DateTime data) {
   final primeiroDiaDoMes = DateTime(data.year, data.month, 1);
   final deslocamento = primeiroDiaDoMes.weekday - 1; 
@@ -42,13 +38,13 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
   return ((diaDoMes + deslocamento) / 7).ceil();
 }
   void _setDados() {
-    // Se os dados já foram calculados, não recalcule (Evita o "piscar")
+    
     if (dadosGrafico.isNotEmpty && maxX > 0) return; 
 
     final estatisticaProvider = context.read<EstatisticaProvider>();
     final dataReferencia = widget.dataReferencia;
     int maxSemanas = 6;
-    // Mapa auxiliar para facilitar a busca de dados
+
     Map<String, dynamic>? dadosPeriodo; 
     
     // Lista de valores (eixo X) e distância (eixo Y) que iremos gerar
@@ -85,49 +81,47 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
     
     
     // --- Lógica para Mês ---
-  else if (widget.periodo == Periodo.mes) {
-      final mesId = "${dataReferencia.year}-${dataReferencia.month}";
-      dadosPeriodo = estatisticaProvider.meses[mesId];
-      
-      final diasComDados = Map<String, dynamic>.from(dadosPeriodo?['dias'] ?? {});
-      
+else if (widget.periodo == Periodo.mes) {
+    // Calcula o ID do mês no formato 'YYYY-MM' (ex: 2025-09)
+    final mesId = "${dataReferencia.year}-${dataReferencia.month.toString().padLeft(2, '0')}";
+    
 
-      final diasNoMes = DateTime(dataReferencia.year, dataReferencia.month + 1, 0).day;
-      Map<int, double> distanciasPorSemanaDoAno = {};
-    // NOVO: Armazena a ordem dos números da semana para o eixo X
-    List<int> semanasDoMes = [];
-      // 1. Acumular distâncias por semana do ano
-      for (int dia = 1; dia <= diasNoMes; dia++) {
-        final diaAtual = DateTime(dataReferencia.year, dataReferencia.month, dia);
-        final chaveDia = "${diaAtual.year}-${diaAtual.month.toString().padLeft(2, '0')}-${dia.toString().padLeft(2, '0')}";
+    final Map<String, dynamic> dadosPeriodo = Map<String, dynamic>.from(estatisticaProvider.meses[mesId] ?? {});
 
-        final dadosDia = Map<String, dynamic>.from(diasComDados[chaveDia] ?? {});
-        final distanciaEmMetros = ((dadosDia['distancia'] ?? 0.0) as num).toDouble();
+
+    final Map<String, dynamic> semanasComDados = 
+        Map<String, dynamic>.from(dadosPeriodo['semanas'] ?? {});
+    
+    Map<String, double> distanciasPorSemana = {};
+
+    List<String> semanasDoMesChaves = [];
+
+   
+    for (final chaveSemanaCompleta in semanasComDados.keys) {
+        final dadosSemana = Map<String, dynamic>.from(semanasComDados[chaveSemanaCompleta] ?? {});
+
+        final distanciaEmMetros = ((dadosSemana['distancia'] ?? 0.0) as num).toDouble();
         final distanciaKm = distanciaEmMetros / 1000.0;
         
-        // Obtém o número da semana do ano usando o utilitário do Provider
-        final numSemanaDoAno = estatisticaProvider.weekNumber(diaAtual); 
-        
-        // Acumula a distância
-        distanciasPorSemanaDoAno.update(
-          numSemanaDoAno, 
-          (valorAntigo) => valorAntigo + distanciaKm, 
-          ifAbsent: () => distanciaKm,
-        );
-      }
-      
-      // 2. Ordenar e preparar os dados para o gráfico
-      semanasDoMes = distanciasPorSemanaDoAno.keys.toList()..sort();
-      
-      for (int i = 0; i < semanasDoMes.length; i++) {
-        final numSemana = semanasDoMes[i];
-        final distancia = distanciasPorSemanaDoAno[numSemana]!;
+        distanciasPorSemana[chaveSemanaCompleta] = distanciaKm;
+    }
+    
+  
+    semanasDoMesChaves = distanciasPorSemana.keys.toList()
+                                          ..sort();
+    
+    
+    for (int i = 0; i < semanasDoMesChaves.length; i++) {
+        final chaveSemanaCompleta = semanasDoMesChaves[i];
+        final distancia = distanciasPorSemana[chaveSemanaCompleta]!;
         distanciasCompletas.add(distancia);
-      }
-      
-      maxX = distanciasCompletas.length.toDouble() - 1;
+        
 
     }
+    
+   
+    maxX = distanciasCompletas.length.toDouble() - 1;
+}
     
     // --- Lógica para Ano ---
     else if (widget.periodo == Periodo.ano) {

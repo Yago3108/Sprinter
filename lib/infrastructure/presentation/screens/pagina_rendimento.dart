@@ -36,54 +36,53 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
       body: Center(
         child: Column(
           children: [
-                Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-            Padding(padding: EdgeInsetsGeometry.only(top: 15)),
-            Container(
-              height: 300,
-              width: 350,
-              decoration: BoxDecoration(
-                border: BoxBorder.all(
-                  color: Color.fromARGB(255, 5, 106, 12),
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(35),
-              
-              ),
-              child: Column(
-                children: [
-                  Padding(padding: EdgeInsetsGeometry.only(top: 5)),
+                Padding(padding: EdgeInsetsGeometry.only(top: 40)),
+      
+      
                   Row(
                     children: [
                        Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                      Text("Distância percorrida",style: TextStyle(
-                        fontFamily: "League Spartan",
-                        fontSize: 15,
-                      ),),
-                      Padding(padding: EdgeInsetsGeometry.only(left: 40)),
-                        Container(
-                          width: 150,
-                          child: TabBar(
-                            dividerColor: Colors.white,
-                            controller: _tabController,
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                          indicator: BoxDecoration(
-                                            shape: BoxShape.rectangle,
-                                            color: const Color.fromARGB(96, 139, 195, 74),
-                                            borderRadius:BorderRadius.circular(15)
-                                          ),
-                                          labelColor: Colors.white,
-                                          unselectedLabelColor: Colors.black,
-                                          indicatorColor: Color.fromARGB(255, 0, 128, 0),
-                                       
-                                          tabs: [
-                                            Tab(text: 'S'),
-                                            Tab(text: "M"),
-                                            Tab(text: 'A'),
-                                          ],
-                                        ),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text("Distância percorrida",style: TextStyle(
+                          fontFamily: "League Spartan",
+                          fontSize: 25,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                  ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Container(
+                                width: 150,
+                                child: TabBar(
+                                  dividerColor: Colors.white,
+                                  controller: _tabController,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                                indicator: BoxDecoration(
+                                                  shape: BoxShape.rectangle,
+                                                  color: const Color.fromARGB(96, 139, 195, 74),
+                                                  borderRadius:BorderRadius.circular(15)
+                                                ),
+                                                labelColor: Colors.white,
+                                                unselectedLabelColor: Colors.black,
+                                                indicatorColor: Color.fromARGB(255, 0, 128, 0),
+                                             
+                                                tabs: [
+                                                  Tab(text: 'S'),
+                                                  Tab(text: "M"),
+                                                  Tab(text: 'A'),
+                                                ],
+                                              ),
+                              ),
+                      ),
                     ],
                   ),
+             
               SizedBox(
                    height: 240,
              
@@ -91,17 +90,125 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
                 controller: _tabController,
                 children: [
                   //semanal
-                    Center(child: GraficoHistorico(periodo: Periodo.semana,dataReferencia: DateTime.now(),)),
+                    Center(child: Column(
+                      children: [
+                      Row(
+                    children: [
+                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text("Semanal",style: TextStyle(
+                          fontFamily: "League Spartan",
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                  ],
+                  ),
+                  Padding(padding: 
+                  EdgeInsetsGeometry.only(top: 10)),
+                        Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(103, 107, 168, 111),
+                               spreadRadius: 5, 
+                                blurRadius: 7, 
+                                offset: Offset(0, 3), 
+                                )
+                              ]
+                            ),
+                            child: GraficoHistorico(periodo: Periodo.semana,dataReferencia: DateTime.now())),
+                        ),
+                      ],
+                    )),
                     //mensal
-                    Center(child: GraficoHistorico(periodo: Periodo.mes,dataReferencia: DateTime.now())),
+                    Center(child: Column(
+                      children: [
+                           Row(
+                    children: [
+                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text("Mensal",style: TextStyle(
+                          fontFamily: "League Spartan",
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                  ],
+                  ),
+                  Padding(padding: 
+                  EdgeInsetsGeometry.only(top: 10)),
+                        Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(103, 107, 168, 111),
+                               spreadRadius: 5, 
+                                blurRadius: 7, 
+                                offset: Offset(0, 3), 
+                                )
+                              ]
+                            ),
+                            child: GraficoHistorico(periodo: Periodo.mes,dataReferencia: DateTime.now())),
+                        ),
+                      ],
+                    )),
                     //anual
-                    Center(child: GraficoHistorico(periodo: Periodo.ano,dataReferencia: DateTime.now())),
+                    Center(child: Column(
+                      children: [
+                        
+                  Row(
+                    children: [
+                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text("Anual",style: TextStyle(
+                          fontFamily: "League Spartan",
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                  ],
+                  ),
+                  Padding(padding: 
+                  EdgeInsetsGeometry.only(top: 10)),
+                        Padding(
+
+                               padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(103, 107, 168, 111),
+                               spreadRadius: 5, 
+                                blurRadius: 7, 
+                                offset: Offset(0, 3), 
+                                )
+                              ]
+                            ),
+                            child: GraficoHistorico(periodo: Periodo.ano,dataReferencia: DateTime.now())),
+                        ),
+                      ],
+                    )),
                 ],
               ),
               )
-                ],
-              ),
-            )
+        
           ],
         ),
       ),

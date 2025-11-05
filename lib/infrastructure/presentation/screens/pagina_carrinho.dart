@@ -124,17 +124,14 @@ class _PaginaCarrinhoState extends State<PaginaCarrinho> {
                 // 3. Dados Carregados
                 final List<WidgetProdutoCarrinho> produtosComprados = snapshot.data ?? [];
 
-                // 4. CÁLCULO DOS TOTAIS: usando a length da lista de widgets
                 final int totalCompras = produtosComprados.length;
                 
-                // NOTA: totalIngressos (soma das quantidades) é 0 pois o dado está no widget
-                // Se você precisar da soma das quantidades, o Provider DEVE retornar List<Compra>.
                 const int totalIngressos = 0; 
 
-                // 5. Exibição: Container de Totais + Lista de Widgets
+              
                 return Column(
                   children: [
-                    // CONTAINER DE TOTAIS
+
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       padding: const EdgeInsets.all(15),

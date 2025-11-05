@@ -51,7 +51,6 @@ class _WidgetProdutoCarrinhoState extends State<WidgetProdutoCarrinho> {
     return snapshot;
   }
 
-  // 2. FUNÇÃO AUXILIAR PARA CARREGAR DADOS DO PRODUTO (Chamada APÓS carregar a compra)
   Future<DocumentSnapshot<Map<String, dynamic>>> _carregarProduto(String produtoId) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('produtos')
@@ -64,9 +63,8 @@ class _WidgetProdutoCarrinhoState extends State<WidgetProdutoCarrinho> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      future: _compraFuture, // <--- Future primário: os dados da Compra
+      future: _compraFuture, 
       builder: (context, compraSnapshot) {
-        // --- Tratamento da Compra ---
         if (compraSnapshot.hasError) {
           return const Center(child: Text("Erro ao carregar detalhes da compra."));
         }
