@@ -100,15 +100,19 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
 
     _auth.authStateChanges().listen((firebaseUser) async {
+      if (firebaseUser == null) {
+        _user = null;
+      }
+
       final doc = await _firestore.collection('usuarios').doc(firebaseUser!.uid).get();
       if (doc.exists) {
         _user = Usuario.fromMap(doc.data()!);
       }
-    });
 
-    _isInitialized = true;
-    _isLoading = false;
-    notifyListeners();
+      _isInitialized = true;
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   Map<String, dynamic>? getFotoPerfil() {
