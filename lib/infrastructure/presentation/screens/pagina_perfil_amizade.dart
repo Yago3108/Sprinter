@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class PaginaPerfilAmizade extends StatefulWidget {
   final String uidAmigo;
 
-  PaginaPerfilAmizade(param0, {super.key, required this.uidAmigo});
+  PaginaPerfilAmizade({super.key, required this.uidAmigo});
 
   @override
   PaginaPerfilAmizadeState createState() => PaginaPerfilAmizadeState();
@@ -21,23 +21,20 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
   @override
   void initState() {
     super.initState();
-    _carregarAmigo();
+        final userProvider = context.read<UserProvider>();
+        userProvider.getUsuarioByUid(widget.uidAmigo);
   }
 
-  Future<void> _carregarAmigo() async {
-    final userProvider = context.read<UserProvider>();
-    if (mounted) {
-      setState(() {
-        amigo = userProvider.usuarioPesquisado;
-          try {
+ 
+  @override
+  Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+     amigo = userProvider.usuarioPesquisado;
+     try {
             fotoBytes = userProvider.usuarioPesquisado?.fotoPerfil!;
           } catch (_) {
             fotoBytes = null;
           }
-      });}}
-  @override
-  Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
     final AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,

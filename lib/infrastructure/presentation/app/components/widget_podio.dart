@@ -64,13 +64,14 @@ class _WidgetPodioRankingState extends State<WidgetPodioRanking> {
         
         if (user != null) ...[
           GestureDetector(
-            onTap: () => {
+            onTap: ()  {
                
               if(user["uid"]!=userProvider.user!.uid){
+                  userProvider.getUsuarioByUid(user?["uid"]);
                   Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PaginaPerfilAmizade(null, uidAmigo: user["uid"],)),
-              ),
+                MaterialPageRoute(builder: (context) => PaginaPerfilAmizade(key: null,uidAmigo: user["uid"],)),
+              );
               }
             },
             child: CircleAvatar(

@@ -154,8 +154,7 @@ class UserProvider extends ChangeNotifier {
     try {
       final doc = await _firestore.collection('usuarios').doc(uid).get();
 
-      if (!doc.exists) return null;
-
+      if (doc.exists) {
       final data = doc.data()!;
 
       usuarioPesquisado = Usuario(
@@ -170,11 +169,16 @@ class UserProvider extends ChangeNotifier {
         fotoPerfil: base64Decode(data['Foto_perfil']),
         amigos: [],
       );
+     
+      notifyListeners();
+      }
 
-      return null;
+     
+
+   
     } catch (e) {
       print("Erro ao buscar usuário por UID: $e");
-      return null;
+
     }
   }
   final List<Usuario> _amigos = [];

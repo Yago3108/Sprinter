@@ -45,7 +45,7 @@ OverlayEntry? _overlayEntry;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PaginaPerfilAmizade(null, uidAmigo: uidAmigo, ),
+                            builder: (_) => PaginaPerfilAmizade( uidAmigo: uidAmigo, ),
                           ),
                         );
                       }
@@ -262,10 +262,12 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                       Padding(padding: EdgeInsetsGeometry.only(top:10)),
                                       GestureDetector(
                                         onTap: () {
+                                              final userProvider = context.read<UserProvider>();
+                                                  userProvider.getUsuarioByUid(amigo1.uid);
                                             Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PaginaPerfilAmizade(null, uidAmigo: amigo1.uid, ),
+                            builder: (_) => PaginaPerfilAmizade( uidAmigo: amigo1.uid, ),
                           ),
                         );
                                         },
