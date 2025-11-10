@@ -98,7 +98,7 @@ class _PaginaState extends State<Pagina> {
             ),
             isAdmin?
             ListTile(
-              leading: Icon(Icons.shopping_basket),
+              leading: Icon(Icons.add_shopping_cart_rounded),
               title: Text("Cadastrar Produtos"),
               onTap: () {
                 Navigator.push(

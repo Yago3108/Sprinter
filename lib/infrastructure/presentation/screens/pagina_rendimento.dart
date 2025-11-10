@@ -30,186 +30,156 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
   @override
   Widget build(BuildContext context) {
               final userProvider = context.read<UserProvider>();
+                final user = userProvider.user;
      final estatisticaProvider = context.read<EstatisticaProvider>();
         estatisticaProvider.carregarAtividades(userProvider.user!.uid);
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-                Padding(padding: EdgeInsetsGeometry.only(top: 40)),
-      
-      
-                  Row(
-                    children: [
-                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text("Distância percorrida",style: TextStyle(
-                          fontFamily: "League Spartan",
-                          fontSize: 25,
-                          color: Color.fromARGB(255, 5, 106, 12),
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ),
-                  ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Container(
-                                width: 150,
-                                child: TabBar(
-                                  dividerColor: Colors.white,
-                                  controller: _tabController,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                                indicator: BoxDecoration(
-                                                  shape: BoxShape.rectangle,
-                                                  color: const Color.fromARGB(96, 139, 195, 74),
-                                                  borderRadius:BorderRadius.circular(15)
-                                                ),
-                                                labelColor: Colors.white,
-                                                unselectedLabelColor: Colors.black,
-                                                indicatorColor: Color.fromARGB(255, 0, 128, 0),
-                                             
-                                                tabs: [
-                                                  Tab(text: 'S'),
-                                                  Tab(text: "M"),
-                                                  Tab(text: 'A'),
-                                                ],
-                                              ),
-                              ),
-                      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+                  Padding(padding: EdgeInsetsGeometry.only(top: 40)),
+                    Row(
+                      children: [
+                         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("Distância percorrida",style: TextStyle(
+                            fontFamily: "League Spartan",
+                            fontSize: 25,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ),
                     ],
-                  ),
-             
-              SizedBox(
-                   height: 240,
-             
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  //semanal
-                    Center(child: Column(
+                    ),
+              
+               
+    
+          Padding(padding: EdgeInsets.only(top:15)),
+                  
+                       //semanal
+                      Center(child: Column(
+                        children: [
+                        Row(
                       children: [
-                      Row(
-                    children: [
-                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text("Semanal",style: TextStyle(
-                          fontFamily: "League Spartan",
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 5, 106, 12),
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ),
-                  ],
-                  ),
-                  Padding(padding: 
-                  EdgeInsetsGeometry.only(top: 10)),
+                         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
                         Padding(
-                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                              decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(103, 107, 168, 111),
-                               spreadRadius: 5, 
-                                blurRadius: 7, 
-                                offset: Offset(0, 3), 
-                                )
-                              ]
-                            ),
-                            child: GraficoHistorico(periodo: Periodo.semana,dataReferencia: DateTime.now())),
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("Semanal",style: TextStyle(
+                            fontFamily: "League Spartan",
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                            fontWeight: FontWeight.bold,
+                          ),),
                         ),
-                      ],
-                    )),
-                    //mensal
-                    Center(child: Column(
-                      children: [
-                           Row(
-                    children: [
-                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text("Mensal",style: TextStyle(
-                          fontFamily: "League Spartan",
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 5, 106, 12),
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ),
-                  ],
-                  ),
-                  Padding(padding: 
-                  EdgeInsetsGeometry.only(top: 10)),
-                        Padding(
-                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                              decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(103, 107, 168, 111),
-                               spreadRadius: 5, 
-                                blurRadius: 7, 
-                                offset: Offset(0, 3), 
-                                )
-                              ]
-                            ),
-                            child: GraficoHistorico(periodo: Periodo.mes,dataReferencia: DateTime.now())),
-                        ),
-                      ],
-                    )),
-                    //anual
-                    Center(child: Column(
-                      children: [
-                        
-                  Row(
-                    children: [
-                       Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text("Anual",style: TextStyle(
-                          fontFamily: "League Spartan",
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 5, 106, 12),
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ),
-                  ],
-                  ),
-                  Padding(padding: 
-                  EdgeInsetsGeometry.only(top: 10)),
-                        Padding(
-
+                    ],
+                    ),
+                    Padding(padding: 
+                    EdgeInsetsGeometry.only(top: 10)),
+                          Padding(
                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                              decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(103, 107, 168, 111),
-                               spreadRadius: 5, 
-                                blurRadius: 7, 
-                                offset: Offset(0, 3), 
-                                )
-                              ]
-                            ),
-                            child: GraficoHistorico(periodo: Periodo.ano,dataReferencia: DateTime.now())),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(103, 107, 168, 111),
+                                 spreadRadius: 5, 
+                                  blurRadius: 7, 
+                                  offset: Offset(0, 3), 
+                                  )
+                                ]
+                              ),
+                              child: GraficoHistorico(periodo: Periodo.semana,dataReferencia: DateTime.now())),
+                          ),
+                        ],
+                      )),
+                      
+                    Padding(padding: EdgeInsets.only(top: 30)),
+                      //mensal
+                      Center(child: Column(
+                        children: [
+                             Row(
+                      children: [
+                         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("Mensal",style: TextStyle(
+                            fontFamily: "League Spartan",
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                            fontWeight: FontWeight.bold,
+                          ),),
                         ),
-                      ],
-                    )),
-                ],
-              ),
-              )
+                    ],
+                    ),
+                    Padding(padding: 
+                    EdgeInsetsGeometry.only(top: 10)),
+                          Padding(
+                               padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(103, 107, 168, 111),
+                                 spreadRadius: 5, 
+                                  blurRadius: 7, 
+                                  offset: Offset(0, 3), 
+                                  )
+                                ]
+                              ),
+                              child: GraficoHistorico(periodo: Periodo.mes,dataReferencia: DateTime.now())),
+                          ),
+                        ],
+                      )),
+                      
+                    Padding(padding: EdgeInsets.only(top: 30)),
+                      //anual
+                      Center(child: Column(
+                        children: [
+                          
+                    Row(
+                      children: [
+                         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("Anual",style: TextStyle(
+                            fontFamily: "League Spartan",
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ),
+                    ],
+                    ),
+                    Padding(padding: 
+                    EdgeInsetsGeometry.only(top: 10)),
+                          Padding(
         
-          ],
+                                 padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(103, 107, 168, 111),
+                                 spreadRadius: 5, 
+                                  blurRadius: 7, 
+                                  offset: Offset(0, 3), 
+                                  )
+                                ]
+                              ),
+                              child: GraficoHistorico(periodo: Periodo.ano,dataReferencia: DateTime.now())),
+                          ),
+                        ],
+                      )),
+            ]
+          ),
         ),
       ),
     );
