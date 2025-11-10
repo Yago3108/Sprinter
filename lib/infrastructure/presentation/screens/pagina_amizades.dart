@@ -83,7 +83,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> _rankingList = []; 
   int? _posicaoUsuario;
   bool _carregandoRanking = true; 
-  String? _erroRanking;
 
   List<Usuario> amigos = [];
   bool carregando = true;
@@ -103,7 +102,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
     setState(() {
       _carregandoRanking = true;
-      _erroRanking = null;
     });
 
     try {
@@ -115,7 +113,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
       });
     } catch (e) {
       setState(() {
-        _erroRanking = "Erro ao carregar o ranking.";
         _carregandoRanking = false;
         print("Erro ao carregar ranking: $e");
       });
@@ -190,7 +187,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
-    final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
 
     return DefaultTabController(
       length: 3,
@@ -261,7 +257,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                 itemBuilder: (context, index) {
                                       Usuario amigo1=amigos[index];
                                   Uint8List? bytes = amigo1.fotoPerfil;
-                                  return amigo1 !=null ?Column(
+                                  return Column(
                                     children: [
                                       Padding(padding: EdgeInsetsGeometry.only(top:10)),
                                       GestureDetector(
@@ -324,7 +320,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                         ),
                                       ),
                                     ],
-                                  ):Text( "Carregando... ");
+                                  );
                               
                                 },
                               ),
@@ -430,7 +426,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                        
                                       
                                       PedidoAmizade pedido=amizadeProvider.pedidos[index];
-                                  return pedido!=null ?Container(
+                                  return Container(
                                     height: 50,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
@@ -482,7 +478,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                         }, icon: Icon(Icons.close,color: Colors.red,)),
                                       ],
                                     ),
-                                  ):Text( "Carregando... ");
+                                  );
                                 },
                               ),
                       )),

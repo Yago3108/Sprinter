@@ -122,11 +122,7 @@ class _PaginaCarrinhoState extends State<PaginaCarrinho> {
                 }
 
                 // 3. Dados Carregados
-                final List<WidgetProdutoCarrinho> produtosComprados = snapshot.data ?? [];
-
-                final int totalCompras = produtosComprados.length;
-                
-                const int totalIngressos = 0; 
+                final List<WidgetProdutoCarrinho> produtosComprados = snapshot.data ?? []; 
 
               
                 return Column(

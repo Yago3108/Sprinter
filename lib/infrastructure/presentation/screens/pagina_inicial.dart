@@ -52,7 +52,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                   children: [
                     Padding(padding: EdgeInsets.only(top: 20)),
                     Text(
-                      "${user!.distancia.toStringAsFixed(1)}km",
+                      "${user.distancia.toStringAsFixed(1)}km",
                       style: TextStyle(
                         color: Color.fromARGB(255, 5, 106, 12),
                         fontSize: 40,

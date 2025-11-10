@@ -43,7 +43,6 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
 
     final estatisticaProvider = context.read<EstatisticaProvider>();
     final dataReferencia = widget.dataReferencia;
-    int maxSemanas = 6;
 
     Map<String, dynamic>? dadosPeriodo; 
     

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil_amizade.dart';
 import 'package:provider/provider.dart';
 

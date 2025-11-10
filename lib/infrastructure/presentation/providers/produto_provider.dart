@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:myapp/infrastructure/presentation/app/components/widget_produto_carrinho.dart';
-import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/entities/usuario.dart';
-import 'package:provider/provider.dart';
 import '../../../entities/produto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +134,7 @@ class ProdutoProvider extends ChangeNotifier {
           tipo: data["tipo"]
         );
         Produto prod=Produto(
-          descricao: data!["descricao"],
+          descricao: data["descricao"],
           id: id,
           nome: data["nome"],
           imagemBase64: data["imagemBase64"],

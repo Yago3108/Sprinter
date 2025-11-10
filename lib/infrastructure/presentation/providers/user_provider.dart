@@ -15,6 +15,9 @@ class UserProvider extends ChangeNotifier {
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   UserProvider() {
     carregarUsuario();
   }
@@ -93,6 +96,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> carregarUsuario() async {
+    _isLoading = true;
+    notifyListeners();
+
     _auth.authStateChanges().listen((firebaseUser) async {
       final doc = await _firestore.collection('usuarios').doc(firebaseUser!.uid).get();
       if (doc.exists) {
@@ -101,6 +107,7 @@ class UserProvider extends ChangeNotifier {
     });
 
     _isInitialized = true;
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -147,7 +154,7 @@ class UserProvider extends ChangeNotifier {
 
       final data = doc.data()!;
 
-      usuarioPesquisado =Usuario(
+      usuarioPesquisado = Usuario(
         uid: data['uid'],
         nome: data['nome'],
         email: data['email'],
@@ -159,20 +166,11 @@ class UserProvider extends ChangeNotifier {
         fotoPerfil: base64Decode(data['Foto_perfil']),
         amigos: [],
       );
+
+      return null;
     } catch (e) {
       print("Erro ao buscar usuário por UID: $e");
-      return Usuario(
-        uid: "",
-        nome: "",
-        email:"",
-        cpf:"",
-        nascimento: "",
-        carboCoins: 0,
-        carbono:0,
-        distancia: 0,
-        fotoPerfil:"",
-        amigos: [],
-      );;
+      return null;
     }
   }
   final List<Usuario> _amigos = [];

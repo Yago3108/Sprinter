@@ -13,7 +13,6 @@ class WidgetPesquisaUsuario extends StatefulWidget {
 }
 
 class WidgetPesquisaUsuarioState extends State<WidgetPesquisaUsuario> {
-    OverlayEntry? _overlayEntry;
   String query = "";
   @override
   Widget build(BuildContext context) {
@@ -82,9 +81,5 @@ class WidgetPesquisaUsuarioState extends State<WidgetPesquisaUsuario> {
       ),
     );
   }
-  
-    void _removerPesquisa() {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
-    }
+
 }
