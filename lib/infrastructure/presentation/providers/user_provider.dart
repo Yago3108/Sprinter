@@ -12,16 +12,16 @@ class UserProvider extends ChangeNotifier {
   Usuario? _user;
   Usuario? get user => _user;
 
-  bool _isInitialized = false;
-  bool get isInitialized => _isInitialized;
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
   UserProvider() {
-    carregarUsuario();
+    _auth.authStateChanges().listen((firebaseUser) async {
+      if (firebaseUser != null) {
+        await carregarUsuario(firebaseUser.uid);
+      } else {
+        _user = null;
+        notifyListeners();
+      }
+    });
   }
-
   Future<void> registrar({
     required String nome,
     required String email,
@@ -31,7 +31,7 @@ class UserProvider extends ChangeNotifier {
     int contPontos = 0,
     double contCarbono = 0,
     double distancia = 0,
-    dynamic foto = "",
+    String foto = "",
   }) async {
     try {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -49,7 +49,7 @@ class UserProvider extends ChangeNotifier {
         carboCoins: contPontos,
         carbono: contCarbono,
         distancia: distancia,
-        fotoPerfil: foto,
+        fotoPerfil: "",
       );
 
       await _firestore
@@ -62,7 +62,7 @@ class UserProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
+  
   Future<void> selecionarImagem() async {
     final ImagePicker _picker = ImagePicker();
     try {
@@ -95,38 +95,40 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> carregarUsuario() async {
-    _isLoading = true;
-    notifyListeners();
-
-    _auth.authStateChanges().listen((firebaseUser) async {
-      if (firebaseUser == null) {
-        _user = null;
-      }
-
-      final doc = await _firestore.collection('usuarios').doc(firebaseUser!.uid).get();
-      if (doc.exists) {
-        _user = Usuario.fromMap(doc.data()!);
-      }
-
-      _isInitialized = true;
-      _isLoading = false;
+    Future<void> carregarUsuario(String uid) async {
+    final doc = await _firestore.collection('usuarios').doc(uid).get();
+    if (doc.exists) {
+      _user = Usuario.fromMap(doc.data()!);
       notifyListeners();
-    });
+    }
   }
 
   Map<String, dynamic>? getFotoPerfil() {
     if (_user == null) return null;
     return {'fotoPerfil': _user!.fotoPerfil};
   }
+  Future<bool> getUsuarioByEmail(String email) async {
+    try {
+      final doc = await _firestore.collection('usuarios')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+      
 
+      
+      return doc.docs.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
   Future<void> atualizarUsuario(Usuario novoUsuario) async {
-    await _firestore.collection('usuarios').doc(novoUsuario.uid).update(novoUsuario.toMap());
+    await _firestore
+        .collection('usuarios')
+        .doc(novoUsuario.uid)
+        .update(novoUsuario.toMap());
 
     _user = novoUsuario;
-
-    carregarUsuario();
-
+    carregarUsuario(_user!.uid);
     notifyListeners();
   }
 

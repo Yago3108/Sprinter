@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
@@ -35,6 +36,7 @@ class _PaginaState extends State<Pagina> {
   @override
   initState() {
     super.initState();
+   
   }
 
   
@@ -44,6 +46,7 @@ class _PaginaState extends State<Pagina> {
   @override
   Widget build(BuildContext context) {
           final userProvider = context.read<UserProvider>();
+      
       final fotoBase64 = userProvider.user?.fotoPerfil;
        if((userProvider.user?.email=="yrtoiu1515@gmail.com") || (userProvider.user?.email=="vitor.fn@aluno.ifsc.edu.br") || (userProvider.user?.email=="gustavocampos@gmail.com")){
         setState(() {

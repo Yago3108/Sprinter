@@ -53,6 +53,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
           // navega para a página inicial
           Navigator.push(context, MaterialPageRoute(builder: (context) => Pagina()));
+          userProvider.carregarUsuario(user.uid);
         }
       } catch (e) {
         setState(() {
@@ -130,40 +131,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 5)),
-                Text(
-                  "Continuar com:",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontFamily: 'Lao Muang Don',
-                  ),
-                ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          "assets/images/google.png",
-                        ),
-                        radius: 30,
-                      ),
-                      onPressed: () async {},
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 15)),
-                    IconButton(
-                      icon: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          "assets/images/facebook.png",
-                        ),
-                        radius: 30,
-                      ),
-                      onPressed: () async {},
-                    ),
-                  ],
-                ),
+             
               ],
             ),
           ],

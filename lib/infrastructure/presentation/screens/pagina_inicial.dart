@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,9 +12,12 @@ class PaginaInicial extends StatefulWidget {
 
 class PaginaInicialState extends State<PaginaInicial> {
   @override
-  Widget build(BuildContext context) {
-    final user = context.watch<UserProvider>().user;
 
+  @override
+  Widget build(BuildContext context) {
+    
+    final user = context.watch<UserProvider>().user;
+   
     if(user == null) {
       return Scaffold(
         body: Center(
@@ -60,7 +64,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                       ),
                     ),
                     Text(
-                      "percorridos hoje",
+                      "percorridos",
                       style: TextStyle(
                         color: Color.fromARGB(255, 5, 106, 12),
                         fontSize: 20,

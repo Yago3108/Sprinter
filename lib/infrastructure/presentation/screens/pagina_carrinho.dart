@@ -49,7 +49,7 @@ class _PaginaCarrinhoState extends State<PaginaCarrinho> {
     if (fotoBase64 != null && fotoBase64.isNotEmpty) {
       try {
         bytes = base64Decode(fotoBase64);
-      } catch (_) { /* Ignora */ }
+      } catch (_) { }
     }
 
     return Scaffold(
@@ -128,19 +128,21 @@ class _PaginaCarrinhoState extends State<PaginaCarrinho> {
                 return Column(
                   children: [
 
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 230, 255, 230), 
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color.fromARGB(255, 5, 106, 12), width: 1.5),
-                      ),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text("aaa")
-                          ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255), 
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: const Color.fromARGB(255, 5, 106, 12), width: 1.5),
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              
+                            ],
+                        ),
                       ),
                     ),
                     

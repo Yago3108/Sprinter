@@ -178,8 +178,8 @@ class MapaProvider extends ChangeNotifier {
     int pontos = (emissao/100).floor();
     
 
-    final userProvider = Provider.of<UserProvider>(context,listen: false);
-    userProvider.atualizarCC(pontos, emissao, distancia/1000);
+    final userProvider = Provider.of<UserProvider>(context,listen: true);
+   userProvider.atualizarCC(pontos, emissao, distancia/1000);
 
     if (_uid != null) {
       await _firestore.collection('usuarios').doc(_uid).collection("atividades").add({

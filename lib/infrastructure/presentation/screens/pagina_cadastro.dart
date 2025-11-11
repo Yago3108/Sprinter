@@ -62,7 +62,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   }
 
   // função para verificações e cadastrar o usuário no banco de dados
-  void verificarECadastrar() {
+  void verificarECadastrar() async {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final usuarioEmail = await userProvider.getUsuarioByEmail(_controllerEmail.text);
+
     setState(() {
       if(_controllerNome.text.isEmpty) {
         _erroNome = "Nome não pode estar vazio";
@@ -72,7 +75,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
       if(_controllerCpf.text.isEmpty) {
         _erroCPF = "CPF não pode estar vazio";
-      } else if(_controllerCpf.text.length!=11) {
+      } else if(_controllerCpf.text.length<=11) {
         _erroCPF = "CPF tem que ter 11 números";
       } else if(!CPFValidator.isValid(_controllerCpf.text)) {
         _erroCPF = "CPF inválido";
@@ -88,9 +91,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
       if(_controllerEmail.text.isEmpty) {
         _erroEmail = "Email não pode estar vazio";
-      } else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_controllerEmail.text)) {
+      }
+       else if(!RegExp(r'^(?!.*[A-Z])[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_controllerEmail.text)) {
         _erroEmail = "Formato de Email inválido";
-      } else {
+      }else if(usuarioEmail){
+        _erroEmail="Email já cadastrado";
+      }else {
         _erroEmail = null;
       }
 
@@ -117,7 +123,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         _erroData == null &&
         _erroSenha == null &&
         _erroConfirmarSenha == null) {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
       userProvider.registrar(
         nome: _controllerNome.text,
         email: _controllerEmail.text,
@@ -125,9 +131,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         cpf: _controllerCpf.text,
         nascimento: _controllerData.text,
         distancia: 0.0,
-        contCarbono: 0.0,
+        contCarbono: 0,
         contPontos: 0,
-        foto: 0,
+        foto: "",
       );
       login();
     }

@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
+import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 enum Periodo { semana, mes, ano }
@@ -28,9 +29,9 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
   @override
   void initState() {
     super.initState();
-   
-  }
+ 
 
+  }
   int calcularSemanaDoMes(DateTime data) {
   final primeiroDiaDoMes = DateTime(data.year, data.month, 1);
   final deslocamento = primeiroDiaDoMes.weekday - 1; 
@@ -38,24 +39,22 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
   return ((diaDoMes + deslocamento) / 7).ceil();
 }
   void _setDados() {
-    
+          final userProvider = context.read<UserProvider>();
+      final estatisticaProvider = context.read<EstatisticaProvider>();
+    estatisticaProvider.carregarAtividades(userProvider.user!.uid);
     if (dadosGrafico.isNotEmpty && maxX > 0) return; 
 
-    final estatisticaProvider = context.read<EstatisticaProvider>();
+ 
     final dataReferencia = widget.dataReferencia;
 
     Map<String, dynamic>? dadosPeriodo; 
-    
-    // Lista de valores (eixo X) e distância (eixo Y) que iremos gerar
     dadosGrafico.clear();
     maxY = 0;
     
     List<double> distanciasCompletas = [];
 
-    // --- Lógica para Semana ---
+  
     if (widget.periodo == Periodo.semana) {
-      // Começa no último domingo (ou segunda, dependendo da sua definição de semana)
-      // Ajuste para começar na SEGUNDA-FEIRA (dia 1)
       final primeiroDiaDaSemana = dataReferencia.subtract(Duration(days: dataReferencia.weekday - 1));
       
       final semanaId =
@@ -66,7 +65,6 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
 
       for (int i = 0; i < 7; i++) {
         final diaAtual = primeiroDiaDaSemana.add(Duration(days: i));
-        // A chave no banco é 'yyyy-mm-dd'
         final chaveDia = "${diaAtual.year}-${diaAtual.month.toString().padLeft(2, '0')}-${diaAtual.day.toString().padLeft(2, '0')}";
 
         final dadosDia = Map<String, dynamic>.from(diasComDados[chaveDia] ?? {});
@@ -106,8 +104,7 @@ else if (widget.periodo == Periodo.mes) {
     }
     
   
-    semanasDoMesChaves = distanciasPorSemana.keys.toList()
-                                          ..sort();
+    semanasDoMesChaves = distanciasPorSemana.keys.toList()..sort();
     
     
     for (int i = 0; i < semanasDoMesChaves.length; i++) {

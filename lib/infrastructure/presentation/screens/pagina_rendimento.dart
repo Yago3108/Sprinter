@@ -21,7 +21,6 @@ class _PaginaRendimentoState extends State<PaginaRendimento>
     // Criando o TabController com 3 abas
     _tabController = TabController(length: 3, vsync: this);
   }
-
   @override
   void dispose() {
     _tabController.dispose();
