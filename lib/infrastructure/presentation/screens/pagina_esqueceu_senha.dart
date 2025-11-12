@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
+import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/outlined_button_navegacao.dart';
 import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
@@ -104,220 +107,133 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final fotoBase64 = userProvider.user?.fotoPerfil;
-    Uint8List? bytes;
-    if (fotoBase64 != null && fotoBase64.isNotEmpty) {
-      bytes = base64Decode(fotoBase64);
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF056A0C),
-        elevation: 0,
+        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: IconButton(
-              icon: CircleAvatar(
-                backgroundImage: bytes != null
-                    ? MemoryImage(bytes) as ImageProvider
-                    : const AssetImage("assets/images/perfil_basico.jpg"),
-                radius: 18,
-              ),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaPerfil()),
-                );
-              },
-            ),
-          ),
-        ],
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  
-                  // Ícone ilustrativo
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF056A0C).withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.lock_reset,
-                      size: 80,
-                      color: Color(0xFF056A0C),
-                    ),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Icon
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF056A0C).withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Título
-                  const Text(
-                    "Esqueceu sua senha?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1a1a1a),
-                      fontFamily: 'League Spartan',
-                      letterSpacing: -0.5,
-                    ),
+                  child: const Icon(
+                    Icons.lock_reset,
+                    size: 80,
+                    color: Color(0xFF056A0C),
                   ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  Text(
-                    "Não se preocupe! Digite seu email e enviaremos um link para redefinir sua senha",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[600],
-                      fontFamily: 'Lao Muang Don',
-                      height: 1.4,
-                    ),
+                ),
+                
+                const SizedBox(height: 30),
+                
+                // Esqueceu sua senha
+                const Text(
+                  "Esqueceu sua senha?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'League Spartan',
                   ),
-                  
-                  const SizedBox(height: 40),
-                  
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 20,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        TextFieldComponente(
-                          controller: _emailController,
-                          prefixIcon: Icons.password,
-                          hint: "seu@email.com",
-                          label: "Email",
-                          error: _erroEmail,
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : validarEmail,
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 56),
-                            backgroundColor: const Color(0xFF056A0C),
-                            disabledBackgroundColor: Colors.grey[300],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(Icons.send, size: 20),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      "Enviar Link de Recuperação",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Lao Muang Don',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                        
-                        if (_emailEnviado) ...[
-                          const SizedBox(height: 16),
-                          TextButton.icon(
-                            onPressed: _isLoading ? null : validarEmail,
-                            icon: const Icon(Icons.refresh, size: 18),
-                            label: const Text(
-                              "Reenviar email",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Lao Muang Don',
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF056A0C),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+                ),
+                
+                const SizedBox(height: 10),
+                
+                // Mensagem
+                Text(
+                  "Não se preocupe! Digite seu email e enviaremos um link para redefinir sua senha",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey[600],
+                    fontFamily: 'Lao Muang Don',
                   ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_back,
-                        size: 16,
-                        color: Colors.grey[600],
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                        ),
-                        child: const Text(
-                          "Voltar para o login",
-                          style: TextStyle(
-                            color: Color(0xFF056A0C),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Lao Muang Don',
-                          ),
-                        ),
+                ),
+                
+                const SizedBox(height: 40),
+                
+                // Container Email
+                Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  
-                  const SizedBox(height: 40),
-                ],
-              ),
+                  child: Column(
+                    children: [
+                      // Email
+                      TextFieldComponente(
+                        controller: _emailController,
+                        prefixIcon: Icons.email,
+                        hint: "seu@email.com",
+                        label: "Email",
+                        error: _erroEmail,
+                      ),
+                      
+                      const SizedBox(height: 15),
+                      
+                      // Botão Enviar
+                      ButtonComponente(
+                        text: "Enviar", 
+                        function: () => validarEmail(),
+                      ),
+                      
+                      // Botão Reenviar
+                      if (_emailEnviado) ...[
+                        const SizedBox(height: 15),
+                        TextButton.icon(
+                          onPressed: _isLoading ? null : validarEmail,
+                          icon: const Icon(Icons.refresh, size: 18),
+                          label: const Text(
+                            "Reenviar email",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Lao Muang Don',
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFF056A0C),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 10),
+                
+                OutlinedButtonNavegacao(
+                  function: () => Navigator.pop(context),
+                  text2: "Voltar ao Login",
+                ),
+              ],
             ),
           ),
         ),
