@@ -68,19 +68,19 @@ class UserProvider extends ChangeNotifier {
   Future<void> selecionarImagem() async {
     final ImagePicker _picker = ImagePicker();
     try {
-      // 1. Seleciona a imagem da galeria
+      //Seleciona a imagem da galeria
       final XFile? imagem = await _picker.pickImage(
         source: ImageSource.gallery,
       );
       if (imagem == null) return; // Usuário cancelou
 
-      // 2. Converte para bytes
+      //Converte para bytes
       final bytes = await imagem.readAsBytes();
 
-      // 3. Converte para Base64
+      //Converte para Base64
       final base64Image = base64Encode(bytes);
 
-      // 4. Atualiza no Firestore
+      //Atualiza no Firestore
       if (_user != null) {
         _user!.fotoPerfil = base64Image;
         await _firestore.collection('usuarios').doc(_user!.uid).update({
