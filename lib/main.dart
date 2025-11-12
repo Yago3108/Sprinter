@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/app_global_state.dart';
+import 'package:myapp/infrastructure/presentation/widgets/app.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/mapa_provider.dart';

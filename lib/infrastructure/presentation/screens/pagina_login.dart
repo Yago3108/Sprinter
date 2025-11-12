@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/button_componente.dart';
-import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_cadastro.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_esqueceu_senha.dart';
@@ -97,7 +97,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 80),
 
               // Logo
               Image.asset("assets/images/Logo_Sprinter.png", height: 90),
@@ -123,6 +123,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     // Email
                     TextFieldComponente(
                       controller: _controllerEmail,
+                      prefixIcon: Icons.email,
                       hint: "seu@email.com",
                       label: "Email",
                       error: _erroEmail,
@@ -133,6 +134,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     // Senha
                     TextFieldComponente(
                       controller: _controllerSenha,
+                      prefixIcon: Icons.password,
                       hint: "••••••••",
                       label: "Senha",
                       error: _erroSenha,

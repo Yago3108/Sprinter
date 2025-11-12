@@ -1,7 +1,8 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/textfield_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'pagina_login.dart';
@@ -218,16 +219,17 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
               // Logo
               Image.asset("assets/images/Logo_Sprinter.png", height: 70),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               
               // Nome
               TextFieldComponente(
                 controller: _controllerNome,
+                prefixIcon: Icons.person,
                 hint: "Digite seu nome completo",
                 label: "Nome Completo",
                 error: _erroNome,
@@ -268,6 +270,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         color: Colors.grey[400],
                         fontSize: 15,
                       ),
+                      prefixIcon: Icon(Icons.password),
                       errorText: _erroCPF,
                       errorStyle: const TextStyle(
                         fontSize: 13,
@@ -360,18 +363,16 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         color: Colors.grey[400],
                         fontSize: 15,
                       ),
+                      prefixIcon: IconButton(
+                        icon: Icon(
+                          Icons.calendar_today_outlined,
+                        ),
+                        onPressed: () => _selecionarData(context),
+                      ),
                       errorText: _erroData,
                       errorStyle: const TextStyle(
                         fontSize: 13,
                         height: 0.8,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.calendar_today_outlined,
-                          color: Theme.of(context).primaryColor,
-                          size: 20,
-                        ),
-                        onPressed: () => _selecionarData(context),
                       ),
                       filled: true,
                       fillColor: _erroData != null 
@@ -430,6 +431,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               // Email
               TextFieldComponente(
                 controller: _controllerEmail,
+                prefixIcon: Icons.email,
                 hint: "seu@email.com",
                 label: "Email",
                 error: _erroEmail,
@@ -440,6 +442,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               // Senha
               TextFieldComponente(
                 controller: _controllerSenha,
+                prefixIcon: Icons.password,
                 hint: "••••••••",
                 label: "Senha",
                 error: _erroSenha,
@@ -451,6 +454,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               // Confirmar Senha
               TextFieldComponente(
                 controller: _controllerConfirmarSenha,
+                prefixIcon: Icons.password,
                 hint: "••••••••",
                 label: "Confirmar Senha",
                 error: _erroConfirmarSenha,
@@ -460,25 +464,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               const SizedBox(height: 30),
               
               // Botão Cadastrar
-              ElevatedButton(
-                onPressed: verificarECadastrar,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
-                  backgroundColor: const Color(0xFF056A0C),
-                  disabledBackgroundColor: Colors.grey[300],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: const Text(
-                  "Cadastrar",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Lao Muang Don',
-                  ),
-                ),
+              ButtonComponente(
+                text: "Cadastrar", 
+                function: verificarECadastrar,
               ),
 
               const SizedBox(height: 15),
@@ -516,7 +504,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
             ],
           ),
         ),

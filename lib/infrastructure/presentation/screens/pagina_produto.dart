@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/modelo_produto.dart';
+import 'package:myapp/infrastructure/presentation/widgets/modelo_produto.dart';
 import 'package:myapp/entities/produto.dart';
 import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
-import 'package:myapp/infrastructure/presentation/app/components/widget_carrinho.dart';
-import 'package:myapp/infrastructure/presentation/app/components/widget_pesquisa.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_carrinho.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_pesquisa.dart';
 import 'package:provider/provider.dart';
 
 class PaginaProduto extends StatefulWidget {

@@ -10,13 +10,19 @@ class ButtonComponente extends StatelessWidget {
     return ElevatedButton(
       onPressed: function,
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(double.infinity, 60),
-        backgroundColor: Color.fromARGB(1000, 5, 106, 12),
-      ), 
-      child: Text(text, style: 
-        TextStyle(
+        minimumSize: const Size(double.infinity, 56),
+        backgroundColor: const Color(0xFF056A0C),
+        disabledBackgroundColor: Colors.grey[300],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 20,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
           fontFamily: 'Lao Muang Don',
         ),
       ),

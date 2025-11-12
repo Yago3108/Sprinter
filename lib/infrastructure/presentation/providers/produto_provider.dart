@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myapp/infrastructure/presentation/app/components/widget_produto_carrinho.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_produto_carrinho.dart';
 import '../../../entities/produto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

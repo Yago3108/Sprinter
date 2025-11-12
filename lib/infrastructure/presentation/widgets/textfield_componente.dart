@@ -4,6 +4,7 @@ class TextFieldComponente extends StatefulWidget {
   const TextFieldComponente({
     super.key,
     this.controller,
+    this.prefixIcon,
     this.hint,
     this.label,
     this.error,
@@ -11,6 +12,7 @@ class TextFieldComponente extends StatefulWidget {
   });
   
   final TextEditingController? controller;
+  final IconData? prefixIcon;
   final String? hint;
   final String? label;
   final String? error;
@@ -72,6 +74,7 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                 fontSize: 13,
                 height: 0.8,
               ),
+              prefixIcon: Icon(widget.prefixIcon),
               suffixIcon: widget.isPassword
                   ? IconButton(
                       icon: Icon(
@@ -84,7 +87,12 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                         });
                       },
                     )
-                  : null,
+                  : widget.controller!.text.isNotEmpty 
+                    ? IconButton(
+                      onPressed: () => widget.controller!.clear(), 
+                      icon: Icon(Icons.clear),
+                    )
+                    : null,
               filled: true,
               fillColor: widget.error != null 
                   ? const Color(0xFFFFF5F5) 
