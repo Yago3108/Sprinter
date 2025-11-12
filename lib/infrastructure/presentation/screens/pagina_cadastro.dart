@@ -2,6 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/outlined_button_navegacao.dart';
 import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -465,38 +466,15 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
               const SizedBox(height: 15),
 
-              // Divider
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Já tem uma conta? ",
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 15,
-                      fontFamily: 'Lao Muang Don',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      clearControllers();
-                      clearErros();
-                      Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                    ),
-                    child: Text(
-                      "Faça login",
-                      style: TextStyle(
-                        color: Color.fromARGB(1000, 5, 106, 12),
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                  ),
-                ],
+              // Botão de Navegação para Login
+              OutlinedButtonNavegacao(
+                function: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaLogin()));
+                  clearControllers();
+                  clearErros();
+                }, 
+                text1: "Já tem uma conta? ", 
+                text2: "Faça login",
               ),
               const SizedBox(height: 20),
             ],

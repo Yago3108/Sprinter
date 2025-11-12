@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/outlined_button_navegacao.dart';
 import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_cadastro.dart';
@@ -22,6 +23,22 @@ class _PaginaLoginState extends State<PaginaLogin> {
   // Erros
   String? _erroEmail;
   String? _erroSenha;
+
+  // Limpa os Controllers
+  void clearControllers() {
+    setState(() {
+      _controllerEmail.clear();
+      _controllerSenha.clear();
+    });
+  }
+
+  // Limpa os erros
+  void clearErros() {
+    setState(() {
+      _erroEmail = null;
+      _erroSenha = null;
+    });
+  }
 
   @override
   void dispose() {
@@ -145,12 +162,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PaginaEsqueceuSenha(),
-                          ),
-                        ),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEsqueceuSenha()));
+                          clearControllers();
+                          clearErros();
+                        },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -202,45 +218,14 @@ class _PaginaLoginState extends State<PaginaLogin> {
               const SizedBox(height: 20),
 
               // Botão de Navegação para Login
-              OutlinedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaginaCadastro(),
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  side: BorderSide(
-                    color: Colors.grey[300]!,
-                    width: 1.5,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Não tem uma conta? ",
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 15,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                    Text(
-                      "Cadastre-se",
-                      style: TextStyle(
-                        color: Color.fromARGB(1000, 5, 106, 12),
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                  ],
-                ),
+              OutlinedButtonNavegacao(
+                function: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaCadastro()));
+                  clearControllers();
+                  clearErros();
+                },
+                text1: "Não tem uma conta? ", 
+                text2: "Cadastre-se!",
               ),
             ],
           ),
