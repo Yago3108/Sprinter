@@ -91,10 +91,6 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> continuarComGoogle() async {
-    notifyListeners();
-  }
-
     Future<void> carregarUsuario(String uid) async {
     final doc = await _firestore.collection('usuarios').doc(uid).get();
     if (doc.exists) {
@@ -133,21 +129,14 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<User?> login(String email, String senha) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: senha);
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw Exception("Usuário não encontrado.");
-      } else if (e.code == 'wrong-password') {
-        throw Exception("Senha incorreta.");
-      } else if (e.code == 'invalid-email') {
-        throw Exception("E-mail inválido.");
-      } else {
-        throw Exception("Erro ao logar: ${e.message}");
-      }
+    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: senha);
+    final user = userCredential.user;
+
+    if(user != null) {
+      return user;
     }
+
+    return null;
   }
 
   Usuario? usuarioPesquisado;

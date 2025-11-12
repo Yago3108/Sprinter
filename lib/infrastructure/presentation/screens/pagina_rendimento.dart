@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
-import 'package:myapp/infrastructure/presentation/app/components/grafico.dart';
+import 'package:myapp/infrastructure/presentation/widgets/grafico.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 

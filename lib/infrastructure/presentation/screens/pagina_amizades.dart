@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/widget_podio.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_podio.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil_amizade.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/entities/pedido.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/entities/usuario.dart';
-import 'package:myapp/infrastructure/presentation/app/components/widget_pesquisaUsuario.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_pesquisaUsuario.dart';
 import 'package:provider/provider.dart';
 
 class PaginaAmizades extends StatefulWidget {

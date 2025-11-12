@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/produto_carrossel.dart';
+import 'package:myapp/infrastructure/presentation/widgets/produto_carrossel.dart';
 
 class WidgetPesquisa extends StatefulWidget {
   final void Function(String produtoId) onProdutoSelecionado;

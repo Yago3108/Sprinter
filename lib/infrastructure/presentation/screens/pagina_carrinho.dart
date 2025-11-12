@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/app/components/widget_produto_carrinho.dart';
+import 'package:myapp/infrastructure/presentation/widgets/widget_produto_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
