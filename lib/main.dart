@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/widgets/app.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => BottomNavigatorProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MapaProvider()),
         ChangeNotifierProvider(create: (_) => ProdutoProvider()),

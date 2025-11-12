@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
+import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_carrinho.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_compras.dart';
@@ -23,8 +23,8 @@ class Pagina extends StatefulWidget {
 }
 
 class _PaginaState extends State<Pagina> {
-  int _paginaAtual = 2;
   bool isAdmin=false;
+
   final List<Widget> _paginas = [
     PaginaAmizades(),
     PaginaCompras(),
@@ -32,32 +32,28 @@ class _PaginaState extends State<Pagina> {
     PaginaMapa(),
     PaginaRendimento(),
   ];
-  Uint8List? bytes;
-  @override
-  initState() {
-    super.initState();
-   
-  }
 
-  
-  
-  
+  Uint8List? bytes;
 
   @override
   Widget build(BuildContext context) {
-          final userProvider = context.read<UserProvider>();
+    final index = context.watch<BottomNavigatorProvider>().index;
+
+    final userProvider = context.read<UserProvider>();
       
-      final fotoBase64 = userProvider.user?.fotoPerfil;
-       if((userProvider.user?.email=="yrtoiu1515@gmail.com") || (userProvider.user?.email=="vitor.fn@aluno.ifsc.edu.br") || (userProvider.user?.email=="gustavocampos@gmail.com")){
-        setState(() {
-                  isAdmin=true;
-        });
-       }
-      if (fotoBase64 != null) {
-        setState(() {
-          bytes = base64Decode(fotoBase64);
-        });
-      }
+    final fotoBase64 = userProvider.user?.fotoPerfil;
+
+    if((userProvider.user?.email=="yrtoiu1515@gmail.com") || (userProvider.user?.email=="vitor.fn@aluno.ifsc.edu.br") || (userProvider.user?.email=="gustavocampos@gmail.com")){
+    setState(() {
+      isAdmin=true;
+    });
+    }
+    if (fotoBase64 != null) {
+      setState(() {
+        bytes = base64Decode(fotoBase64);
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         actionsPadding: EdgeInsets.only(right: 10),
@@ -139,12 +135,12 @@ class _PaginaState extends State<Pagina> {
         ),
       ),
       backgroundColor: Color.fromARGB(255, 240, 240, 240),
-      body: _paginas[_paginaAtual],
+      body: _paginas[index],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _paginaAtual,
-        onTap: (index) {
+        currentIndex: index,
+        onTap: (newIndex) {
           setState(() {
-            _paginaAtual = index;
+            context.read<BottomNavigatorProvider>().index = newIndex;
           });
         },
         iconSize: 30,
