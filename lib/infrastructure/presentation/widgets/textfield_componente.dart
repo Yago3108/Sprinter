@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 class TextFieldComponente extends StatefulWidget {
   const TextFieldComponente({
     super.key,
-    this.controller,
-    this.prefixIcon,
-    this.hint,
-    this.label,
+    required this.controller,
+    required this.prefixIcon,
+    required this.hint,
+    required this.label,
     this.error,
     this.isPassword = false,
   });
   
-  final TextEditingController? controller;
-  final IconData? prefixIcon;
-  final String? hint;
-  final String? label;
+  final TextEditingController controller;
+  final IconData prefixIcon;
+  final String hint;
+  final String label;
   final String? error;
   final bool isPassword;
 
@@ -24,7 +24,6 @@ class TextFieldComponente extends StatefulWidget {
 
 class _TextFieldComponenteState extends State<TextFieldComponente> {
   late bool obsText;
-  bool isFocused = false;
 
   @override
   void initState() {
@@ -37,31 +36,24 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 8),
-            child: Text(
-              widget.label!,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1a1a1a),
-                fontFamily: 'Lao Muang Don',
-              ),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+              fontFamily: 'Lao Muang Don',
             ),
           ),
-        Focus(
-          onFocusChange: (hasFocus) {
-            setState(() {
-              isFocused = hasFocus;
-            });
-          },
-          child: TextField(
+        ),
+        TextField(
             controller: widget.controller,
             obscureText: obsText,
             style: const TextStyle(
               fontSize: 16,
-              color: Color(0xFF1a1a1a),
+              color: Colors.black,
             ),
             decoration: InputDecoration(
               hintText: widget.hint,
@@ -74,12 +66,12 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                 fontSize: 13,
                 height: 0.8,
               ),
-              prefixIcon: Icon(widget.prefixIcon),
+              prefixIcon: Icon(widget.prefixIcon, color: Color.fromARGB(255, 5, 106, 12)),
               suffixIcon: widget.isPassword
                   ? IconButton(
                       icon: Icon(
                         obsText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: isFocused ? Theme.of(context).primaryColor : Colors.grey[600],
+                        color: Color.fromARGB(255, 5, 106, 12),
                       ),
                       onPressed: () {
                         setState(() {
@@ -87,9 +79,9 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                         });
                       },
                     )
-                  : widget.controller!.text.isNotEmpty 
+                  : widget.controller.text.isNotEmpty 
                     ? IconButton(
-                      onPressed: () => widget.controller!.clear(), 
+                      onPressed: () => widget.controller.clear(), 
                       icon: Icon(Icons.clear),
                     )
                     : null,
@@ -113,7 +105,7 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                 borderSide: BorderSide(
                   color: widget.error != null 
                       ? Colors.red[300]! 
-                      : Colors.grey[300]!,
+                      : Color.fromARGB(255, 5, 106, 12),
                   width: 1.5,
                 ),
               ),
@@ -122,7 +114,7 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
                 borderSide: BorderSide(
                   color: widget.error != null 
                       ? Colors.red[400]! 
-                      : Theme.of(context).primaryColor,
+                      : Color.fromARGB(255, 5, 106, 12),
                   width: 2,
                 ),
               ),
@@ -142,7 +134,6 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
               ),
             ),
           ),
-        ),
       ],
     );
   }

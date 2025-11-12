@@ -196,7 +196,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                   
                   const SizedBox(height: 40),
                   
-                  // Card com o formulário
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -214,6 +213,7 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                       children: [
                         TextFieldComponente(
                           controller: _emailController,
+                          prefixIcon: Icons.password,
                           hint: "seu@email.com",
                           label: "Email",
                           error: _erroEmail,
@@ -221,7 +221,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                         
                         const SizedBox(height: 24),
                         
-                        // Botão de enviar
                         ElevatedButton(
                           onPressed: _isLoading ? null : validarEmail,
                           style: ElevatedButton.styleFrom(
@@ -262,7 +261,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                                 ),
                         ),
                         
-                        // Botão de reenviar (só aparece após envio)
                         if (_emailEnviado) ...[
                           const SizedBox(height: 16),
                           TextButton.icon(
@@ -291,7 +289,6 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                   
                   const SizedBox(height: 24),
                   
-                  // Link para voltar ao login
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -69,6 +69,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextFieldComponente(
                               controller:controllersSenha ,
+                              prefixIcon: Icons.lock,
                               hint: "Digite sua senha",
                               isPassword: true,
                               label: "Senha",
@@ -218,6 +219,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                                 padding:EdgeInsets.symmetric(horizontal: 20),
                                 child: TextFieldComponente(
                                   controller: controllerNome,
+                                  prefixIcon: Icons.person,
                                   hint: "Digite o novo nome",
                                   isPassword: false,
                                   label: "Nome",

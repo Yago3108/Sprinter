@@ -203,7 +203,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
       // App Bar
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -270,7 +270,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         color: Colors.grey[400],
                         fontSize: 15,
                       ),
-                      prefixIcon: Icon(Icons.password),
+                      prefixIcon: Icon(Icons.perm_identity, color: Color.fromARGB(255, 5, 106, 12)),
                       errorText: _erroCPF,
                       errorStyle: const TextStyle(
                         fontSize: 13,
@@ -284,19 +284,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         horizontal: 20,
                         vertical: 18,
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.grey[300]!,
-                          width: 1.5,
-                        ),
-                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
                           color: _erroCPF != null 
                               ? Colors.red[300]! 
-                              : Colors.grey[300]!,
+                              : Color.fromARGB(255, 5, 106, 12),
                           width: 1.5,
                         ),
                       ),
@@ -305,7 +298,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         borderSide: BorderSide(
                           color: _erroCPF != null 
                               ? Colors.red[400]! 
-                              : Theme.of(context).primaryColor,
+                              : Color.fromARGB(255, 5, 106, 12),
                           width: 2,
                         ),
                       ),
@@ -366,6 +359,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       prefixIcon: IconButton(
                         icon: Icon(
                           Icons.calendar_today_outlined,
+                          color: Color.fromARGB(255, 5, 106, 12),
                         ),
                         onPressed: () => _selecionarData(context),
                       ),
@@ -394,7 +388,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         borderSide: BorderSide(
                           color: _erroData != null 
                               ? Colors.red[300]! 
-                              : Colors.grey[300]!,
+                              : Color.fromARGB(255, 5, 106, 12),
                           width: 1.5,
                         ),
                       ),
@@ -403,7 +397,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         borderSide: BorderSide(
                           color: _erroData != null 
                               ? Colors.red[400]! 
-                              : Theme.of(context).primaryColor,
+                              : Color.fromARGB(255, 5, 106, 12),
                           width: 2,
                         ),
                       ),
@@ -442,7 +436,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               // Senha
               TextFieldComponente(
                 controller: _controllerSenha,
-                prefixIcon: Icons.password,
+                prefixIcon: Icons.lock,
                 hint: "••••••••",
                 label: "Senha",
                 error: _erroSenha,
@@ -454,7 +448,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               // Confirmar Senha
               TextFieldComponente(
                 controller: _controllerConfirmarSenha,
-                prefixIcon: Icons.password,
+                prefixIcon: Icons.lock,
                 hint: "••••••••",
                 label: "Confirmar Senha",
                 error: _erroConfirmarSenha,

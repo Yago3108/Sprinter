@@ -134,7 +134,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     // Senha
                     TextFieldComponente(
                       controller: _controllerSenha,
-                      prefixIcon: Icons.password,
+                      prefixIcon: Icons.lock,
                       hint: "••••••••",
                       label: "Senha",
                       error: _erroSenha,
