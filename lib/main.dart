@@ -4,10 +4,10 @@ import 'package:myapp/infrastructure/presentation/app/app_global_state.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/mapa_provider.dart';
-import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart'; 
+import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-  
+
 Future<void> main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

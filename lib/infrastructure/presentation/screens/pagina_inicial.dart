@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/providers/estatistica_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,117 +11,398 @@ class PaginaInicial extends StatefulWidget {
 
 class PaginaInicialState extends State<PaginaInicial> {
   @override
-
-  @override
   Widget build(BuildContext context) {
-    
     final user = context.watch<UserProvider>().user;
-   
-    if(user == null) {
+
+    if (user == null) {
       return Scaffold(
+        backgroundColor: Colors.white,
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF056A0C)),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "Carregando...",
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 16,
+                  fontFamily: 'Lao Muang Don',
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
 
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.only(top: 30)),
-              Image.asset("assets/images/Logo_Sprinter.png", height: 100),
-              Padding(padding: EdgeInsets.only(top: 70)),
-              Container(
-                alignment: Alignment.topCenter,
-                width: 250,
-                height: 150,
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(162, 84, 138, 87),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF056A0C),
+                        Color(0xFF078A10),
+                      ],
                     ),
-                  ],
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color.fromARGB(255, 230, 230, 230),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF056A0C).withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.directions_run,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              "Total",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Lao Muang Don',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "Distância Percorrida",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Lao Muang Don',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "${user.distancia.toStringAsFixed(1)} km",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'League Spartan',
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white.withOpacity(0.8),
+                            size: 16,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            "Continue se exercitando!",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 13,
+                              fontFamily: 'Lao Muang Don',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF0A8F14),
+                        Color(0xFF0DB520),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF056A0C).withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.eco,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              "Total",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Lao Muang Don',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "CarboCoins",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Lao Muang Don',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        user.carboCoins.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'League Spartan',
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white.withOpacity(0.8),
+                            size: 16,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            "Pontos acumulados",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 13,
+                              fontFamily: 'Lao Muang Don',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 15,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF056A0C).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.lightbulb_outline,
+                              color: Color(0xFF056A0C),
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            "Dica do dia",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1a1a1a),
+                              fontFamily: 'League Spartan',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "Cada quilômetro pedalado contribui para um planeta mais sustentável e gera CarboCoins para você!",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
+                          fontFamily: 'Lao Muang Don',
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Row(
                   children: [
-                    Padding(padding: EdgeInsets.only(top: 20)),
-                    Text(
-                      "${user.distancia.toStringAsFixed(1)}km",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontSize: 40,
-                        fontFamily: 'Lao Muang Don',
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 15,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFA726).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.emoji_events,
+                                color: Color(0xFFFFA726),
+                                size: 28,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Conquistas",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1a1a1a),
+                                fontFamily: 'Lao Muang Don',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Text(
-                      "percorridos",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontSize: 20,
-                        fontFamily: 'Lao Muang Don',
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 15,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF42A5F5).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.trending_up,
+                                color: Color(0xFF42A5F5),
+                                size: 28,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Progresso",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1a1a1a),
+                                fontFamily: 'Lao Muang Don',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(padding: EdgeInsets.only(top: 20)),
                   ],
                 ),
-              ),
-              Padding(padding: EdgeInsetsGeometry.only(top: 45)),
-              Container(
-                alignment: Alignment.center,
-                width: 250,
-                height: 150,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(162, 84, 138, 87),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color.fromARGB(255, 230, 230, 230),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      "Você tem:",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontSize: 20,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                    Text(
-                      user.carboCoins.toString(),
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontSize: 40,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                    Text(
-                      "CarboCoins",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontSize: 20,
-                        fontFamily: 'Lao Muang Don',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),
