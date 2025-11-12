@@ -56,7 +56,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
       showDialog(context: context, builder:(context) => Dialog(
         child: SizedBox(
           width: 350,
-          height: 250,
+          height: 260,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -166,12 +166,12 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                       Padding(
                       padding: const EdgeInsets.only(left: 30),
                       child: Text("Configurações:",
-                      style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "League Spartan"
-                          ),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: "League Spartan"
+                        ),
                       ),
-                                      ),
+                    ),
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),

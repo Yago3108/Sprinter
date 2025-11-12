@@ -30,6 +30,7 @@ class MapaProvider extends ChangeNotifier {
   bool get isAtividadeAtiva => _posicaoStream != null;
   bool _marcadorInicializado = false;
 
+//INICIAR ATIVIDADE
   void iniciarAtividade(BuildContext context) {
     rota.clear();
     _distancia = 0.0;
@@ -56,7 +57,7 @@ class MapaProvider extends ChangeNotifier {
           id: 'userPosition', 
           markerIcon: MarkerIcon(
             iconWidget: Icon(
-              Icons.directions_run,
+              Icons.directions_sharp,
               color: Colors.green,
               size: 48,
             ),
@@ -150,7 +151,6 @@ class MapaProvider extends ChangeNotifier {
             }
             
             notifyListeners();
-            return;
           }
         }
       }
@@ -184,6 +184,7 @@ class MapaProvider extends ChangeNotifier {
   double get distancia => _distancia;
   Duration get tempo => _tempo;
 
+//PARAR ATIVIDADE
   Future<void> pararAtividade(BuildContext context) async {
     _fim = DateTime.now();
     _posicaoStream?.cancel();

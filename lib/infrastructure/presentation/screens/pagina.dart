@@ -110,11 +110,10 @@ class _PaginaState extends State<Pagina> {
                 );
               },
             ):SizedBox(),
-                           ListTile(
+             ListTile(
               leading: Icon(Icons.shopping_cart),
               title: Text("Carrinho"),
               onTap: () {
-              
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PaginaCarrinho()),
