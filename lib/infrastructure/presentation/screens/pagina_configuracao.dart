@@ -92,7 +92,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             child: Text('OK',
                             style: TextStyle(
                             fontFamily: "League Spartan",
-                            color: Color.fromARGB(255, 5, 106,12 ),  
+                            color: Color.fromARGB(255, 5, 106, 12 ),  
                             ),),
                           ),
                 

@@ -28,6 +28,7 @@ class MapaProvider extends ChangeNotifier {
   StreamSubscription<Position>? _posicaoStream;
 
   bool get isAtividadeAtiva => _posicaoStream != null;
+  bool _marcadorInicializado = false;
 
   void iniciarAtividade(BuildContext context) {
     rota.clear();
@@ -49,6 +50,24 @@ class MapaProvider extends ChangeNotifier {
       // Atualiza a posição no mapa
       await controller.moveTo(ponto);
 
+      if(!_marcadorInicializado){
+        await controller.setStaticPosition([ponto], 'userPosition');
+        await controller.setMarkerOfStaticPoint( 
+          id: 'userPosition', 
+          markerIcon: MarkerIcon(
+            iconWidget: Icon(
+              Icons.directions_run,
+              color: Colors.green,
+              size: 48,
+            ),
+          ),
+        );
+        _marcadorInicializado = true;
+      } 
+      else{
+        await controller.setStaticPosition([ponto], 'userPosition');
+      }
+
       bool atividadeParada = false;
 
       if(_ultimaPosicao != null && _ultimoTempo != null){
@@ -62,6 +81,9 @@ class MapaProvider extends ChangeNotifier {
         final Duration tempoLocal = pos.timestamp.difference(_ultimoTempo!);
 
         if(tempoLocal.inSeconds > 0){
+
+          _tempo += tempoLocal;
+
           final double velocidade = distanciaLocal / tempoLocal.inSeconds;
 
           final double velocidadeKm = velocidade * 3.6;
@@ -167,18 +189,14 @@ class MapaProvider extends ChangeNotifier {
     _posicaoStream?.cancel();
     _posicaoStream = null;
 
-    if (_inicio != null && _fim != null) {
-      _tempo = _fim!.difference(_inicio!);
-    }
-
     double fatorEmissao = 1.5;
 
-    double emissao = _tempo.inSeconds*fatorEmissao*(_distancia/1000);
+    double emissao = fatorEmissao*(_distancia/1000);
     
-    int pontos = (emissao/100).floor();
+    int pontos = (emissao/5).floor();
     
 
-    final userProvider = Provider.of<UserProvider>(context,listen: true);
+    final userProvider = Provider.of<UserProvider>(context,listen: false);
    userProvider.atualizarCC(pontos, emissao, distancia/1000);
 
     if (_uid != null) {
