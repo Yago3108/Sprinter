@@ -59,8 +59,8 @@ class PaginaInicialState extends State<PaginaInicial> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color(0xFF056A0C),
-                          Color(0xFF078A10),
+                          Color.fromARGB(255, 10, 88, 15),
+                          Color.fromARGB(255, 41, 119, 46),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(24),
@@ -165,8 +165,8 @@ class PaginaInicialState extends State<PaginaInicial> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color(0xFF0A8F14),
-                          Color(0xFF0DB520),
+                          Color.fromARGB(255, 20, 99, 27),
+                          Color.fromARGB(255, 32, 87, 38),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(24),
@@ -341,12 +341,12 @@ class PaginaInicialState extends State<PaginaInicial> {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFFA726).withOpacity(0.1),
+                                  color: const Color.fromARGB(255, 18, 95, 24).withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
                                   Icons.emoji_events,
-                                  color: Color(0xFFFFA726),
+                                  color: Color.fromARGB(255, 68, 126, 57),
                                   size: 28,
                                 ),
                               ),
@@ -387,12 +387,12 @@ class PaginaInicialState extends State<PaginaInicial> {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF42A5F5).withOpacity(0.1),
+                                  color: const Color.fromARGB(255, 18, 95, 24).withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
                                   Icons.trending_up,
-                                  color: Color(0xFF42A5F5),
+                                  color: Color.fromARGB(255, 68, 126, 57),
                                   size: 28,
                                 ),
                               ),
