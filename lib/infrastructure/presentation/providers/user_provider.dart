@@ -16,10 +16,12 @@ class UserProvider extends ChangeNotifier {
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
         await carregarUsuario(firebaseUser.uid);
+     
       } else {
         _user = null;
         notifyListeners();
       }
+          
     });
   }
   Future<void> registrar({

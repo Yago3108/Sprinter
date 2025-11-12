@@ -16,6 +16,7 @@ class EstatisticaProvider extends ChangeNotifier {
 
   // carrega as atividades
  Future<void> carregarAtividades(String userId) async {
+    
     final atividadesSnap = await _firestore
         .collection('usuarios')
         .doc(userId)

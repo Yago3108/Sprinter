@@ -40,7 +40,7 @@ class _GraficoHistoricoState extends State<GraficoHistorico> {
 }
   void _setDados() {
           final userProvider = context.read<UserProvider>();
-      final estatisticaProvider = context.read<EstatisticaProvider>();
+      final estatisticaProvider = context.watch<EstatisticaProvider>();
     estatisticaProvider.carregarAtividades(userProvider.user!.uid);
     if (dadosGrafico.isNotEmpty && maxX > 0) return; 
 
@@ -116,7 +116,7 @@ else if (widget.periodo == Periodo.mes) {
     }
     
    
-    maxX = distanciasCompletas.length.toDouble() - 1;
+    maxX =  3;
 }
     
     // --- Lógica para Ano ---
@@ -144,16 +144,12 @@ else if (widget.periodo == Periodo.mes) {
       if (distancia > maxY) maxY = distancia;
     }
 
-    // Garante que o gráfico tenha pelo menos um ponto se houver dados
     if (dadosGrafico.isEmpty) maxX = 0;
   }
 
-  // O restante do LineChartData e build permanecem.
-  // ... (getChartData)
 
   LineChartData getChartData() {
     return LineChartData(
-      // ... (Restante do LineChartData, sem alterações)
       gridData: FlGridData(show: true),
       borderData: FlBorderData(show: true),
       minX: 0,
