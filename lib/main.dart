@@ -9,7 +9,7 @@ import 'package:myapp/infrastructure/presentation/providers/produto_provider.dar
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-Future<void> main() async { 
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -20,8 +20,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MapaProvider()),
         ChangeNotifierProvider(create: (_) => ProdutoProvider()),
-        ChangeNotifierProvider(create:  (_) => AmizadeProvider()), 
-        ChangeNotifierProvider(create:  (_) => EstatisticaProvider()),
+        ChangeNotifierProvider(create: (_) => AmizadeProvider()),
+        ChangeNotifierProvider(create: (_) => EstatisticaProvider()),
       ],
       child: const MyApp(),
     ),

@@ -12,8 +12,6 @@ class PaginaMapa extends StatefulWidget {
 }
 
 class _PaginaMapaState extends State<PaginaMapa> {
-
-
   @override
   void initState() {
     super.initState();
@@ -23,7 +21,6 @@ class _PaginaMapaState extends State<PaginaMapa> {
     if (userProvider.user != null) {
       _mapaProvider.setUid(userProvider.user!.uid);
     }
-    
   }
 
   @override
@@ -36,11 +33,29 @@ class _PaginaMapaState extends State<PaginaMapa> {
         children: [
           OSMFlutter(
             controller: mapa.controller,
-          
+
             osmOption: OSMOption(
-          
               zoomOption: ZoomOption(initZoom: 16),
               showDefaultInfoWindow: false,
+
+              staticPoints: [
+                StaticPositionGeoPoint(
+                  'userPosition',
+                  MarkerIcon(
+                    iconWidget: Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                    ),
+                  ),
+                  [],
+                ),
+              ],
+
               roadConfiguration: const RoadOption(
                 roadColor: Color.fromARGB(255, 21, 77, 25),
               ),
@@ -68,7 +83,6 @@ class _PaginaMapaState extends State<PaginaMapa> {
                     ),
                   ),
                   onPressed: () async {
-
                     if (isAtividadeAtiva) {
                       await mapa.pararAtividade(context);
                       ScaffoldMessenger.of(context).showSnackBar(

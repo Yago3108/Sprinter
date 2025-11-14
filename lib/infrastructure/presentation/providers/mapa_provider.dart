@@ -19,10 +19,12 @@ class MapaProvider extends ChangeNotifier {
   DateTime? _ultimoTempo;
   Position? _ultimaPosicao;
   bool _marcadorInicializado = false;
+  bool _atividadeEncerrada = false;
 
   void setUid(String uid) {
     _uid = uid;
   }
+
   final MapController controller = MapController(
     initMapWithUserPosition: UserTrackingOption(enableTracking: false),
   );
@@ -30,123 +32,167 @@ class MapaProvider extends ChangeNotifier {
 
   bool get isAtividadeAtiva => _posicaoStream != null;
 
+  //INICIAR ATIVIDADE
   void iniciarAtividade(BuildContext context) {
+    _atividadeEncerrada = false;
     rota.clear();
     _distancia = 0.0;
     _tempo = Duration.zero;
     _inicio = DateTime.now();
     _ultimaPosicao = null;
     _ultimoTempo = null;
-    _marcadorInicializado = false; // Garante que a inicialização no mapa ocorrerá
+    _marcadorInicializado = false;
 
-    _posicaoStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-         accuracy: LocationAccuracy.bestForNavigation,
-         distanceFilter: 0,
-        ),
-      ).listen((pos) async {
-      final ponto = GeoPoint(latitude: pos.latitude, longitude: pos.longitude);
+    _posicaoStream =
+        Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 0,
+          ),
+        ).listen((pos) async {
+          if (_atividadeEncerrada) return;
 
-      bool atividadeParada = false;
+          final ponto = GeoPoint(
+            latitude: pos.latitude,
+            longitude: pos.longitude,
+          );
 
-      if (_ultimaPosicao != null && _ultimoTempo != null) {
+          bool atividadeParada = false;
 
-        final ultimaPosicaoValida = _ultimaPosicao!; 
-        final ultimoTempoValido = _ultimoTempo!;
+          if (_ultimaPosicao != null && _ultimoTempo != null) {
+            final ultimaPosicaoValida = _ultimaPosicao!;
+            final ultimoTempoValido = _ultimoTempo!;
 
-        final distanciaLocal = Distance().as(
-          LengthUnit.Meter,
-          LatLng(ultimaPosicaoValida.latitude, ultimaPosicaoValida.longitude),
-          LatLng(pos.latitude, pos.longitude),
-        );
+            final distanciaLocal = Distance().as(
+              LengthUnit.Meter,
+              LatLng(
+                ultimaPosicaoValida.latitude,
+                ultimaPosicaoValida.longitude,
+              ),
+              LatLng(pos.latitude, pos.longitude),
+            );
 
-        final Duration tempoLocal = pos.timestamp.difference(ultimoTempoValido);
+            final Duration tempoLocal = pos.timestamp.difference(
+              ultimoTempoValido,
+            );
 
-        if (tempoLocal.inSeconds > 0) {
-          final double velocidade = distanciaLocal / tempoLocal.inSeconds;
-          final double velocidadeKm = velocidade * 3.6;
+            if (tempoLocal.inSeconds > 0) {
+              final double velocidade = distanciaLocal / tempoLocal.inSeconds;
+              final double velocidadeKm = velocidade * 3.6;
 
-          if (velocidadeKm > 40) {
-            atividadeParada = true;
+              if (velocidadeKm > 40) {
+                atividadeParada = true;
 
-            await pararAtividade(context);
+                await pararAtividade(context);
 
-            if (ModalRoute.of(context)?.isCurrent ?? false) {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  title: Row(children: [
-                    const Icon(Icons.warning_amber_rounded, color: Color.fromARGB(255, 5, 106, 12), size: 30),
-                    const SizedBox(width: 10),
-                    Text("Alerta de Velocidade!", style: TextStyle(color: Color.fromARGB(255, 5, 106, 12), fontWeight: FontWeight.bold)),
-                  ]),
-                  content: const Text("Você está andando acima da velocidade permitida do aplicativo! Diminua a velocidade e reinicie a atividade.", style: TextStyle(fontSize: 16)),
-                  actions: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      onPressed: () => Navigator.of(ctx).pop(),
-                      child: const Text("Entendi", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                    )
-                  ],
+                      title: Row(
+                        children: [
+                          const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                            size: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            "Alerta de Velocidade!",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 106, 12),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      content: const Text(
+                        "Você ultrapassou 40km/h. A atividade foi pausada.",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          child: const Text("Entendi"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                notifyListeners();
+                return;
+              }
+
+              _distancia += distanciaLocal;
+              _tempo += tempoLocal;
+            }
+          }
+
+          if (!atividadeParada) {
+            rota.add(ponto);
+            _ultimaPosicao = pos;
+            _ultimoTempo = pos.timestamp;
+
+            if (!_marcadorInicializado) {
+              await controller.changeLocation(ponto);
+
+              await controller.setMarkerOfStaticPoint(
+                id: 'userPosition',
+                markerIcon: MarkerIcon(
+                  iconWidget: Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                  ),
+                ),
+              );
+
+              _marcadorInicializado = true;
+            } else {
+              await controller.changeLocation(ponto);
+            }
+
+            await controller.moveTo(ponto);
+
+            if (rota.length >= 2) {
+              await controller.drawRoadManually(
+                rota,
+                const RoadOption(
+                  roadColor: Colors.green,
+                  roadWidth: 6,
+                  zoomInto: false,
                 ),
               );
             }
+          }
 
           notifyListeners();
-          return; 
-        }
-
-          _distancia += distanciaLocal;
-          _tempo += tempoLocal; // Atualiza o tempo total decorrido
-      }
-      }
-
-      if (!atividadeParada) {
-        rota.add(ponto); 
-        _ultimaPosicao = pos;
-        _ultimoTempo = pos.timestamp;
-
-        if (!_marcadorInicializado) {
-          await controller.setStaticPosition([ponto], 'userPosition');
-          await controller.setMarkerOfStaticPoint(
-            id: 'userPosition',
-            markerIcon: MarkerIcon(
-              iconWidget: Icon(Icons.person_pin_circle, color: Colors.blue, size: 48),
-            ),
-          );
-          await controller.goToLocation(ponto);
-          _marcadorInicializado = true;
-        } else {
-          await controller.setStaticPosition([ponto], 'userPosition');
-        }
-
-        await controller.moveTo(ponto); 
-
-        if (rota.length >= 2) {
-          await controller.drawRoadManually(
-            rota,
-            const RoadOption(roadColor: Colors.green, roadWidth: 6, zoomInto: false),
-          );
-        }
-      }
-
-      notifyListeners();
-    });
+        });
   }
+
   List<GeoPoint> get rota => _rota;
   double get distancia => _distancia;
   Duration get tempo => _tempo;
 
+  //PARAR ATIVIDADE
   Future<void> pararAtividade(BuildContext context) async {
+    _atividadeEncerrada = true;
     _fim = DateTime.now();
     _posicaoStream?.cancel();
     _posicaoStream = null;
+
+    notifyListeners();
+
+    await Future.delayed(const Duration(milliseconds: 50));
 
     if (_inicio != null && _fim != null) {
       _tempo = _fim!.difference(_inicio!);
@@ -154,27 +200,35 @@ class MapaProvider extends ChangeNotifier {
 
     double fatorEmissao = 1.5;
 
-    double emissao = _tempo.inSeconds*fatorEmissao*(_distancia/1000);
-    
-    int pontos = (emissao/100).floor();
-    
+    double emissao = fatorEmissao * (_distancia / 1000);
 
-    final userProvider = Provider.of<UserProvider>(context,listen: false);
-    userProvider.atualizarCC(pontos, emissao, distancia/1000);
+    int pontos = (emissao / 10).floor();
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.atualizarCC(pontos, emissao, distancia / 1000);
 
     if (_uid != null) {
-      await _firestore.collection('usuarios').doc(_uid).collection("atividades").add({
-        'rota': _rota.map((ponto) => { 'latitude': ponto.latitude, 'longitude': ponto.longitude}).toList(),
-        'uid': _uid,
-        'distancia': _distancia,
-        'tempo': _tempo.inSeconds,
-        'inicio': _inicio,
-        'fim': _fim,
-        'emissao': emissao,
-        'pontos': pontos
-      });
+      await _firestore
+          .collection('usuarios')
+          .doc(_uid)
+          .collection("atividades")
+          .add({
+            'rota': _rota
+                .map(
+                  (ponto) => {
+                    'latitude': ponto.latitude,
+                    'longitude': ponto.longitude,
+                  },
+                )
+                .toList(),
+            'uid': _uid,
+            'distancia': _distancia,
+            'tempo': _tempo.inSeconds,
+            'inicio': _inicio,
+            'fim': _fim,
+            'emissao': emissao,
+            'pontos': pontos,
+          });
     }
-
-    notifyListeners();
   }
 }
