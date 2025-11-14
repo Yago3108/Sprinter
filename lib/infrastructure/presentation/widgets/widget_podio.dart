@@ -67,7 +67,7 @@ class _WidgetPodioRankingState extends State<WidgetPodioRanking> {
             onTap: ()  {
                
               if(user["uid"]!=userProvider.user!.uid){
-                  userProvider.getUsuarioByUid(user?["uid"]);
+                  userProvider.getUsuarioByUid(user["uid"]);
                   Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PaginaPerfilAmizade(key: null,uidAmigo: user["uid"],)),

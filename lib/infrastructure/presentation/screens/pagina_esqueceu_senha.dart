@@ -1,11 +1,8 @@
-import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
 import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
 import 'package:myapp/infrastructure/presentation/widgets/outlined_button_navegacao.dart';
 import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
-import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 

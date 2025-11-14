@@ -280,7 +280,7 @@ bool _dataLoaded = false;
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Text(
-                            "${user!.distancia.toStringAsFixed(1)} km",
+                            "${user.distancia.toStringAsFixed(1)} km",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 36,
