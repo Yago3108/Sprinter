@@ -13,22 +13,17 @@ class PaginaMapa extends StatefulWidget {
 
 class _PaginaMapaState extends State<PaginaMapa> {
 
-  bool _isInit = false; 
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    
-    if (!_isInit) { 
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final mapaProvider = Provider.of<MapaProvider>(context, listen: false);
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final _mapaProvider = Provider.of<MapaProvider>(context, listen: false);
 
-      if (userProvider.user != null) {
-        mapaProvider.setUid(userProvider.user!.uid);
-      }
-
-      _isInit = true; // Marca como inicializado
+    if (userProvider.user != null) {
+      _mapaProvider.setUid(userProvider.user!.uid);
     }
+    
   }
 
   @override
