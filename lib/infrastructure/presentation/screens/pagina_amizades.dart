@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/widgets/widget_podio.dart';
@@ -18,121 +19,70 @@ class PaginaAmizades extends StatefulWidget {
   @override
   State<PaginaAmizades> createState() => _PaginaAmizadesState();
 }
-OverlayEntry? _overlayEntry;
-
-
-  void _mostrarPesquisa(BuildContext context) {
-    if (_overlayEntry != null) return;
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned.fill(
-        child: GestureDetector(
-          onTap: _removerPesquisa,
-          child: Material(
-            color: const Color.fromARGB(85, 0, 0, 0),
-            
-             // fundo semitransparente
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 85, left: 16, right: 16),
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      WidgetPesquisaUsuario(
-                        onProdutoSelecionado: (uidAmigo) {
-                        _removerPesquisa();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaginaPerfilAmizade( uidAmigo: uidAmigo, ),
-                          ),
-                        );
-                      }
-                      ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: _removerPesquisa,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-  void _removerPesquisa() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
 
 class _PaginaAmizadesState extends State<PaginaAmizades> {
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<Map<String, dynamic>>? _rankingFuture; 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  OverlayEntry? _overlayEntry;
   
-  // Variáveis para guardar os dados do ranking
-  List<Map<String, dynamic>> _rankingList = []; 
+  List<Map<String, dynamic>> _rankingList = [];
   int? _posicaoUsuario;
-  bool _carregandoRanking = true; 
-
+  bool _carregandoRanking = true;
   List<Usuario> amigos = [];
   bool carregando = true;
 
   @override
+  void initState() {
+    super.initState();
+    carregarTodosAmigos();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final amizadeProvider = context.read<AmizadeProvider>();
+      final userUid = context.read<UserProvider>().user?.uid;
+      
+      if (userUid != null) {
+        amizadeProvider.fetchAmizadesFromFirestore(userUid);
+        amizadeProvider.fetchPedidosFromFirestore(userUid);
+      }
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_rankingFuture == null) {
+    if (_carregandoRanking) {
       _carregarRanking();
     }
   }
 
-  
+  @override
+  void dispose() {
+    _removerPesquisa();
+    super.dispose();
+  }
+
   Future<void> _carregarRanking() async {
     final estatisticaProvider = Provider.of<EstatisticaProvider>(context, listen: false);
-    final uid = context.read<UserProvider>().user!.uid;
+    final uid = context.read<UserProvider>().user?.uid;
 
-    setState(() {
-      _carregandoRanking = true;
-    });
+    if (uid == null) return;
 
     try {
       final data = await estatisticaProvider.rankingSemanal(uid);
-      setState(() {
-        _rankingList = data['ranking'] as List<Map<String, dynamic>>;
-        _posicaoUsuario = data['posicaoUsuario'] as int?;
-        _carregandoRanking = false;
-      });
+      if (mounted) {
+        setState(() {
+          _rankingList = data['ranking'] as List<Map<String, dynamic>>;
+          _posicaoUsuario = data['posicaoUsuario'] as int?;
+          _carregandoRanking = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _carregandoRanking = false;
+      if (mounted) {
+        setState(() {
+          _carregandoRanking = false;
+        });
         print("Erro ao carregar ranking: $e");
-      });
+      }
     }
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-       carregarTodosAmigos();
-      AmizadeProvider amizadeProvider = context.read<AmizadeProvider>();
-  
-
-  setState(() {
-      amizadeProvider.fetchAmizadesFromFirestore(context.read<UserProvider>().user!.uid);
-  amizadeProvider.fetchPedidosFromFirestore(context.read<UserProvider>().user!.uid);
-  });
-
-       
   }
 
   Future<void> carregarTodosAmigos() async {
@@ -172,322 +122,679 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
         }
       }
 
-      setState(() {
-        amigos = listaTemp;
-        carregando = false;
-      });
+      if (mounted) {
+        setState(() {
+          amigos = listaTemp;
+          carregando = false;
+        });
+      }
     } catch (e) {
       print("Erro ao carregar amigos: $e");
-      setState(() {
-        carregando = false;
-      });
+      if (mounted) {
+        setState(() {
+          carregando = false;
+        });
+      }
     }
+  }
+
+  void _mostrarPesquisa(BuildContext context) {
+    if (_overlayEntry != null) return;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: GestureDetector(
+          onTap: _removerPesquisa,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Material(
+              color: Colors.black.withOpacity(0.5),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Buscar Amigos",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1a1a1a),
+                                fontFamily: 'League Spartan',
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, size: 24),
+                              onPressed: _removerPesquisa,
+                              color: Colors.grey[600],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        WidgetPesquisaUsuario(
+                          onProdutoSelecionado: (uidAmigo) {
+                            _removerPesquisa();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PaginaPerfilAmizade(uidAmigo: uidAmigo),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _removerPesquisa() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
+    final amizadeProvider = context.watch<AmizadeProvider>();
 
     return DefaultTabController(
       length: 3,
-      initialIndex: 0,
       child: Scaffold(
-        body: Center(
+        backgroundColor: const Color(0xFFF8F9FA),
+        body: SafeArea(
           child: Column(
             children: [
-             
-              Padding(padding: EdgeInsets.only(top: 20)),
-                Container(
-                  height: 40,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 5, 106, 12),
-                      width: 2.0,
+              const SizedBox(height: 16),
+              
+              // Barra de pesquisa
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: GestureDetector(
+                  onTap: () => _mostrarPesquisa(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
                     ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      _mostrarPesquisa(context);
-                    },
-                    icon: Row(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.grey[300]!,
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
                       children: [
-                        Text("Pesquisar amigo..."),
-                        Padding(padding: EdgeInsetsGeometry.only(left: 120)),
-                        Icon(Icons.search),
+                        Icon(
+                          Icons.search,
+                          color: Colors.grey[500],
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          "Buscar amigos...",
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                            fontFamily: 'Lao Muang Don',
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                 Padding(padding: EdgeInsets.only(top: 20)),
-                 WidgetPodioRanking(ranking: _rankingList),
-              Padding(padding: EdgeInsets.only(top: 60)),
-              TabBar(
-                dividerColor: Colors.white,
-                labelColor: Color.fromARGB(255, 5, 106, 12),
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Color.fromARGB(255, 0, 128, 0),
-                tabs: [
-                  Tab(text: 'Amizades'),
-                  Tab(text: "Ranking"),
-                  Tab(text: 'Pedidos'),
-                ],
               ),
-              SizedBox(
-                height: 300,
-                width: double.infinity,
-                child:TabBarView(
-                    children: [
-                  
-                      //amizades
-                      Center(
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color:  const Color.fromARGB(255, 207, 207, 207),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child:
-                        amizadeProvider.amizades.isEmpty
-                            ? Text('Nenhum amigo encontrado.')
+              
+              const SizedBox(height: 20),
+              
+              // Pódio de ranking
+              WidgetPodioRanking(ranking: _rankingList),
+              
+              const SizedBox(height: 24),
+              
+              // Tab bar
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TabBar(
+                  dividerColor: Colors.transparent,
+                  labelColor: const Color(0xFF056A0C),
+                  unselectedLabelColor: Colors.grey[600],
+                  indicator: BoxDecoration(
+                    color: const Color(0xFF056A0C).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'League Spartan',
+                  ),
+                  tabs: const [
+                    Tab(text: 'Amizades'),
+                    Tab(text: 'Ranking'),
+                    Tab(text: 'Pedidos'),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Tab bar view
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    // Aba Amizades
+                    carregando
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF056A0C)),
+                            ),
+                          )
+                        : amigos.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.people_outline,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      "Nenhum amigo encontrado",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                        fontFamily: 'Lao Muang Don',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             : ListView.builder(
-                       
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                                 itemCount: amigos.length,
                                 itemBuilder: (context, index) {
-                                      Usuario amigo1=amigos[index];
-                                  Uint8List? bytes = amigo1.fotoPerfil;
-                                  return Column(
-                                    children: [
-                                      Padding(padding: EdgeInsetsGeometry.only(top:10)),
-                                      GestureDetector(
-                                        onTap: () {
-                                              final userProvider = context.read<UserProvider>();
-                                                  userProvider.getUsuarioByUid(amigo1.uid);
-                                            Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaginaPerfilAmizade( uidAmigo: amigo1.uid, ),
-                          ),
-                        );
-                                        },
-                                        child: Container(
-                                          width: 400,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(30),
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                  color: Color.fromARGB(255, 5, 106, 12),
-                                                width: 1,
-                                              
-                                            ),
+                                  final amigo = amigos[index];
+                                  final bytes = amigo.fotoPerfil;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        final userProvider = context.read<UserProvider>();
+                                        userProvider.getUsuarioByUid(amigo.uid);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => PaginaPerfilAmizade(uidAmigo: amigo.uid),
                                           ),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                        );
+                                      },
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: Colors.grey[200]!,
+                                            width: 1,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.05),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 28,
+                                              backgroundImage: (bytes != null && bytes.isNotEmpty)
+                                                  ? MemoryImage(bytes) as ImageProvider
+                                                  : const AssetImage("assets/images/perfil_basico.jpg"),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Padding(    padding: EdgeInsets.only(left: 10), ),
-                                              
-                                                  CircleAvatar(
-                                                    radius: 18,
-                                                    backgroundImage: (bytes != null && amigo1.fotoPerfil.isNotEmpty)
-                                                        ? MemoryImage(bytes)
-                                                        : AssetImage("assets/images/perfil_basico.jpg"),
+                                                  Text(
+                                                    amigo.nome,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Color(0xFF1a1a1a),
+                                                      fontFamily: 'League Spartan',
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
-                                                  Padding(padding: EdgeInsets.only(left: 20)),
-                                                  Text(amigo1.nome,style: TextStyle(
-                                                    fontSize: 15,
-                                                                                    
-                                                  fontFamily: 'League Spartan',
-                                                    color: Color.fromARGB(255, 5, 106, 12
-                                                  ),),),
-                                                  Padding(padding: EdgeInsets.only(left: 20)),
-                                                  Text('${amigo1.carboCoins.toStringAsFixed(0)} Cc',style: TextStyle(
-                                                    fontSize: 15,
-                                                                                    fontFamily: 'League Spartan',
-                                                    color: Color.fromARGB(255, 5, 106, 12
-                                                  ),),),
-                                                       Padding(padding: EdgeInsets.only(left: 20)),
-                                                  Text(amigo1.email,style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily: 'League Spartan',
-                                                    color: Color.fromARGB(255, 5, 106, 12
-                                                  ),),),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    amigo.email,
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.grey[600],
+                                                      fontFamily: 'Lao Muang Don',
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 ],
                                               ),
                                             ),
-                                          
+                                            const SizedBox(width: 12),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 6,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF056A0C).withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.eco,
+                                                    color: Color(0xFF056A0C),
+                                                    size: 16,
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Text(
+                                                    '${amigo.carboCoins}',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Color(0xFF056A0C),
+                                                      fontFamily: 'League Spartan',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                    
+                    // Aba Ranking
+                    _carregandoRanking
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF056A0C)),
+                            ),
+                          )
+                        : _rankingList.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.emoji_events_outlined,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      "Nenhum dado de ranking encontrado",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                        fontFamily: 'Lao Muang Don',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                                itemCount: _posicaoUsuario != null ? _rankingList.length + 1 : _rankingList.length,
+                                itemBuilder: (context, index) {
+                                  if (index == 0 && _posicaoUsuario != null) {
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        gradient: const LinearGradient(
+                                          colors: [Color(0xFF056A0C), Color(0xFF078A10)],
+                                        ),
+                                        borderRadius: BorderRadius.circular(16),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFF056A0C).withOpacity(0.3),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.emoji_events,
+                                            color: Colors.white,
+                                            size: 32,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              "Você está em $_posicaoUsuarioº lugar!",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: 'League Spartan',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+
+                                  final rankingIndex = _posicaoUsuario != null ? index - 1 : index;
+                                  final item = _rankingList[rankingIndex];
+                                  final posicao = rankingIndex + 1;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: Colors.grey[200]!,
+                                          width: 1,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.05),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: posicao <= 3
+                                                  ? const Color(0xFF056A0C)
+                                                  : Colors.grey[300],
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                "$posicaoº",
+                                                style: TextStyle(
+                                                  color: posicao <= 3 ? Colors.white : Colors.grey[700],
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  fontFamily: 'League Spartan',
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item['nome'],
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF1a1a1a),
+                                                    fontFamily: 'League Spartan',
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.straighten,
+                                                      size: 14,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      "${item['distancia'].toStringAsFixed(2)} m",
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: Colors.grey[600],
+                                                        fontFamily: 'Lao Muang Don',
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 12),
+                                                    Icon(
+                                                      Icons.timer,
+                                                      size: 14,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      "${item['tempo'].toStringAsFixed(1)} seg",
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: Colors.grey[600],
+                                                        fontFamily: 'Lao Muang Don',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                    
+                    // Aba Pedidos
+                    amizadeProvider.pedidos.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.mail_outline,
+                                  size: 64,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  "Nenhum pedido de amizade",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                    fontFamily: 'Lao Muang Don',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                            itemCount: amizadeProvider.pedidos.length,
+                            itemBuilder: (context, index) {
+                              final pedido = amizadeProvider.pedidos[index];
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.grey[200]!,
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF056A0C).withOpacity(0.1),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.person_add,
+                                          color: Color(0xFF056A0C),
+                                          size: 24,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              pedido.nomeRemetente,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(0xFF1a1a1a),
+                                                fontFamily: 'League Spartan',
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              "Pedido de amizade",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey[600],
+                                                fontFamily: 'Lao Muang Don',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            amizadeProvider.aceitarPedidoAmizade(
+                                              pedido.remetenteId,
+                                              context.read<UserProvider>().user!.uid,
+                                            );
+                                            amizadeProvider.fetchPedidosFromFirestore(
+                                              context.read<UserProvider>().user!.uid,
+                                            );
+                                            carregarTodosAmigos();
+                                          });
+                                        },
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.withOpacity(0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            amizadeProvider.negarPedidoAmizade(
+                                              pedido.remetenteId,
+                                              context.read<UserProvider>().user!.uid,
+                                            );
+                                            amizadeProvider.fetchPedidosFromFirestore(
+                                              context.read<UserProvider>().user!.uid,
+                                            );
+                                          });
+                                        },
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.withOpacity(0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.red,
+                                            size: 20,
+                                          ),
                                         ),
                                       ),
                                     ],
-                                  );
-                              
-                                },
-                              ),
-                      )),
-
-
-
-
-
-
-
-                      //ranking
-                    Center(
-  child: _carregandoRanking
-      ? const Center(child: CircularProgressIndicator())
-      :_rankingList.isEmpty
-              ? const Center(child: Text("Nenhum dado encontrado."))
-              : ListView.builder(
-                  itemCount: 1 + _rankingList.length, 
-                  itemBuilder: (context, index) {
-
-                    if (index == 0) {
-                      // NOVA POSIÇÃO 0: A POSIÇÃO DO USUÁRIO
-                      if (_posicaoUsuario != null) {
-                        return Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Você está em $_posicaoUsuarioº lugar esta semana!",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontFamily: "League Spartan",
-                              color: Color.fromARGB(255, 5, 106, 12)
-                            ),
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink(); 
-                    }
-
-                  
-                    final rankingIndex = index - 1;
-                    final item = _rankingList[rankingIndex];
-                    final posicao = rankingIndex + 1; 
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 5, 106, 12),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(35)
-                        ),
-                        height: 80,
-                        width: 300,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: const Color.fromARGB(255, 5, 106, 12),
-                            child: Text("${posicao}º", style: const TextStyle(
-                              color: Colors.white
-                            )),
-                          ),
-                          title: Text(item['nome'], style: const TextStyle(
-                            fontSize: 19
-                          )),
-                          subtitle: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Distância: ${item['distancia'].toStringAsFixed(2)} m", style: const TextStyle(
-                                    fontSize: 17
                                   ),
                                 ),
-                                const Padding(padding: EdgeInsets.only(right: 5)),
-                                Text("Tempo: ${item['tempo'].toStringAsFixed(1)} seg", style: const TextStyle(
-                                  fontSize: 17
-                                ),)
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        ),
-                      ),
-                    );
-                  },
+                  ],
                 ),
-),
-                      //pedidos
-                      Center(child: Container(
-                          padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color:  const Color.fromARGB(255, 207, 207, 207),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child:
-                        amizadeProvider.pedidos.isEmpty
-                            ? Text('Nenhum pedido encontrado.')
-                            : ListView.builder(
-                       
-                                itemCount: amizadeProvider.pedidos.length,
-                                itemBuilder: (context, index) {
-                                       
-                                      
-                                      PedidoAmizade pedido=amizadeProvider.pedidos[index];
-                                  return Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                            color: Color.fromARGB(255, 5, 106, 12),
-                                          width: 1,
-                                        
-                                      ),
-                                    ),
-                                    child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    textBaseline: TextBaseline.alphabetic,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(padding: EdgeInsets.only(left: 20)),
-                                        Text(pedido.nomeRemetente,style: TextStyle(
-                                          fontSize: 16,
-                  
-                                  fontFamily: 'League Spartan',
-                                          color: Color.fromARGB(255, 5, 106, 12
-                                        ),),),
-                                        Padding(padding: EdgeInsets.only(left: 20)),
-                                       Text("Aceitar pedido de amizade?",style: TextStyle(
-                                          fontSize: 12,
-                                  fontFamily: 'League Spartan',
-                                          color: Color.fromARGB(255, 5, 106, 12
-                                        ),),),
-                                        Padding(padding: EdgeInsets.only(left: 2)),
-                                        IconButton(
-                                          alignment: Alignment.topCenter,
-                                          onPressed: (){
-                                          setState(() {
-                                             amizadeProvider.aceitarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().user!.uid);
-                                              amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().user!.uid);
-                                               carregarTodosAmigos();
-                                          });
-                                         
-                                        }, icon: Icon(Icons.check,color: Colors.green,)),
-                                        Padding(padding: EdgeInsetsGeometry.only(left: 5)),
-                                        IconButton(
-                                          alignment: Alignment.topCenter,
-                                          onPressed: (){
-                                          setState(() {
-                                             amizadeProvider.negarPedidoAmizade(pedido.remetenteId, context.read<UserProvider>().user!.uid);
-                                             amizadeProvider.fetchPedidosFromFirestore( context.read<UserProvider>().user!.uid);
-                                          });
-                                         
-                                        }, icon: Icon(Icons.close,color: Colors.red,)),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                      )),
-                    ],
-                  ),
               ),
-            
             ],
           ),
         ),
