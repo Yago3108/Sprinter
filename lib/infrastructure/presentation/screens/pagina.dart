@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/widgets/logout_dialog.dart';
 import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_amizades.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_carrinho.dart';
@@ -23,7 +24,7 @@ class Pagina extends StatefulWidget {
 }
 
 class _PaginaState extends State<Pagina> {
-  bool isAdmin=false;
+  bool isAdmin = false;
 
   final List<Widget> _paginas = [
     PaginaAmizades(),
@@ -40,13 +41,15 @@ class _PaginaState extends State<Pagina> {
     final index = context.watch<BottomNavigatorProvider>().index;
 
     final userProvider = context.read<UserProvider>();
-      
+
     final fotoBase64 = userProvider.user?.fotoPerfil;
 
-    if((userProvider.user?.email=="yrtoiu1515@gmail.com") || (userProvider.user?.email=="vitor.fn@aluno.ifsc.edu.br") || (userProvider.user?.email=="gustavocampos@gmail.com")){
-    setState(() {
-      isAdmin=true;
-    });
+    if ((userProvider.user?.email == "yrtoiu1515@gmail.com") ||
+        (userProvider.user?.email == "vitor.fn@aluno.ifsc.edu.br") ||
+        (userProvider.user?.email == "gustavocampos@gmail.com")) {
+      setState(() {
+        isAdmin = true;
+      });
     }
     if (fotoBase64 != null) {
       setState(() {
@@ -95,18 +98,21 @@ class _PaginaState extends State<Pagina> {
                 );
               },
             ),
-            isAdmin?
+            isAdmin
+                ? ListTile(
+                    leading: Icon(Icons.add_shopping_cart_rounded),
+                    title: Text("Cadastrar Produtos"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CriarProdutoPage(),
+                        ),
+                      );
+                    },
+                  )
+                : SizedBox(),
             ListTile(
-              leading: Icon(Icons.add_shopping_cart_rounded),
-              title: Text("Cadastrar Produtos"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CriarProdutoPage()),
-                );
-              },
-            ):SizedBox(),
-             ListTile(
               leading: Icon(Icons.shopping_cart),
               title: Text("Carrinho"),
               onTap: () {
@@ -120,16 +126,23 @@ class _PaginaState extends State<Pagina> {
               leading: Icon(Icons.logout),
               title: Text("Fazer Logout"),
               onTap: () {
-                UserProvider userProvider =
-                    Provider.of<UserProvider>(context, listen: false);
+                showLogoutConfirmationDialog(
+                  context: context,
+                  onConfirm: () {
+                    UserProvider userProvider = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    );
                     userProvider.logout();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaLogin()),
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => PaginaLogin()),
+                    );
+                  },
                 );
               },
             ),
-      
           ],
         ),
       ),

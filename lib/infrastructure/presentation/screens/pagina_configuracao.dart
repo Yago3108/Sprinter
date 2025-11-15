@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/widgets/logout_dialog.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_login.dart';
+import 'package:myapp/infrastructure/presentation/widgets/logout_dialog.dart';
 import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil.dart';
@@ -328,7 +330,6 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GestureDetector(
                 onTap: () async {
-                  //Pede a senha
                   TextEditingController senhaController =
                       TextEditingController();
 
@@ -373,7 +374,6 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                     ),
                   );
 
-                  //Usuário cancelou
                   if (confirmar == null || confirmar.isEmpty) return;
 
                   final senhaDigitada = confirmar;
@@ -426,23 +426,42 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
             ),
 
             Padding(padding: EdgeInsets.only(top: 20)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                alignment: Alignment.center,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ListTile(
-                  leading: Icon(Icons.logout_rounded, color: Colors.red),
-                  title: Text(
-                    "Sair",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 20,
-                      fontFamily: "League Spartan",
+            GestureDetector(
+              onTap: () {
+                showLogoutConfirmationDialog(
+                  context: context,
+                  onConfirm: () {
+                    UserProvider userProvider = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    );
+                    userProvider.logout();
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => PaginaLogin()),
+                    );
+                  },
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.logout_rounded, color: Colors.red),
+                    title: Text(
+                      "Sair",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 20,
+                        fontFamily: "League Spartan",
+                      ),
                     ),
                   ),
                 ),
