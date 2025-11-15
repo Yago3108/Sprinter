@@ -16,12 +16,10 @@ class UserProvider extends ChangeNotifier {
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
         await carregarUsuario(firebaseUser.uid);
-     
       } else {
         _user = null;
         notifyListeners();
       }
-          
     });
   }
   Future<void> registrar({
@@ -64,7 +62,7 @@ class UserProvider extends ChangeNotifier {
       rethrow;
     }
   }
-  
+
   Future<void> selecionarImagem() async {
     final ImagePicker _picker = ImagePicker();
     try {
@@ -93,7 +91,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-    Future<void> carregarUsuario(String uid) async {
+  Future<void> carregarUsuario(String uid) async {
     final doc = await _firestore.collection('usuarios').doc(uid).get();
     if (doc.exists) {
       _user = Usuario.fromMap(doc.data()!);
@@ -105,20 +103,21 @@ class UserProvider extends ChangeNotifier {
     if (_user == null) return null;
     return {'fotoPerfil': _user!.fotoPerfil};
   }
+
   Future<bool> getUsuarioByEmail(String email) async {
     try {
-      final doc = await _firestore.collection('usuarios')
-            .where('email', isEqualTo: email)
-            .limit(1)
-            .get();
-      
+      final doc = await _firestore
+          .collection('usuarios')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-      
       return doc.docs.isNotEmpty;
     } catch (e) {
       return false;
     }
   }
+
   Future<void> atualizarUsuario(Usuario novoUsuario) async {
     await _firestore
         .collection('usuarios')
@@ -131,10 +130,11 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<User?> login(String email, String senha) async {
-    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: senha);
+    final userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: senha);
     final user = userCredential.user;
 
-    if(user != null) {
+    if (user != null) {
       return user;
     }
 
@@ -142,38 +142,34 @@ class UserProvider extends ChangeNotifier {
   }
 
   Usuario? usuarioPesquisado;
-  
+
   Future<Usuario?> getUsuarioByUid(String uid) async {
     try {
       final doc = await _firestore.collection('usuarios').doc(uid).get();
 
       if (doc.exists) {
-      final data = doc.data()!;
+        final data = doc.data()!;
 
-      usuarioPesquisado = Usuario(
-        uid: data['uid'],
-        nome: data['nome'],
-        email: data['email'],
-        cpf: data['cpf'],
-        nascimento: data['nascimento'],
-        carboCoins: (data['carboCoins'] ?? 0).round(),
-        carbono: (data['carbono'] ?? 0).toDouble(),
-        distancia: (data['distancia'] ?? 0).toDouble(),
-        fotoPerfil: base64Decode(data['Foto_perfil']),
-        amigos: [],
-      );
-     
-      notifyListeners();
+        usuarioPesquisado = Usuario(
+          uid: data['uid'],
+          nome: data['nome'],
+          email: data['email'],
+          cpf: data['cpf'],
+          nascimento: data['nascimento'],
+          carboCoins: (data['carboCoins'] ?? 0).round(),
+          carbono: (data['carbono'] ?? 0).toDouble(),
+          distancia: (data['distancia'] ?? 0).toDouble(),
+          fotoPerfil: base64Decode(data['Foto_perfil']),
+          amigos: [],
+        );
+
+        notifyListeners();
       }
-
-     
-
-   
     } catch (e) {
       print("Erro ao buscar usuário por UID: $e");
-
     }
   }
+
   final List<Usuario> _amigos = [];
   List<Usuario> get amigos => _amigos;
 
@@ -191,59 +187,95 @@ class UserProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-     
-    void atualizarCC(int pontos, double emissao, double distancia){
-      Usuario user = _user!;  
-      user.distancia += distancia;
-      user.carboCoins += pontos;
-      user.carbono += emissao;
-      atualizarUsuario(user);
-    }
 
-    void retirarCC(int pontos){
-      Usuario user = _user!;
-      user.carboCoins = user.carboCoins-pontos;
-      atualizarUsuario(user);
-    }
-    
-   
+  void atualizarCC(int pontos, double emissao, double distancia) {
+    Usuario user = _user!;
+    user.distancia += distancia;
+    user.carboCoins += pontos;
+    user.carbono += emissao;
+    atualizarUsuario(user);
+  }
+
+  void retirarCC(int pontos) {
+    Usuario user = _user!;
+    user.carboCoins = user.carboCoins - pontos;
+    atualizarUsuario(user);
+  }
+
   Future<void> logout() async {
     await _auth.signOut();
     _user = null;
     notifyListeners();
   }
+
   Future<bool> redefinirCredenciais(String senha) async {
     final AuthCredential credential = EmailAuthProvider.credential(
-  email: user!.email, 
-  password: senha,      
-);
-try {
-  await _auth.currentUser!.reauthenticateWithCredential(credential);
-  
-  debugPrint('Reautenticação bem-sucedida! Pode continuar com a operação.');
-  return true;
-} on FirebaseAuthException catch (e) {
-  // ERRO! A senha estava incorreta ou outro problema de autenticação.
-  if (e.code == 'wrong-password') {
-    debugPrint('A senha digitada está incorreta.');
-    return false;
-  } else {
-    debugPrint('Erro durante a reautenticação: ${e.message}');
-     return false;
-  }
-} catch (e) {
-  debugPrint('Erro inesperado: $e');
-   return false;
-}
+      email: user!.email,
+      password: senha,
+    );
+    try {
+      await _auth.currentUser!.reauthenticateWithCredential(credential);
+
+      debugPrint('Reautenticação bem-sucedida! Pode continuar com a operação.');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        debugPrint('A senha digitada está incorreta.');
+        return false;
+      } else {
+        debugPrint('Erro durante a reautenticação: ${e.message}');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('Erro inesperado: $e');
+      return false;
+    }
   }
 
   Future<void> esqueceuSenha() async {
     await _auth.sendPasswordResetEmail(email: _user!.email);
     notifyListeners();
   }
-   void atualizarNome(String nome){
-      Usuario user = _user!;  
-      user.nome =nome;
-      atualizarUsuario(user);
+
+  void atualizarNome(String nome) {
+    Usuario user = _user!;
+    user.nome = nome;
+    atualizarUsuario(user);
+  }
+
+  Future<void> excluirConta(String senha) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        throw "Nenhum usuário autenticado.";
+      }
+
+      final cred = EmailAuthProvider.credential(
+        email: user.email!,
+        password: senha,
+      );
+
+      await user.reauthenticateWithCredential(cred);
+
+      //Exclui do Firestore
+      await FirebaseFirestore.instance
+          .collection("usuarios")
+          .doc(user.uid)
+          .delete();
+
+      //Exclui a conta do Firebase Auth
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        throw "Senha incorreta.";
+      }
+      if (e.code == 'invalid-credential') {
+        throw "Senha inválida.";
+      }
+      throw "Erro: ${e.message}";
+    } catch (e) {
+      throw "Erro ao excluir conta: $e";
     }
+  }
 }
