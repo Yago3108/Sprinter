@@ -117,7 +117,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                       padding: const EdgeInsets.symmetric(horizontal: 35),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
                             width: 100,
@@ -216,63 +216,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                       ),
                     ),
                     Padding(padding: EdgeInsets.only(top: 30)),
-
-                    // O problema está aqui: TabBarView dentro de um ListView precisa de altura.
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      child: Container(
-                        // 1. Usamos Container para aplicar a decoração de fundo e borda arredondada
-                   
-                     
-                        height: 590, 
-                        child: DefaultTabController(
-                          length: 2,
-                          initialIndex: 1,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max, 
-                            children: [
-                            
-                              Container(
-                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Colors.white, // Fundo branco para a seção de abas
-                                ) ,
-                                child: TabBar(
-                                  dividerColor: Color.fromARGB(0, 0, 0, 0),
-                                  indicatorSize: TabBarIndicatorSize.tab,
-                                  indicator: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(255, 141, 175, 138),
-                                        Color.fromARGB(255, 29, 64, 26),
-                                      ],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  labelColor: Colors.white,
-                                  unselectedLabelColor: Color.fromARGB(255, 29, 64, 26),
-                                  indicatorColor: Color.fromARGB(255, 0, 128, 0),
-                                  tabs: [
-                                    Tab(text: 'Últimas Atividades'),
-                                    Tab(text: 'Detalhes'),
-                                  ],
-                                ),
-                              ),
-                              
-                              Padding(padding: EdgeInsets.only(top: 30)),
-                              Expanded(
-                                child: TabBarView(
-                                  children: [
-                                    
-                                    Container(
-                                     
-                                    ),
-                                    
-                                
-                                    Container(
+                      Container(
                                       padding: EdgeInsets.all(20),
                                            decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
@@ -402,14 +346,9 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ),),
-                  ],
+                
+                
+                ],
                 ),
               ],
             ),

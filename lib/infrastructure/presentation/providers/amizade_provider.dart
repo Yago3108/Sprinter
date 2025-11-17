@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/entities/amigo.dart';
 import 'package:myapp/entities/amizade.dart';
 import 'package:myapp/entities/pedido.dart';
 
@@ -8,10 +9,11 @@ class AmizadeProvider extends ChangeNotifier {
   // listas de amizades e pedidos
   final List<Amizade> _amizades = [];
   final List<PedidoAmizade> _pedidos = [];
-
+  final List<Amigo>_amigos=[];
   // getter para as listas
   List<Amizade> get amizades =>_amizades;
   List<PedidoAmizade> get pedidos => _pedidos;
+  List<Amigo> get amigos=>_amigos;
 
   // verifica se é amigo
   bool verificarAmigo(String uid) {
@@ -35,6 +37,12 @@ class AmizadeProvider extends ChangeNotifier {
         id: doc.id,
         usuarioId1: doc.id,
         usuarioId2: doc['uid'],
+      ));
+    }
+      for (var doc in snapshot.docs) {
+      amigos.add(Amigo(
+        uid: doc['uid'],
+        dataInicio: doc['dataCriacao'].toDate(),
       ));
     }
     notifyListeners();
