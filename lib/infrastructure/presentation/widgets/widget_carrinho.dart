@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class WidgetCarrinho extends StatefulWidget {
@@ -6,142 +9,199 @@ class WidgetCarrinho extends StatefulWidget {
   final String userId;
   final int preco;
   final String nome;
+  final String? imagemUrl;
 
-  const WidgetCarrinho(
+  const WidgetCarrinho({
     Key? key,
-    this.produtoId,
-    this.quantidade,
-    this.userId,
-    this.preco,
-    this.nome,
-  ) : super(key: key);
+    required this.produtoId,
+    required this.quantidade,
+    required this.userId,
+    required this.preco,
+    required this.nome,
+    this.imagemUrl,
+  }) : super(key: key);
 
   @override
-  _WidgetCarrinhoState createState() => _WidgetCarrinhoState();
+  State<WidgetCarrinho> createState() => _WidgetCarrinhoState();
 }
 
-
-
 class _WidgetCarrinhoState extends State<WidgetCarrinho> {
-  int quantidade = 1;
-  String nome = "";
-  int preco = 0;
-  String userid = "";
-  String produtoid = "";
+  late int quantidade;
+  late String nome;
+  late int preco;
+  late String userId;
+  late String produtoId;
+  late String? imagemUrl;
+
   @override
   void initState() {
     super.initState();
     quantidade = widget.quantidade;
     nome = widget.nome;
     preco = widget.preco;
-    userid = widget.userId;
-    produtoid = widget.produtoId;
+    userId = widget.userId;
+    produtoId = widget.produtoId;
+    imagemUrl = widget.imagemUrl;
   }
 
-  void Comprar(int quantidade, int preco, String produtoid, String userid) {
-    
-    print("Compra realizada: $quantidade x $nome por \$$preco cada.");
-    
+  void _realizarCompra() {
+    print("Compra realizada: $quantidade x $nome por \${preco * quantidade}");
+    // Lógica para realizar a compra
   }
+
+  void _mostrarMensagemSucesso() {
+    final snackBar = SnackBar(
+      backgroundColor: Color.fromARGB(255, 5, 106, 12),
+      content: Text(
+        "Compra realizada: $nome",
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+        ),
+      ),
+      duration: const Duration(seconds: 2),
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _processarCompra() {
+    _realizarCompra();
+    _mostrarMensagemSucesso();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+     Uint8List? bytes;
+    if (imagemUrl != null && imagemUrl!.isNotEmpty) {
+      try {
+        bytes = base64Decode(imagemUrl!);
+      } catch (_) { }
+    }
 
-      width: 300,
+    return Container(
+      
+      width: 180,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 204, 204, 204),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Center(
-        child: Column(
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Imagem do produto
+          Container(
+            height: 160,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: imagemUrl != null
+                  ?  Image.memory(
+                      bytes!,
+                      height: 250,
+                      width: 350,
+                      fit: BoxFit.cover, 
+                    )
+                  : const Center(
+                      child: Icon(
+                        Icons.cake,
+                        size: 60,
+                        color: Colors.grey,
+                      ),
+                    ),
+            ),
+          ),
+          
+          // Informações do produto
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(padding: EdgeInsetsGeometry.only(right: 10)),
-               Text(
-                  "Carrinho:",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Color.fromARGB(255, 5, 106, 12),
-                    fontFamily: "Lao Muang Don",
+                // Nome do produto
+                Text(
+                  nome,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    height: 1.3,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                
+                const SizedBox(height: 8),
+                   Text(
+                  "${quantidade}x",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    height: 1.3,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                // Preço
+                Text(
+                  (preco*quantidade).toStringAsFixed(2),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
-                      Padding(padding: EdgeInsetsGeometry.only(right: 110)),
-                    Icon(
-                  Icons.shopping_cart,
-                  size: 20,
-                  color: Color.fromARGB(255, 5, 106, 12),
+                
+                const SizedBox(height: 12),
+                
+                // Botão Comprar
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                    _processarCompra();
+                    Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2E7D32),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "Comprar",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Padding(padding: EdgeInsetsGeometry.only(top: 20)),
-            Container(
-              alignment: Alignment.center,
-              width: 250,
-              height: 30,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 230, 230, 230),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("$quantidade x",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontFamily: "Lao Muang Don",
-                      )),
-                  Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                  Text(nome,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color.fromARGB(255, 5, 106, 12),
-                        fontFamily: "Lao Muang Don",
-                      )),
-                  Padding(padding: EdgeInsetsGeometry.only(right: 5)),
-                ],
-              ),
-            ),
-            Padding(padding:  EdgeInsetsGeometry.only(top: 20)),
-            Container(
-              width: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Color.fromARGB(255, 5, 106, 12),
-              ),
-              child: TextButton(
-                child: Text(
-                  "Comprar",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "Lao Muang Don",
-                    fontSize: 15,
-                  ),
-                ),
-                onPressed: () {
-                  Comprar(quantidade, preco, produtoid, userid);
-                  Navigator.pop(context);
-
-                  showSnackBar(BuildContext context) {
-                    final snackBar = SnackBar(
-                      backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                      content: Text("Compra realizada: $quantidade x $nome por $preco Cc.",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontFamily: "Lao Muang Don",
-                          )),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                  showSnackBar( context);
-                },
-              ),
-            ),
-              Padding(padding:  EdgeInsetsGeometry.only(top: 20)),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

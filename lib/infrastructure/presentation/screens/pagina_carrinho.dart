@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -131,18 +132,38 @@ class _PaginaCarrinhoState extends State<PaginaCarrinho> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 70),
                         height: 60,
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255), 
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: const Color.fromARGB(255, 5, 106, 12), width: 1.5),
                         ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              
-                            ],
-                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+              "Quantidade de compras",
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: "League Spartan",
+                fontWeight:FontWeight.w900,
+                color: const Color.fromARGB(255, 5, 106, 12)
+              ),
+            
+            ),
+            Padding(padding: EdgeInsets.only(top: 2)),
+            Text(
+              produtosComprados.length.toString(),
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: "League Spartan",
+                fontWeight:FontWeight.w900,
+                color: const Color.fromARGB(255, 5, 106, 12)
+              ),
+            ),
+                          ],
+                        )
                       ),
                     ),
                     
