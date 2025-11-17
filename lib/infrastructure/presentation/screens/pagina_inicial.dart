@@ -59,8 +59,8 @@ class PaginaInicialState extends State<PaginaInicial> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color.fromARGB(255, 33, 80, 36),
-                          Color.fromARGB(255, 40, 133, 46),
+                          Color(0xFF056A0C),
+                          Color(0xFF078A10),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(24),
@@ -165,8 +165,8 @@ class PaginaInicialState extends State<PaginaInicial> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color.fromARGB(255, 91, 161, 98),
-                          Color.fromARGB(255, 16, 112, 27),
+                          Color(0xFF0A8F14),
+                          Color(0xFF0DB520),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(24),
