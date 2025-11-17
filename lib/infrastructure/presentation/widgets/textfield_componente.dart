@@ -36,8 +36,9 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Label
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: const EdgeInsets.only(left: 5),
           child: Text(
             widget.label,
             style: const TextStyle(
@@ -48,92 +49,79 @@ class _TextFieldComponenteState extends State<TextFieldComponente> {
             ),
           ),
         ),
+
+        const SizedBox(height: 10),
+        
+        // Text Field
         TextField(
-            controller: widget.controller,
-            obscureText: obsText,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
+          controller: widget.controller,
+          obscureText: obsText,
+          style: const TextStyle(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            hintStyle: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 15,
             ),
-            decoration: InputDecoration(
-              hintText: widget.hint,
-              hintStyle: TextStyle(
-                color: Colors.grey[400],
-                fontSize: 15,
-              ),
-              errorText: widget.error,
-              errorStyle: const TextStyle(
-                fontSize: 13,
-                height: 0.8,
-              ),
-              prefixIcon: Icon(widget.prefixIcon, color: Color.fromARGB(255, 5, 106, 12)),
-              suffixIcon: widget.isPassword
+            errorText: widget.error,
+            prefixIcon: Icon(widget.prefixIcon, color: widget.error == null ? Color.fromARGB(255, 5, 106, 12) : Colors.red[400]),
+            suffixIcon: widget.isPassword
+                ? IconButton(
+                    icon: Icon(
+                      obsText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: widget.error == null ? Color.fromARGB(255, 5, 106, 12) : Colors.red[400],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        obsText = !obsText;
+                      });
+                    },
+                  )
+                : widget.controller.text.isNotEmpty 
                   ? IconButton(
-                      icon: Icon(
-                        obsText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: Color.fromARGB(255, 5, 106, 12),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          obsText = !obsText;
-                        });
-                      },
-                    )
-                  : widget.controller.text.isNotEmpty 
-                    ? IconButton(
-                      onPressed: () => widget.controller.clear(), 
-                      icon: Icon(Icons.clear),
-                    )
-                    : null,
-              filled: true,
-              fillColor: widget.error != null 
-                  ? const Color(0xFFFFF5F5) 
-                  : Colors.grey[50],
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 18,
+                    onPressed: () => widget.controller.clear(), 
+                    icon: Icon(Icons.clear, color: widget.error == null ? Color.fromARGB(255, 5, 106, 12) : Colors.red[400]),
+                  )
+                  : null,
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: Color.fromARGB(255, 5, 106, 12),
+                width: 2,
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: Colors.grey[300]!,
-                  width: 1.5,
-                ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: Color.fromARGB(255, 5, 106, 12),
+                width: 2,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: widget.error != null 
-                      ? Colors.red[300]! 
-                      : Color.fromARGB(255, 5, 106, 12),
-                  width: 1.5,
-                ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: Colors.red[400]!,
+                width: 2,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: widget.error != null 
-                      ? Colors.red[400]! 
-                      : Color.fromARGB(255, 5, 106, 12),
-                  width: 2,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: Colors.red[400]!,
-                  width: 1.5,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: Colors.red[400]!,
-                  width: 2,
-                ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: Colors.red[400]!,
+                width: 2,
               ),
             ),
           ),
+        ),
       ],
     );
   }

@@ -22,6 +22,7 @@ class UserProvider extends ChangeNotifier {
       }
     });
   }
+
   Future<void> registrar({
     required String nome,
     required String email,
@@ -130,15 +131,22 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<User?> login(String email, String senha) async {
-    final userCredential = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: senha);
-    final user = userCredential.user;
-
-    if (user != null) {
-      return user;
+    try {
+      final userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: senha);
+      
+      if (userCredential.user != null) {
+        await carregarUsuario(userCredential.user!.uid);
+      }
+      
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      print('Erro de autenticação: ${e.code}');
+      return null;
+    } catch(e) {
+      print('Erro inesperado no login: $e');
+      return null;
     }
-
-    return null;
   }
 
   Usuario? usuarioPesquisado;
