@@ -133,7 +133,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   userProvider.user?.carboCoins.toString() ?? "",
                                   style: TextStyle(
                                     fontFamily: 'League Spartan',
-                                    fontSize: 35,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -164,7 +164,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                                   userProvider.user?.distancia.toStringAsFixed(1) ?? "",
                                   style: TextStyle(
                                     fontFamily: 'League Spartan',
-                                    fontSize: 35,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -191,13 +191,17 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  userProvider.user?.carbono.toStringAsFixed(0) ?? "",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Flexible(
+                                  child: 
+                                      Text(
+                                        userProvider.user?.carbono.toStringAsFixed(0) ?? "",
+                                        style: TextStyle(
+                                          fontFamily: 'League Spartan',
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                   
                                 ),
                                 Padding(
                                   padding: EdgeInsetsGeometry.only(top: 5),

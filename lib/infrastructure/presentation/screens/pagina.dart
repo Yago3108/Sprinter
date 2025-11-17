@@ -67,7 +67,7 @@ class _PaginaState extends State<Pagina> {
         actions: [
           IconButton(
             icon: CircleAvatar(
-              backgroundImage: bytes != null
+              backgroundImage: bytes != null && bytes!.isNotEmpty
                   ? MemoryImage(bytes!)
                   : AssetImage("assets/images/perfil_basico.jpg"),
               radius: 25,

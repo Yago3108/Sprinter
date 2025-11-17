@@ -76,7 +76,7 @@ class _WidgetPodioRankingState extends State<WidgetPodioRanking> {
             },
             child: CircleAvatar(
               radius: 25,
-              backgroundImage: bytes != null
+              backgroundImage: bytes != null && bytes!.isNotEmpty
                     ? MemoryImage(bytes!)
                     : AssetImage("assets/images/perfil_basico.jpg"),
               
