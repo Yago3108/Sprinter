@@ -77,6 +77,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
         if (user != null) {
           await userProvider.carregarUsuario(user.uid);
+           userProvider.sortearDica();
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina()));
 
           _controllerEmail.clear();

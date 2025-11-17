@@ -55,50 +55,33 @@ bool _dataLoaded = false;
                   Padding(padding: EdgeInsetsGeometry.only(top: 40)),
         
         
-                    Row(
-                      children: [
-                         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text("Seu Rendimento",style: TextStyle(
-                            fontFamily: "League Spartan",
-                            fontSize:25 ,
-                            color: Color.fromARGB(255, 5, 106, 12),
-                            fontWeight: FontWeight.bold,
-                          ),),
-                        ),
-                               Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-                        Container(
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  child: TabBar(
-                                    dividerColor: const Color.fromARGB(0, 255, 255, 255),
-                                    controller: _tabController,
-                                        indicatorSize: TabBarIndicatorSize.tab,
-                                                  indicator: BoxDecoration(
-                                                    shape: BoxShape.rectangle,
-                                                    color: const Color.fromARGB(96, 139, 195, 74),
-                                                    borderRadius:BorderRadius.circular(15)
-                                                  ),
-                                                  labelColor: Colors.white,
-                                                  unselectedLabelColor: Colors.black,
-                                                  indicatorColor: Color.fromARGB(255, 0, 128, 0),
-                                               
-                                                  tabs: [
-                                                    Tab(text: 'S'),
-                                                    Tab(text: "M"),
-                                                    Tab(text: 'A'),
-                                                  ],
-                                                ),
-                                ),
-                    ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                                 Container(
+                            width: 4,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF056A0C),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                           Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text("Seu Rendimento",style: TextStyle(
+                              fontFamily: "League Spartan",
+                              fontSize:25 ,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                          ),
+                      ],
+                      ),
                     ),
+            
                       Padding(padding: EdgeInsets.only(top: 15)),
-                  Padding(padding: EdgeInsets.only(top:5)),
-          
                 SizedBox(
                      height: 240,
                
@@ -169,7 +152,33 @@ bool _dataLoaded = false;
                   ],
                 ),
                 ),
-             
+                          Padding(padding: EdgeInsets.only(top:5)),
+                      Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  child: TabBar(
+                                    dividerColor: const Color.fromARGB(0, 255, 255, 255),
+                                    controller: _tabController,
+                                        indicatorSize: TabBarIndicatorSize.tab,
+                                                  indicator: BoxDecoration(
+                                                    shape: BoxShape.rectangle,
+                                                    color: const Color.fromARGB(95, 49, 88, 58),
+                                                    borderRadius:BorderRadius.circular(15)
+                                                  ),
+                                                  labelColor: Colors.white,
+                                                  unselectedLabelColor: Colors.black,
+                                                  indicatorColor: Color.fromARGB(255, 0, 128, 0),
+                                               
+                                                  tabs: [
+                                                    Tab(text: 'S'),
+                                                    Tab(text: "M"),
+                                                    Tab(text: 'A'),
+                                                  ],
+                                                ),
+                                ),
                      Padding(padding: EdgeInsets.only(top: 10)),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
@@ -11,10 +13,17 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class PaginaInicialState extends State<PaginaInicial> {
+ 
+  @override
+  void initState() {
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<UserProvider>().user;
-
+    final userProvider = context.watch<UserProvider>();
+    final user=userProvider.user;
+   
     if (user == null) {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -306,7 +315,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        "Cada quilômetro pedalado contribui para um planeta mais sustentável e gera CarboCoins para você!",
+                      userProvider.dicaSelecionada!,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[700],

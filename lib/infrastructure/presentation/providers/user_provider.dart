@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,11 +12,25 @@ class UserProvider extends ChangeNotifier {
 
   Usuario? _user;
   Usuario? get user => _user;
-
+   String? dicaSelecionada;
+  
+  List<String> dicas=[
+    "Cada quilômetro pedalado contribui para um planeta mais sustentável e gera CarboCoins para você!",
+    "Trocar o carro pela bicicleta uma vez por semana é o primeiro passo para uma vida com impacto zero.",
+    "Lembre-se: o tempo gasto ao ar livre melhora sua saúde mental e diminui sua pegada de carbono.",
+    "Visite a loja de recompensas! Seus pontos já podem ser trocados por ingressos para parques e museus.",
+    "O transporte individual é responsável por cerca de 25% das emissões de CO2 nas cidades. Você está fazendo a diferença!",
+  ];
+  void sortearDica(){
+    final random = Random();
+  final indice = random.nextInt(dicas.length);
+  dicaSelecionada = dicas[indice];
+  }
   UserProvider() {
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
         await carregarUsuario(firebaseUser.uid);
+         sortearDica();
       } else {
         _user = null;
         notifyListeners();
