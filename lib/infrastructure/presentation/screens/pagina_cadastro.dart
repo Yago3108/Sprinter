@@ -80,7 +80,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Theme.of(context).primaryColor,
+              primary: Color.fromARGB(255, 5, 106, 12),
               onPrimary: Colors.white,
               onSurface: Colors.black,
             ),
@@ -94,7 +94,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       String dataFormatada = DateFormat('dd/MM/yyyy').format(dataSelecionada);
       setState(() {
         _controllerData.text = dataFormatada;
-        _erroData = null;
       });
     }
   }
@@ -184,7 +183,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
             content: Row(
               children: [
                 Icon(Icons.error, color: Colors.red),
-                SizedBox(width: 8),
+                SizedBox(width: 10),
                 Text("Erro Inesperado! Tente novamente.", style: TextStyle(color: Colors.black)),
               ],
             ),
@@ -243,17 +242,18 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 8),
+                    padding: EdgeInsets.only(left: 5),
                     child: Text(
                       "CPF",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1a1a1a),
+                        color: Colors.black,
                         fontFamily: 'Lao Muang Don',
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _controllerCpf,
                     keyboardType: TextInputType.number,
@@ -262,8 +262,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       CpfInputFormatter(),
                     ],
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF1a1a1a),
+                      fontSize: 15,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       hintText: "000.000.000-00",
@@ -271,35 +271,25 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         color: Colors.grey[400],
                         fontSize: 15,
                       ),
-                      prefixIcon: Icon(Icons.perm_identity, color: Color.fromARGB(255, 5, 106, 12)),
+                      prefixIcon: Icon(Icons.perm_identity, color: _erroCPF == null ? Color.fromARGB(255, 5, 106, 12) : Colors.red[400]),
                       errorText: _erroCPF,
-                      errorStyle: const TextStyle(
-                        fontSize: 13,
-                        height: 0.8,
-                      ),
                       filled: true,
-                      fillColor: _erroCPF != null 
-                          ? const Color(0xFFFFF5F5) 
-                          : Colors.grey[50],
+                      fillColor: Colors.white,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
-                        vertical: 18,
+                        vertical: 20,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: _erroCPF != null 
-                              ? Colors.red[300]! 
-                              : Color.fromARGB(255, 5, 106, 12),
-                          width: 1.5,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          width: 2,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: _erroCPF != null 
-                              ? Colors.red[400]! 
-                              : Color.fromARGB(255, 5, 106, 12),
+                          color: Color.fromARGB(255, 5, 106, 12),
                           width: 2,
                         ),
                       ),
@@ -307,7 +297,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
                           color: Colors.red[400]!,
-                          width: 1.5,
+                          width: 2,
                         ),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
@@ -329,17 +319,18 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 8),
+                    padding: EdgeInsets.only(left: 5),
                     child: Text(
                       "Data de Nascimento",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1a1a1a),
+                        color: Colors.black,
                         fontFamily: 'Lao Muang Don',
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _controllerData,
                     keyboardType: TextInputType.number,
@@ -348,8 +339,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       DataInputFormatter(),
                     ],
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF1a1a1a),
+                      fontSize: 15,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       hintText: "DD/MM/AAAA",
@@ -360,45 +351,28 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       prefixIcon: IconButton(
                         icon: Icon(
                           Icons.calendar_today_outlined,
-                          color: Color.fromARGB(255, 5, 106, 12),
+                          color: _erroData == null ? Color.fromARGB(255, 5, 106, 12) : Colors.red[400],
                         ),
                         onPressed: () => _selecionarData(context),
                       ),
                       errorText: _erroData,
-                      errorStyle: const TextStyle(
-                        fontSize: 13,
-                        height: 0.8,
-                      ),
                       filled: true,
-                      fillColor: _erroData != null 
-                          ? const Color(0xFFFFF5F5) 
-                          : Colors.grey[50],
+                      fillColor: Colors.white,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
-                        vertical: 18,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.grey[300]!,
-                          width: 1.5,
-                        ),
+                        vertical: 20,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: _erroData != null 
-                              ? Colors.red[300]! 
-                              : Color.fromARGB(255, 5, 106, 12),
-                          width: 1.5,
+                          color: Color.fromARGB(255, 5, 106, 12),
+                          width: 2,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: _erroData != null 
-                              ? Colors.red[400]! 
-                              : Color.fromARGB(255, 5, 106, 12),
+                          color: Color.fromARGB(255, 5, 106, 12),
                           width: 2,
                         ),
                       ),
@@ -406,7 +380,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
                           color: Colors.red[400]!,
-                          width: 1.5,
+                          width: 2,
                         ),
                       ),
                       focusedErrorBorder: OutlineInputBorder(

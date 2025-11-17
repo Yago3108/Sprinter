@@ -75,6 +75,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
           _controllerSenha.text,
         );
 
+        // Se o usuário existir, carrega o usuário e navega pra página iniciaç
         if (user != null) {
           await userProvider.carregarUsuario(user.uid);
            userProvider.sortearDica();
@@ -82,17 +83,32 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
           _controllerEmail.clear();
           _controllerSenha.clear();
+        } else {
+          // Senão, mostra aviso ao usuário
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text("Email ou Senha inválidos!", style: TextStyle(color: Colors.black)),
+                ],
+              ),
+              backgroundColor: Colors.white,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
         }
-      } 
-      // Quando o usuário erra o Login, o Firebase manda uma exceção [Usuário não encontrando, senha inválida, etc...]
-      catch (e) {
+      } catch (e) {
+        // Caso dê algum erro inesperado
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
                 Icon(Icons.error, color: Colors.red),
                 SizedBox(width: 8),
-                Text("Email ou Senha inválidos!", style: TextStyle(color: Colors.black)),
+                Text("Erro Inesperado. Tente novamente!", style: TextStyle(color: Colors.black)),
               ],
             ),
             backgroundColor: Colors.white,
@@ -168,12 +184,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           clearControllers();
                           clearErros();
                         },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                        ),
                         child: Text(
                           "Esqueceu a senha?",
                           style: TextStyle(
@@ -201,17 +211,16 @@ class _PaginaLoginState extends State<PaginaLogin> {
               Row(
                 children: [
                   Expanded(child: Divider(color: Colors.grey[300])),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      "ou",
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "ou",
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Expanded(child: Divider(color: Colors.grey[300])),
                 ],
               ),
