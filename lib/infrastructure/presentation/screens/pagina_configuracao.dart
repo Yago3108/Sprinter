@@ -336,12 +336,32 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                   final confirmar = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("Excluir conta"),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      title: Row(
+                        children: [
+                          const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 20),
+                          const Text(
+                            "Excluir conta",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                        ],
+                      ),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Text(
-                            "Digite sua senha para confirmar a exclusão da conta."
+                            "Digite sua senha para confirmar a exclusão da conta. "
                             "Esta ação não pode ser desfeita.",
                           ),
                           const SizedBox(height: 20),
@@ -350,21 +370,43 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             obscureText: true,
                             decoration: const InputDecoration(
                               labelText: "Senha",
-                              prefixIcon: Icon(Icons.lock),
-                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Colors.red,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                  width: 2,
+                                )
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                  width: 2,
+                                )
+                              )
+                              
                             ),
                           ),
                         ],
                       ),
                       actions: [
                         TextButton(
-                          child: const Text("Cancelar"),
+                          child: const Text(
+                            "Cancelar",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 106, 12),
+                            ),),
                           onPressed: () => Navigator.pop(context, null),
                         ),
                         TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
                           child: const Text(
                             "Excluir",
-                            style: TextStyle(color: Colors.red),
+                            style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
                             Navigator.pop(context, senhaController.text);
