@@ -338,7 +338,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                     builder: (context) => AlertDialog(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       title: Row(
                         children: [
@@ -353,7 +353,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             style: TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
-                            )
+                            ),
                           ),
                         ],
                       ),
@@ -370,23 +370,19 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             obscureText: true,
                             decoration: const InputDecoration(
                               labelText: "Senha",
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: Colors.red,
-                              ),
+                              prefixIcon: Icon(Icons.lock, color: Colors.red),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.red,
                                   width: 2,
-                                )
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.red,
                                   width: 2,
-                                )
-                              )
-                              
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -397,7 +393,8 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                             "Cancelar",
                             style: TextStyle(
                               color: Color.fromARGB(255, 5, 106, 12),
-                            ),),
+                            ),
+                          ),
                           onPressed: () => Navigator.pop(context, null),
                         ),
                         TextButton(
@@ -424,6 +421,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
 
                   try {
                     await userProvider.excluirConta(senhaDigitada);
+                    await userProvider.logout();
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

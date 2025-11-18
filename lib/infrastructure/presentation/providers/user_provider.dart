@@ -12,25 +12,26 @@ class UserProvider extends ChangeNotifier {
 
   Usuario? _user;
   Usuario? get user => _user;
-   String? dicaSelecionada;
-  
-  List<String> dicas=[
+  String? dicaSelecionada;
+
+  List<String> dicas = [
     "Cada quilômetro pedalado contribui para um planeta mais sustentável e gera CarboCoins para você!",
     "Trocar o carro pela bicicleta uma vez por semana é o primeiro passo para uma vida com impacto zero.",
     "Lembre-se: o tempo gasto ao ar livre melhora sua saúde mental e diminui sua pegada de carbono.",
     "Visite a loja de recompensas! Seus pontos já podem ser trocados por ingressos para parques e museus.",
     "O transporte individual é responsável por cerca de 25% das emissões de CO2 nas cidades. Você está fazendo a diferença!",
   ];
-  void sortearDica(){
+  void sortearDica() {
     final random = Random();
-  final indice = random.nextInt(dicas.length);
-  dicaSelecionada = dicas[indice];
+    final indice = random.nextInt(dicas.length);
+    dicaSelecionada = dicas[indice];
   }
+
   UserProvider() {
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
         await carregarUsuario(firebaseUser.uid);
-         sortearDica();
+        sortearDica();
       } else {
         _user = null;
         notifyListeners();
@@ -149,16 +150,16 @@ class UserProvider extends ChangeNotifier {
     try {
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: senha);
-      
+
       if (userCredential.user != null) {
         await carregarUsuario(userCredential.user!.uid);
       }
-      
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       print('Erro de autenticação: ${e.code}');
       return null;
-    } catch(e) {
+    } catch (e) {
       print('Erro inesperado no login: $e');
       return null;
     }
@@ -274,21 +275,36 @@ class UserProvider extends ChangeNotifier {
         throw "Nenhum usuário autenticado.";
       }
 
+      //Reautenticar
       final cred = EmailAuthProvider.credential(
         email: user.email!,
         password: senha,
       );
-
       await user.reauthenticateWithCredential(cred);
 
-      //Exclui do Firestore
-      await FirebaseFirestore.instance
+      //Excluir subcoleções
+      final atividadesRef = _firestore
           .collection("usuarios")
           .doc(user.uid)
-          .delete();
+          .collection("atividades");
 
-      //Exclui a conta do Firebase Auth
+      final atividades = await atividadesRef.get();
+      for (var doc in atividades.docs) {
+        await doc.reference.delete();
+      }
+
+      //Excluir documento principal do Firestore
+      await _firestore.collection("usuarios").doc(user.uid).delete();
+
+      //Excluir do Firebase Auth
       await user.delete();
+
+      //Limpar dados locais e deslogar
+      await FirebaseAuth.instance.signOut();
+      _user = null;
+      usuarioPesquisado = null;
+      _amigos.clear();
+      notifyListeners();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         throw "Senha incorreta.";
