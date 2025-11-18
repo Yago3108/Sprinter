@@ -144,6 +144,10 @@ class _PaginaLoginState extends State<PaginaLogin> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    width: 2,
+                    color: Color.fromARGB(255, 5, 106, 12),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),

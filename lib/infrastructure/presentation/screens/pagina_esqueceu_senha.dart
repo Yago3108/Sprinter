@@ -170,6 +170,10 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      width: 2,
+                      color: Color.fromARGB(255, 5, 106, 12),
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.05),
@@ -189,7 +193,7 @@ class _PaginaEsqueceuSenhaState extends State<PaginaEsqueceuSenha> {
                         error: _erroEmail,
                       ),
                       
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
                       
                       // Botão Enviar
                       ButtonComponente(
