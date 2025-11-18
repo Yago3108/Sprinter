@@ -78,6 +78,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
         // Se o usuário existir, carrega o usuário e navega pra página iniciaç
         if (user != null) {
           await userProvider.carregarUsuario(user.uid);
+           userProvider.sortearDica();
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pagina()));
 
           _controllerEmail.clear();

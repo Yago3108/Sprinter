@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
@@ -12,11 +14,18 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class PaginaInicialState extends State<PaginaInicial> {
+ 
   @override
-  Widget build(BuildContext context) {
-    final user = context.watch<UserProvider>().user;
+  void initState() {
+    super.initState();
 
     // Tela de carregamento caso o usuário não esteja carregado ainda
+  }
+  @override
+  Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    final user=userProvider.user;
+   
     if (user == null) {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -217,6 +226,67 @@ class PaginaInicialState extends State<PaginaInicial> {
                               offset: const Offset(0, 4),
                             ),
                           ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                      userProvider.dicaSelecionada!,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
+                          fontFamily: 'Lao Muang Don',
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.read<BottomNavigatorProvider>().index = 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 15,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 18, 95, 24).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.emoji_events,
+                                  color: Color.fromARGB(255, 68, 126, 57),
+                                  size: 28,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Conquistas",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1a1a1a),
+                                  fontFamily: 'Lao Muang Don',
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         child: Column(
                           children: [

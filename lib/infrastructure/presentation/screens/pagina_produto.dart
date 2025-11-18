@@ -112,12 +112,13 @@ class PaginaProdutoState extends State<PaginaProduto> {
       context: context,
       builder: (context) => AlertDialog(
         title: WidgetCarrinho(
-          null,
-          produto!.id,
-          quantidade,
-          dados.uid,
-          produto!.preco,
-          produto!.nome,
+          
+          produtoId:produto!.id,
+          quantidade:quantidade,
+          userId:dados.uid,
+          preco:produto!.preco,
+          nome:produto!.nome,
+          imagemUrl: produto!.imagemBase64,
         ),
       ),
     );

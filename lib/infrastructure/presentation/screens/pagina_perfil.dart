@@ -14,6 +14,12 @@ class PaginaPerfil extends StatefulWidget {
 }
 
 class PaginaPerfilState extends State<PaginaPerfil> {
+  // Paleta de cores verde
+  static const Color verdeEscuro = Color(0xFF1B5E20);
+  static const Color verdeMedio = Color(0xFF2E7D32);
+  static const Color verdeClaro = Color(0xFF4CAF50);
+  static const Color verdeClaroSuave = Color(0xFFE8F5E9);
+  
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -24,336 +30,323 @@ class PaginaPerfilState extends State<PaginaPerfil> {
     }
     
     return Scaffold(
-        appBar: AppBar(
-          actionsPadding: EdgeInsets.only(right: 10),
-          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-          iconTheme: IconThemeData(color: Colors.white),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>Pagina(key: null,)));
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: CircleAvatar(
-                backgroundImage: bytes != null
-                    ? MemoryImage(bytes)
-                    : AssetImage("assets/images/perfil_basico.jpg"),
-                radius: 25,
-              ),
-              onPressed: () => {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaginaPerfil()),
-                ),
-              },
-            ),
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actionsPadding: const EdgeInsets.only(right: 10),
+        backgroundColor: verdeMedio,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Pagina()),
+            );
+          },
+          icon: const Icon(Icons.arrow_back),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/fundo.png"),
-              fit: BoxFit.cover,
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: CircleAvatar(
+              backgroundImage: bytes != null && bytes.isNotEmpty
+                  ? MemoryImage(bytes)
+                  : const AssetImage("assets/images/perfil_basico.jpg") as ImageProvider,
+              radius: 20,
+              backgroundColor: Colors.white,
             ),
           ),
-          child: Center(
-            child: ListView(
+        ],
+      ),
+      body: Center(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          children: [
+            Column(
               children: [
-                Column(
+                // Foto de perfil
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  clipBehavior: Clip.none,
                   children: [
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      clipBehavior: Clip.none,
-                      children: [
-                        IconButton(
-                          icon: CircleAvatar(
-                            backgroundImage: bytes != null
-                                ? MemoryImage(bytes, scale: 75)
-                                : AssetImage("assets/images/perfil_basico.jpg"),
-                            radius: 75,
-                            child: Container(
-                              height: 375,
-                              width: 375,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color.fromARGB(255, 29, 64, 26),
-                                ),
-                                borderRadius: BorderRadius.circular(75),
-                              ),
-                            ),
-                          ),
-                          onPressed: () => {userProvider.selecionarImagem()},
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: verdeMedio,
+                          width: 3,
                         ),
-                        Positioned(
-                          bottom: -3,
-                          child:Container(
-                            height: 15,
-                            width: 15,
+                      ),
+                      child: CircleAvatar(
+                        backgroundImage: bytes != null && bytes.isNotEmpty
+                            ? MemoryImage(bytes)
+                            : const AssetImage("assets/images/perfil_basico.jpg") as ImageProvider,
+                        radius: 75,
+                        backgroundColor: verdeClaroSuave,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -3,
+                      child: Container(
+                        height: 15,
+                        width: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -10,
+                      child: InkWell(
+                        onTap: () => userProvider.selecionarImagem(),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
                             color: Colors.white,
-                          ) ),
-                        Positioned(
-                          bottom: -10,
-                          child: Icon(
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
                             Icons.add_circle,
                             size: 30,
-                            color: Color.fromARGB(255, 29, 64, 26),
+                            color: verdeMedio,
                           ),
                         ),
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text(
-                      userProvider.user?.nome ?? "",
-                      style: TextStyle(
-                        fontFamily: 'League Spartan',
-                        fontSize: 40,
                       ),
                     ),
-                    Padding(padding: EdgeInsets.only(top: 30)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  userProvider.user?.carboCoins.toString() ?? "",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsGeometry.only(top: 5),
-                                ),
-                                Text(
-                                  "CarboCoins",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  userProvider.user?.distancia.toStringAsFixed(1) ?? "",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsGeometry.only(top: 5),
-                                ),
-                                Text(
-                                  "Distância",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  userProvider.user?.carbono.toStringAsFixed(0) ?? "",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsGeometry.only(top: 5),
-                                ),
-                                Text(
-                                  "Carbono",
-                                  style: TextStyle(
-                                    fontFamily: 'League Spartan',
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                  ],
+                ),
+                const SizedBox(height: 20),
+                
+                // Nome do usuário
+                Text(
+                  userProvider.user?.nome ?? "",
+                  style: const TextStyle(
+                    fontFamily: 'League Spartan',
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: verdeEscuro,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                
+                // Cards de estatísticas
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 35),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatCard(
+                        userProvider.user?.carboCoins.toString() ?? "0",
+                        "CarboCoins",
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 30)),
+                      _buildStatCard(
+                        userProvider.user?.distancia.toStringAsFixed(1) ?? "0.0",
+                        "Distância",
+                      ),
+                      _buildStatCard(
+                        userProvider.user?.carbono.toStringAsFixed(0) ?? "0",
+                        "Carbono",
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                
+                // Container com informações
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: verdeClaroSuave,
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      
+                      // Email
+                      _buildInfoField(
+                        "Email",
+                        userProvider.user?.email ?? "",
+                      ),
+                      const SizedBox(height: 30),
+                      
+                      // Data de nascimento
+                      _buildInfoField(
+                        "Data de nascimento",
+                        userProvider.user?.nascimento ?? "",
+                      ),
+                      const SizedBox(height: 30),
+                      
+                      // Carbono não emitido
+                      _buildInfoField(
+                        "Carbono não emitido",
+                        "${userProvider.user?.carbono.toStringAsFixed(2)} kg CO2",
+                      ),
+                      const SizedBox(height: 30),
+                      
+                      // Senha
+                      const Text(
+                        "Senha",
+                        style: TextStyle(
+                          fontFamily: 'League Spartan',
+                          fontSize: 18,
+                          color: verdeEscuro,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       Container(
-                                      padding: EdgeInsets.all(20),
-                                           decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
+                        width: 300,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: verdeMedio, width: 1.5),
                           color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(padding: EdgeInsets.only(top: 10)),
-                                          
-                                           Text("Email",
-                                          style: TextStyle(
-                                            fontFamily: 'League Spartan', fontSize: 18
-                                          ),),
-                                          Container(
-                                            width: 300,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.black, width: 1),
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(30),
-                                              
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                userProvider.user?.email ?? "",
-                                                style: TextStyle(fontFamily: 'Lao Muang Don', fontSize: 15),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(top: 30)),
-                                          
-                                         Text("Data de nascimento",
-                                          style: TextStyle(
-                                            fontFamily: 'League Spartan', fontSize: 18
-                                          ),),
-                                          Container(
-                                            width: 300,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.black, width: 1),
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(30),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                userProvider.user?.nascimento ?? "",
-                                                style: TextStyle(fontFamily: 'League Spartan', fontSize: 15),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(top: 30)),
-                                          Text("Carbono não emitido",
-                                          style: TextStyle(
-                                            fontFamily: 'League Spartan', fontSize: 18
-                                          ),),
-                                          Container(
-                                            width: 300,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.black, width: 1),
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(30),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "${userProvider.user?.carbono.toStringAsFixed(2)} kg CO2",
-                                                style: TextStyle(fontFamily: 'League Spartan', fontSize: 15),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(top: 30)),
-                                           Text("Senha",
-                                          style: TextStyle(
-                                            fontFamily: 'League Spartan', fontSize: 18
-                                          ),),
-                                          // Bloco Senha
-                                          Container(
-                                            width: 300,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.black, width: 1),
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(30),
-                                            ),
-                                            child: Center(
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                spacing: 5,
-                                                children: [
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                  Icon(Icons.circle,size: 12,),
-                                                ],
-                                              )
-                                            ),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(top: 5)),
-                                          
-                                          // Botão Alterar Senha
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => PaginaEsqueceuSenha(),
-                                                ),
-                                              );
-                                            },
-                                            child: Text(
-                                              "Alterar Senha",
-                                              style: TextStyle(
-                                                fontFamily: 'League Spartan',
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(top: 10)),
-                                        ],
-                                      ),
-                                    ),
-                
-                
-                ],
+                        child: const Center(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                              SizedBox(width: 5),
+                              Icon(Icons.circle, size: 12, color: verdeMedio),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      
+                      // Botão Alterar Senha
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PaginaEsqueceuSenha(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Alterar Senha",
+                          style: TextStyle(
+                            fontFamily: 'League Spartan',
+                            color: verdeMedio,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            decorationColor: verdeMedio,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // Widget auxiliar para cards de estatísticas
+  Widget _buildStatCard(String value, String label) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [verdeClaro, verdeMedio],
+        ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: verdeMedio.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'League Spartan',
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'League Spartan',
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Widget auxiliar para campos de informação
+  Widget _buildInfoField(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'League Spartan',
+            fontSize: 18,
+            color: verdeEscuro,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        const SizedBox(height: 8),
+        Container(
+          width: 300,
+          height: 50,
+          decoration: BoxDecoration(
+            border: Border.all(color: verdeMedio, width: 1.5),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontFamily: 'League Spartan',
+                fontSize: 15,
+                color: verdeEscuro,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
