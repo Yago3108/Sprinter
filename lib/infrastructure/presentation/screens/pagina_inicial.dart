@@ -12,18 +12,17 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class PaginaInicialState extends State<PaginaInicial> {
-  
   @override
   void initState() {
     super.initState();
     // Tela de carregamento caso o usuário não esteja carregado ainda
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     final user = userProvider.user;
-    
+
     // Mostra tela de carregamento se o usuário não estiver carregado
     if (user == null) {
       return Scaffold(
@@ -60,31 +59,33 @@ class PaginaInicialState extends State<PaginaInicial> {
           child: Column(
             children: [
               const SizedBox(height: 40),
-              
+
               // Primeiro Container (Distância Percorrida)
               ContainerTelaInicial(
-                function: () => context.read<BottomNavigatorProvider>().index = 3, 
-                color1: const Color(0xFF056A0C), 
+                function: () =>
+                    context.read<BottomNavigatorProvider>().index = 3,
+                color1: const Color(0xFF056A0C),
                 color2: const Color(0xFF078A10),
-                icon: Icons.directions_run, 
-                titulo: "Distância Percorrida", 
-                informacao: "${user.distancia.toStringAsFixed(1)} km", 
+                icon: Icons.directions_run,
+                titulo: "Distância Percorrida",
+                informacao: "${user.distancia.toStringAsFixed(1)} km",
                 mensagem: "Continue se exercitando!",
               ),
 
               const SizedBox(height: 20),
-              
+
               // Segundo Container (CarboCoins)
               ContainerTelaInicial(
-                function: () => context.read<BottomNavigatorProvider>().index = 1, 
+                function: () =>
+                    context.read<BottomNavigatorProvider>().index = 1,
                 color1: const Color(0xFF0A8F14),
                 color2: const Color(0xFF0DB520),
-                icon: Icons.eco, 
-                titulo: "CarboCoins", 
-                informacao: user.carboCoins.toString(), 
+                icon: Icons.eco,
+                titulo: "CarboCoins",
+                informacao: user.carboCoins.toString(),
                 mensagem: "Pontos acumulados",
               ),
-              
+
               const SizedBox(height: 30),
 
               // Dica do dia
@@ -136,7 +137,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "Cada quilômetro pedalado contribui para um planeta mais sustentável e gera CarboCoins para você!",
+                      userProvider.dicaSelecionada!,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[700],
@@ -149,14 +150,15 @@ class PaginaInicialState extends State<PaginaInicial> {
               ),
 
               const SizedBox(height: 25),
-              
+
               // Linha (Conquistas e Progresso)
               Row(
                 children: [
                   // Conquistas
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.read<BottomNavigatorProvider>().index = 0,
+                      onTap: () =>
+                          context.read<BottomNavigatorProvider>().index = 0,
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -179,7 +181,12 @@ class PaginaInicialState extends State<PaginaInicial> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 18, 95, 24).withOpacity(0.1),
+                                color: const Color.fromARGB(
+                                  255,
+                                  18,
+                                  95,
+                                  24,
+                                ).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(
@@ -203,77 +210,62 @@ class PaginaInicialState extends State<PaginaInicial> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(width: 15),
-                  
+
                   // Progresso (Bloco corrigido)
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.read<BottomNavigatorProvider>().index = 4,
-                      // O child do GestureDetector agora é um Column para agrupar o Container e o Text
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // O Container principal (o "card" de progresso)
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                width: 2,
-                                color: const Color.fromARGB(255, 5, 106, 12),
+                      onTap: () =>
+                          context.read<BottomNavigatorProvider>().index = 4,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            width: 2,
+                            color: Color.fromARGB(255, 5, 106, 12),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 15,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(
+                                  255,
+                                  18,
+                                  95,
+                                  24,
+                                ).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+                              child: const Icon(
+                                Icons.trending_up,
+                                color: Color.fromARGB(255, 68, 126, 57),
+                                size: 28,
+                              ),
                             ),
-                            // Conteúdo dentro do card de Progresso
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 18, 95, 24).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.trending_up,
-                                    color: Color.fromARGB(255, 68, 126, 57),
-                                    size: 28,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                const Text(
-                                  "Progresso",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1a1a1a),
-                                    fontFamily: 'Lao Muang Don',
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Progresso",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1a1a1a),
+                                fontFamily: 'Lao Muang Don',
+                              ),
                             ),
-                          ),
-                          
-                          const SizedBox(height: 10),
-                          
-                          // O Texto da Dica (abaixo do card)
-                          Text(
-                            userProvider.dicaSelecionada!,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[700],
-                              fontFamily: 'Lao Muang Don',
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

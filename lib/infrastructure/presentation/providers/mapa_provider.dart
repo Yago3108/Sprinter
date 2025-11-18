@@ -83,46 +83,48 @@ class MapaProvider extends ChangeNotifier {
               if (velocidadeKm > 40) {
                 atividadeParada = true;
 
-                await pararAtividade(context);
+                pararAtividade(context);
 
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (ctx) => AlertDialog(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      title: Row(
-                        children: [
-                          const Icon(
-                            Icons.warning_amber_rounded,
-                            color: Color.fromARGB(255, 5, 106, 12),
-                            size: 30,
-                          ),
-                          const SizedBox(width: 10),
-                          const Text(
-                            "Alerta de Velocidade!",
-                            style: TextStyle(
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (ctx) => AlertDialog(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.warning_amber_rounded,
                               color: Color.fromARGB(255, 5, 106, 12),
-                              fontWeight: FontWeight.bold,
+                              size: 30,
                             ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              "Alerta de Velocidade!",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 5, 106, 12),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: const Text(
+                          "Você ultrapassou 40km/h. A atividade foi pausada.",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text("Entendi"),
                           ),
                         ],
                       ),
-                      content: const Text(
-                        "Você ultrapassou 40km/h. A atividade foi pausada.",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(),
-                          child: const Text("Entendi"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                    );
+                  }
+                });
 
                 notifyListeners();
                 return;

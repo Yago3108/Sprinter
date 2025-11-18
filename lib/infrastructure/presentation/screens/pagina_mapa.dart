@@ -84,21 +84,31 @@ class _PaginaMapaState extends State<PaginaMapa> {
                   ),
                   onPressed: () async {
                     if (isAtividadeAtiva) {
-                      await mapa.pararAtividade(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Atividade parada"),
-                          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                        ),
-                      );
+                      mapa.pararAtividade(context);
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Atividade parada"),
+                              backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                            ),
+                          );
+                        }
+                      });
                     } else {
                       mapa.iniciarAtividade(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Atividade iniciada"),
-                          backgroundColor: Color.fromARGB(255, 5, 106, 12),
-                        ),
-                      );
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Atividade iniciada"),
+                              backgroundColor: Color.fromARGB(255, 5, 106, 12),
+                            ),
+                          );
+                        }
+                      });
                     }
                   },
                   child: Icon(
