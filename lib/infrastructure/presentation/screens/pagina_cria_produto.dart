@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/infrastructure/presentation/widgets/button_componente.dart';
+import 'package:myapp/infrastructure/presentation/widgets/textfield_componente.dart';
 import 'package:provider/provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/produto_provider.dart';
 
@@ -79,43 +81,53 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Adicionar Produto')),
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        foregroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 5, 106, 12),
+        title: const Text('Adicionar Produto'),
+    ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _nomeController,
-                decoration: const InputDecoration(labelText: 'Nome'),
-                validator: (value) => value!.isEmpty ? 'Informe o nome' : null,
+              TextFieldComponente(
+                controller: _nomeController, 
+                prefixIcon: Icons.shopping_basket, 
+                hint: "Ingresso para cinema", 
+                label: "Nome",
               ),
-              TextFormField(
-                controller: _descricaoController,
-                decoration: const InputDecoration(labelText: 'Descrição'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe a descrição' : null,
+              const SizedBox(height: 20),
+              TextFieldComponente(
+                controller: _descricaoController, 
+                prefixIcon: Icons.edit, 
+                hint: "Ingresso para...", 
+                label: "Descrição",
               ),
-              TextFormField(
-                controller: _precoController,
-                decoration: const InputDecoration(labelText: 'Preço'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? 'Informe o preço' : null,
+              const SizedBox(height: 20),
+              TextFieldComponente(
+                controller: _precoController, 
+                prefixIcon: Icons.money, 
+                hint: "35", 
+                label: "Preço",
               ),
-              TextFormField(
-                controller: _tipoController,
-                decoration: const InputDecoration(labelText: 'Tipo'),
-                validator: (value) => value!.isEmpty ? 'Informe o tipo' : null,
+              const SizedBox(height: 20),
+              TextFieldComponente(
+                controller: _tipoController, 
+                prefixIcon: Icons.shopping_bag, 
+                hint: "Ingresso", 
+                label: "Tipo",
               ),
-              TextFormField(
+              const SizedBox(height: 20),
+              TextFieldComponente(
                 controller: _quantidadeController,
-                decoration: const InputDecoration(labelText: 'Quantidade'),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe a quantidade' : null,
+                prefixIcon: Icons.numbers_outlined, 
+                hint: "3", 
+                label: "Quantidade",
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: _selecionarImagem,
                 child: _imagemSelecionada == null
@@ -129,10 +141,10 @@ class _CriarProdutoPageState extends State<CriarProdutoPage> {
               const SizedBox(height: 20),
               _carregando
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _salvarProduto,
-                      child: const Text('Salvar Produto'),
-                    ),
+                  : ButtonComponente(
+                    text: "Cadastrar", 
+                    function: _salvarProduto,
+                  ),
             ],
           ),
         ),

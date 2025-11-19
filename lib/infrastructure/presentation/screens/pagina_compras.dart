@@ -49,7 +49,7 @@ class PaginaComprasState extends State<PaginaCompras> {
                       left: 20,
                       right: 20,
                     ),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -64,26 +64,8 @@ class PaginaComprasState extends State<PaginaCompras> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Buscar Produtos",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1a1a1a),
-                                fontFamily: 'League Spartan',
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, size: 24),
-                              onPressed: _removerPesquisa,
-                              color: Colors.grey[600],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
+                       
+                        const SizedBox(height: 2),
                         WidgetPesquisa(
                           onProdutoSelecionado: (produtoId) {
                             _removerPesquisa();

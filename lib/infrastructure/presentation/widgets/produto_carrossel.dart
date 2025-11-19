@@ -73,7 +73,7 @@ class ProdutoCarrossel extends StatelessWidget {
                     child: Text(
                       produto['nome'],
                       style: TextStyle(
-                        fontSize: (height!*0.09),
+                        fontSize: (height!*0.07),
                         fontFamily: 'League Spartan',
                         color: const Color.fromARGB(255, 29, 64, 26),
                       ),

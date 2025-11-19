@@ -29,7 +29,7 @@ class WidgetPesquisaUsuarioState extends State<WidgetPesquisaUsuario> {
               hint: Text("Pesquisar usuário..."),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(color:Color.fromARGB(255, 5, 106, 12), width: 1.5),
               ),
             ),

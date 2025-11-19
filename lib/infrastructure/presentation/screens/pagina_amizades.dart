@@ -153,7 +153,7 @@ class _PaginaAmizadesState extends State<PaginaAmizades> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -168,26 +168,7 @@ class _PaginaAmizadesState extends State<PaginaAmizades> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Buscar Amigos",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1a1a1a),
-                                fontFamily: 'League Spartan',
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, size: 24),
-                              onPressed: _removerPesquisa,
-                              color: Colors.grey[600],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 2),
                         WidgetPesquisaUsuario(
                           onProdutoSelecionado: (uidAmigo) {
                             _removerPesquisa();
@@ -526,7 +507,17 @@ class _PaginaAmizadesState extends State<PaginaAmizades> {
                                           ),
                                           const SizedBox(width: 12),
                                           Expanded(
-                                            child: Text(
+                                            child: _posicaoUsuario==-1?
+                                              Text(
+                                              "Faça atividades para entrar no ranking",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: 'League Spartan',
+                                              ),
+                                            ):
+                                            Text(
                                               "Você está em $_posicaoUsuarioº lugar!",
                                               style: const TextStyle(
                                                 fontSize: 16,
