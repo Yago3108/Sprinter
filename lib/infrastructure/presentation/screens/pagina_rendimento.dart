@@ -44,7 +44,7 @@ bool _dataLoaded = false;
                 final user = userProvider.user;
      final estatisticaProvider = context.watch<EstatisticaProvider>();
         estatisticaProvider.carregarAtividades(userProvider.user!.uid);
-         if(estatisticaProvider.semanas.isEmpty){
+         if(estatisticaProvider.anos.isEmpty){
         return Center(child:Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

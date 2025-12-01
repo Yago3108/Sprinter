@@ -36,11 +36,14 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
     final userProvider = context.read<UserProvider>();
     userProvider.getUsuarioByUid(widget.uidAmigo);
   }
+
+  // Novo widget auxiliar para os cards de estatísticas (copiado da PaginaPerfil)
   Widget _buildStatCard(String value, String label, Color verdeMedio, Color verdeClaro) {
     return Container(
       width: 100,
       height: 100,
       decoration: BoxDecoration(
+        // Aplica o Gradient
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -64,7 +67,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
               fontFamily: 'League Spartan',
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.white, 
+              color: Colors.white, // Texto em branco para contraste com o gradiente
             ),
           ),
           const SizedBox(height: 5),
@@ -73,7 +76,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
             style: const TextStyle(
               fontFamily: 'League Spartan',
               fontSize: 16,
-              color: Colors.white, 
+              color: Colors.white, // Texto em branco
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -81,6 +84,8 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
       ),
     );
   }
+
+  // Novo widget auxiliar para os campos de informação (copiado da PaginaPerfil)
   Widget _buildInfoField(String label, String value) {
     return Column(
       children: [
@@ -89,7 +94,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
           style: const TextStyle(
             fontFamily: 'League Spartan',
             fontSize: 18,
-            color: verdeEscuro, 
+            color: verdeEscuro, // Cor do título
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -98,7 +103,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
           width: 300,
           height: 50,
           decoration: BoxDecoration(
-            border: Border.all(color: verdeMedio, width: 1.5), 
+            border: Border.all(color: verdeMedio, width: 1.5), // Borda em verde médio
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
           ),
@@ -122,7 +127,9 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
     final formatadorNumero = context.watch<BottomNavigatorProvider>();
     final userProvider = context.watch<UserProvider>();
     final AmizadeProvider amizadeProvider = context.watch<AmizadeProvider>();
+    amizadeProvider.fetchAmizadesFromFirestore(userProvider.user!.uid);
     amigo = userProvider.usuarioPesquisado;
+
     for (var i = 0; i < amizadeProvider.amigos.length; i++) {
       Amigo amizade;
       amizade = amizadeProvider.amigos[i];
@@ -202,21 +209,21 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                     children: [
                       // Card CarboCoins
                       _buildStatCard(
-                        "${formatadorNumero.formatarNumero(amigo!.carboCoins)}" ?? "0",
+                        "${formatadorNumero.formatarNumero(amigo?.carboCoins)}" ?? "0",
                         "CarboCoins",
                         verdeMedio,
                         verdeClaro,
                       ),
                       // Card Distância
                       _buildStatCard(
-                        "${formatadorNumero.formatarNumero(amigo!.distancia)}" ?? "0.0",
+                        "${formatadorNumero.formatarNumero(amigo?.distancia)}" ?? "0.0",
                         "Distância",
                         verdeMedio,
                         verdeClaro,
                       ),
                       // Card Carbono
                       _buildStatCard(
-                        "${formatadorNumero.formatarNumero(amigo!.carbono)}" ?? "0",
+                        "${formatadorNumero.formatarNumero(amigo?.carbono)}" ?? "0",
                         "Carbono",
                         verdeMedio,
                         verdeClaro,
@@ -286,7 +293,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                           width: 100,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: verdeMedio, 
+                            color: verdeMedio, // Cor do botão de adicionar amigo
                             borderRadius: BorderRadius.circular(50),
                             boxShadow: [
                                BoxShadow(
@@ -308,7 +315,7 @@ class PaginaPerfilAmizadeState extends State<PaginaPerfilAmizade> {
                         style: TextStyle(
                           fontFamily: "League Spartan",
                           fontSize: 30,
-                          color: verdeEscuro, 
+                          color: verdeEscuro, // Cor do texto "Seu Amigo"
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -10,8 +10,8 @@ class BottomNavigatorProvider with ChangeNotifier {
     _index = newIndex;
     notifyListeners();
   }
-  String formatarNumero(num number) {
-  double value = number.toDouble();
+  String formatarNumero(num? number) {
+  double value = number?.toDouble() ?? 0;
   if (value >= 1000000) {
     value /= 1000000;
    return '${NumberFormat('0.0', 'pt_BR').format(value)}M';
