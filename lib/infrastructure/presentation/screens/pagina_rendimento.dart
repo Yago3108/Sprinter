@@ -44,9 +44,31 @@ bool _dataLoaded = false;
                 final user = userProvider.user;
      final estatisticaProvider = context.watch<EstatisticaProvider>();
         estatisticaProvider.carregarAtividades(userProvider.user!.uid);
-        if (_dataLoaded && estatisticaProvider.semanas.isEmpty) {
+         if(estatisticaProvider.semanas.isEmpty){
+        return Center(child:Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.show_chart,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      "Nenhum dado de estatistica encontrado",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                        fontFamily: 'Lao Muang Don',
+                                      ),
+                                    ),
+                                  ],
+                                ), );
+  }
+        if (_dataLoaded ) {
     return const Center(child: CircularProgressIndicator());
   }
+ 
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(

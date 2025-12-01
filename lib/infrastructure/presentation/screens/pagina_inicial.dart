@@ -20,6 +20,7 @@ class PaginaInicialState extends State<PaginaInicial> {
 
   @override
   Widget build(BuildContext context) {
+    final formatadorNumero= context.watch<BottomNavigatorProvider>();
     final userProvider = context.watch<UserProvider>();
     final user = userProvider.user;
 
@@ -68,7 +69,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                 color2: const Color(0xFF078A10),
                 icon: Icons.directions_run,
                 titulo: "Distância Percorrida",
-                informacao: "${user.distancia.toStringAsFixed(1)} km",
+                informacao: "${formatadorNumero.formatarNumero(userProvider.user!.distancia)} km",
                 mensagem: "Continue se exercitando!",
               ),
 
@@ -82,7 +83,7 @@ class PaginaInicialState extends State<PaginaInicial> {
                 color2: const Color(0xFF0DB520),
                 icon: Icons.eco,
                 titulo: "CarboCoins",
-                informacao: user.carboCoins.toString(),
+                informacao: "${formatadorNumero.formatarNumero(userProvider.user!.carboCoins)} cc",
                 mensagem: "Pontos acumulados",
               ),
 

@@ -89,7 +89,7 @@ class ProdutoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        " Cc",
+                        " cc",
                         style: const TextStyle(
                           fontSize: 20,
                           fontFamily: "League Spartan",

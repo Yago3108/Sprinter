@@ -162,7 +162,7 @@ class _WidgetProdutoCarrinhoState extends State<WidgetProdutoCarrinho> {
                         ),
                         Padding(padding: EdgeInsetsGeometry.only(top: 5)),
                         Text(
-                          "CarboCoins gastos: ${carbocoinsGastos.toStringAsFixed(0)} CC",
+                          "CarboCoins gastos: ${carbocoinsGastos.toStringAsFixed(0)} cc",
                           style: const TextStyle(fontSize: 14),
                         ),
                          Padding(padding: EdgeInsetsGeometry.only(top: 5)),

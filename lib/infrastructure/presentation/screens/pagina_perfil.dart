@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/providers/user_provider.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_esqueceu_senha.dart';
@@ -22,6 +23,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
   
   @override
   Widget build(BuildContext context) {
+      final formatadorNumero= context.watch<BottomNavigatorProvider>();
     final userProvider = context.watch<UserProvider>();
     final fotoBase64 = userProvider.user!.fotoPerfil;
     Uint8List? bytes;
@@ -136,15 +138,15 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildStatCard(
-                        userProvider.user?.carboCoins.toString() ?? "0",
+                       " ${formatadorNumero.formatarNumero(userProvider.user!.carboCoins)}" ?? "0",
                         "CarboCoins",
                       ),
                       _buildStatCard(
-                        userProvider.user?.distancia.toStringAsFixed(1) ?? "0.0",
+                       " ${formatadorNumero.formatarNumero(userProvider.user!.distancia)}" ?? "0.0",
                         "Distância",
                       ),
                       _buildStatCard(
-                        userProvider.user?.carbono.toStringAsFixed(0) ?? "0",
+                       " ${formatadorNumero.formatarNumero(userProvider.user!.carbono)}" ?? "0",
                         "Carbono",
                       ),
                     ],
@@ -181,7 +183,7 @@ class PaginaPerfilState extends State<PaginaPerfil> {
                       // Carbono não emitido
                       _buildInfoField(
                         "Carbono não emitido",
-                        "${userProvider.user?.carbono.toStringAsFixed(2)} kg CO2",
+                       " ${formatadorNumero.formatarNumero(userProvider.user!.carbono)} kg CO2",
                       ),
                       const SizedBox(height: 30),
                       

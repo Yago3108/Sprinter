@@ -102,20 +102,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
         }
       } catch (e) {
         // Caso dê algum erro inesperado
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.red),
-                SizedBox(width: 8),
-                Text("Erro Inesperado. Tente novamente!", style: TextStyle(color: Colors.black)),
-              ],
-            ),
-            backgroundColor: Colors.white,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+      
       }
     }
   }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/infrastructure/presentation/providers/bottom_navigator_provider.dart';
 import 'package:myapp/infrastructure/presentation/widgets/widget_podio.dart';
 import 'package:myapp/infrastructure/presentation/screens/pagina_perfil_amizade.dart';
 import 'package:myapp/infrastructure/presentation/providers/amizade_provider.dart';
@@ -201,6 +202,7 @@ class _PaginaAmizadesState extends State<PaginaAmizades> {
 
   @override
   Widget build(BuildContext context) {
+    final formatadorNumero= context.watch<BottomNavigatorProvider>();
     final amizadeProvider = context.watch<AmizadeProvider>();
 
     return DefaultTabController(
@@ -429,7 +431,7 @@ class _PaginaAmizadesState extends State<PaginaAmizades> {
                                                   ),
                                                   const SizedBox(width: 4),
                                                   Text(
-                                                    '${amigo.carboCoins}',
+                                                   " ${formatadorNumero.formatarNumero(amigo.carboCoins)}",
                                                     style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight: FontWeight.w600,
