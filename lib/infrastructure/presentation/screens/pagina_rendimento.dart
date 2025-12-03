@@ -29,7 +29,10 @@ bool _dataLoaded = false;
       final estatisticaProvider = context.read<EstatisticaProvider>();
       if (userProvider.user != null) {
         estatisticaProvider.carregarAtividades(userProvider.user!.uid);
-        _dataLoaded = true;
+      setState(() {
+         _dataLoaded = true;
+      });
+       
       }
     }
   }
@@ -65,10 +68,7 @@ bool _dataLoaded = false;
                                   ],
                                 ), );
   }
-        if (_dataLoaded ) {
-    return const Center(child: CircularProgressIndicator());
-  }
- 
+     
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(

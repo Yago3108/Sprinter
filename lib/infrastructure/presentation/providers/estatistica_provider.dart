@@ -118,9 +118,9 @@ class EstatisticaProvider extends ChangeNotifier {
     _semanas = semanasTemp;
     _meses = mesesTemp;
     _anos = anosTemp;
-
+    print(semanasTemp);
     notifyListeners();
-
+  
     // salvar de volta no firestore
     await salvarEstatisticas(userId);
 }
