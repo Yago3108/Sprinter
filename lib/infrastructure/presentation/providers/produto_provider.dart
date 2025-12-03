@@ -17,6 +17,7 @@ class ProdutoProvider extends ChangeNotifier {
   // Lista de produtos carregados
   List<Produto> _produtos = [];
   List<Produto> get produtos => _produtos;
+  List<Produto> filtrados =[];
 
   // Adicionar produto no Firestore
   Future<void> adicionarProduto(
@@ -39,7 +40,7 @@ class ProdutoProvider extends ChangeNotifier {
         'imagemBase64': base64Image,
         'quantidade': quantidade,
       });
-
+    
       // Atualiza a lista local
       _produtos.add(Produto(
         id: docRef.id,
@@ -50,7 +51,7 @@ class ProdutoProvider extends ChangeNotifier {
         imagemBase64: base64Image,
         quantidade: quantidade,
       ));
-
+      filtrados.addAll(_produtos);
       notifyListeners();
     } catch (e) {
       throw Exception('Erro ao adicionar produto: $e');

@@ -21,7 +21,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => MapaProvider()),
         ChangeNotifierProvider(create: (_) => ProdutoProvider()),
         ChangeNotifierProvider(create: (_) => AmizadeProvider()),
-        ChangeNotifierProvider(create: (_) => EstatisticaProvider()),
+        ChangeNotifierProvider(create: (_) => EstatisticaProvider()),  
       ],
       child: const MyApp(),
     ),

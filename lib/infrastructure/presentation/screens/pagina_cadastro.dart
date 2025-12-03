@@ -332,6 +332,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    readOnly: true,
                     controller: _controllerData,
                     keyboardType: TextInputType.number,
                     inputFormatters: [

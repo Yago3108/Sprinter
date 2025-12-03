@@ -145,7 +145,7 @@ class PaginaProdutoState extends State<PaginaProduto> {
   }
   @override
   Widget build(BuildContext context) {
-    final maisVendidos = context.watch<ProdutoProvider>().produtos;
+    dynamic maisVendidos = context.read<ProdutoProvider>().produtos;
 
     return Scaffold(
       appBar: AppBar(
@@ -359,8 +359,14 @@ class PaginaProdutoState extends State<PaginaProduto> {
                     scrollDirection: Axis.horizontal,
                     itemCount: maisVendidos.length,
                     itemBuilder: (context, index) {
-                      final maisVendido = maisVendidos[index];
+                               Produto maisVendido = maisVendidos[index];
+                       if(maisVendido.id==widget.produtoId){
+                        return SizedBox();
+                       }else{
+                   
                       return ProdutoCard(produtoId: maisVendido.id);
+                       }
+                  
                     }
                   ),
                 ),
