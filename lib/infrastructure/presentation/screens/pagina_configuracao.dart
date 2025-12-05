@@ -229,7 +229,7 @@ class _PaginaConfiguracaoState extends State<PaginaConfiguracao> {
                   enabled: credWid,
                   children: [
                     SizedBox(
-                      height: 150,
+                      height: 180,
                       child: Column(
                         children: [
                           Padding(padding: EdgeInsets.only(top: 15)),
