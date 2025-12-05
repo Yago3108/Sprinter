@@ -47,7 +47,7 @@ class MapaProvider extends ChangeNotifier {
         Geolocator.getPositionStream(
           locationSettings: const LocationSettings(
             accuracy: LocationAccuracy.bestForNavigation,
-            distanceFilter: 0,
+            distanceFilter: 1,
           ),
         ).listen((pos) async {
           if (_atividadeEncerrada) return;
@@ -79,8 +79,8 @@ class MapaProvider extends ChangeNotifier {
             if (tempoLocal.inSeconds > 0) {
               final double velocidade = distanciaLocal / tempoLocal.inSeconds;
               final double velocidadeKm = velocidade * 3.6;
-
-              if (velocidadeKm > 40) {
+/*
+             if (velocidadeKm > 40) {
                 atividadeParada = true;
 
                 pararAtividade(context);
@@ -128,7 +128,7 @@ class MapaProvider extends ChangeNotifier {
 
                 notifyListeners();
                 return;
-              }
+              }*/
 
               _distancia += distanciaLocal;
               _tempo += tempoLocal;
@@ -192,7 +192,7 @@ class MapaProvider extends ChangeNotifier {
     _posicaoStream?.cancel();
     _posicaoStream = null;
 
-    notifyListeners();
+
 
     await Future.delayed(const Duration(milliseconds: 50));
 
@@ -232,5 +232,6 @@ class MapaProvider extends ChangeNotifier {
             'pontos': pontos,
           });
     }
+        notifyListeners();
   }
 }

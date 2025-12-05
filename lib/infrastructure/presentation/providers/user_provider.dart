@@ -142,7 +142,6 @@ class UserProvider extends ChangeNotifier {
         .update(novoUsuario.toMap());
 
     _user = novoUsuario;
-    carregarUsuario(_user!.uid);
     notifyListeners();
   }
 
